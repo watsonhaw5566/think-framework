@@ -38,7 +38,7 @@ class ValidateRuleSet
     {
         $ruleSet = new static($rules);
 
-        return $this;
+        return $ruleSet;
     }
 
     /**
