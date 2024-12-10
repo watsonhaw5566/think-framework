@@ -1781,10 +1781,12 @@ class Validate
                 return is_array($value) ? $value : [$value];
             }
             // user.*.id
-            [$key] = explode('.*.', $key);
+            [$key, $column] = explode('.*.', $key);
 
             $value = $this->getRecursiveData($data, $key) ?: [];
-            return is_array($value) ? $value : [];
+            return array_map(function ($item) use ($column) {
+                return $item[$column] ?? null;
+            }, $value);
         }
 
         $value = $this->getDataValue($data, $key);
