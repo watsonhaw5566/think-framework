@@ -699,6 +699,12 @@ class Validate
             foreach ($rule->getMessage() as $name => $message) {
                 $this->message[$key . '.' . $name] = $message;
             }
+        } elseif ($rule instanceof Closure) {
+            $values = $this->getDataSet($data, $key);
+            if (empty($values)) {
+                return true;
+            }            
+            $items = $rule(new self)->getRule();
         } else {
             $items = [$rule];
         }
