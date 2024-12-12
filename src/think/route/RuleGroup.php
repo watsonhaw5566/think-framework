@@ -413,12 +413,15 @@ class RuleGroup extends Rule
      * 分组绑定到类
      * @access public
      * @param  string $class
+     * @param  bool   $prefix
      * @return $this
      */
-    public function class(string $class)
+    public function class(string $class, bool $prefix = true)
     {
         $this->bind = '\\' . $class;
-        $this->prefix('\\' . $class . '@');
+        if ($prefix) {
+            $this->prefix('\\' . $class . '@');            
+        }
         return $this;
     }
 
@@ -426,12 +429,15 @@ class RuleGroup extends Rule
      * 分组绑定到控制器
      * @access public
      * @param  string $controller
+     * @param  bool   $prefix
      * @return $this
      */
-    public function controller(string $controller)
+    public function controller(string $controller, bool $prefix = true)
     {
         $this->bind = '@' . $controller;
-        $this->prefix($controller . '/');
+        if ($prefix) {
+            $this->prefix($controller . '/');            
+        }
         return $this;
     }
 
@@ -439,12 +445,15 @@ class RuleGroup extends Rule
      * 分组绑定到命名空间
      * @access public
      * @param  string $namespace
+     * @param  bool   $prefix
      * @return $this
      */
-    public function namespace(string $namespace)
+    public function namespace(string $namespace, bool $prefix = true)
     {
         $this->bind = ':' . $namespace;
-        $this->prefix($namespace . '\\');
+        if ($prefix) {
+            $this->prefix($namespace . '\\');            
+        }
         return $this;
     }
 
@@ -452,12 +461,15 @@ class RuleGroup extends Rule
      * 分组绑定到控制器分级
      * @access public
      * @param  string $namespace
+     * @param  bool   $prefix
      * @return $this
      */
-    public function layer(string $layer)
+    public function layer(string $layer, bool $prefix = true)
     {
         $this->bind = '/' . $layer;
-        $this->prefix($layer . '/');
+        if ($prefix) {
+            $this->prefix($layer . '/');            
+        }
         return $this;
     }
 
