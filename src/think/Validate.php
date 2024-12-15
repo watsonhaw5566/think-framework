@@ -25,6 +25,7 @@ use UnitEnum;
 /**
  * 数据验证类
  * @package think
+ * @mixin ValidateRule
  */
 class Validate
 {
