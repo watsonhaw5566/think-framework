@@ -121,7 +121,6 @@ class ValidateTest extends TestCase
         $this->assertFalse($validate->multipleOf('4', '3'));
         $this->assertFalse($validate->multipleOf(4, '3'));
         $this->assertFalse($validate->multipleOf('4', 3));
-
     }
 
     /**
@@ -138,5 +137,35 @@ class ValidateTest extends TestCase
         $this->assertTrue($validate->elt('1', 1)); // <=
         $this->assertTrue($validate->eq('1', 1)); // ==
         $this->assertTrue($validate->neq('1', 0)); // <>
+    }
+
+    public function testMessage()
+    {
+        $validate = new Validate();
+        $validate->setLang($this->lang);
+
+        $validate->rule([
+            'name|Name' => 'require',
+            'tag|Tag'   => 'require',
+        ]);
+
+        $this->expectExceptionMessage('Name require');
+
+        $validate->check([]);
+    }
+
+    public function testBatchMessage()
+    {
+        $validate = new Validate();
+        $validate->setLang($this->lang);
+
+        $validate->rule([
+            'name|Name' => 'require',
+            'tag|Tag'   => 'require',
+        ]);
+
+        $this->expectExceptionMessage(json_encode(['name' => 'Name require', 'tag' => 'Tag require']));
+
+        $validate->batch(true)->check([]);
     }
 }
