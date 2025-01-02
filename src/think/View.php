@@ -87,6 +87,11 @@ class View extends Manager
      */
     public function fetch(string $template = '', array $vars = []): string
     {
+        if (false === strpos($template, '@') && $this->app->request->layer()) {
+            // 自动追加模块标识
+            $template = $this->app->request->layer() . '@' . $template;
+        }
+
         return $this->getContent(function () use ($vars, $template) {
             $this->engine()->fetch($template, array_merge($this->data, $vars));
         });
