@@ -113,6 +113,9 @@ class Php implements TemplateHandlerInterface
         if (str_contains($template, '@')) {
             // 跨应用调用
             [$app, $template] = explode('@', $template);
+        } elseif ($request->layer()) {
+            $app        = $request->layer();
+            $controller = $request->controller(true, true);
         }
 
         if ($this->config['view_path'] && !isset($app)) {
@@ -132,7 +135,7 @@ class Php implements TemplateHandlerInterface
 
         if (!str_starts_with($template, '/')) {
             $template   = str_replace(['/', ':'], $depr, $template);
-            $controller = $request->controller();
+            $controller = $controller ?? $request->controller();
             if (str_contains($controller, '.')) {
                 $pos        = strrpos($controller, '.');
                 $controller = substr($controller, 0, $pos) . '.' . Str::snake(substr($controller, $pos + 1));
