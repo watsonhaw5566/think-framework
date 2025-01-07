@@ -115,13 +115,13 @@ class Php implements TemplateHandlerInterface
             [$app, $template] = explode('@', $template);
         } elseif ($request->layer()) {
             $app        = $request->layer();
-            $controller = $request->controller(true, true);
+            $controller = $request->controller(false, true);
         }
 
-        if ($this->config['view_path'] && !isset($app)) {
+        if ($this->config['view_path']) {
             $path = $this->config['view_path'];
         } else {
-            $appName = isset($app) ? $app : $this->app->http->getName();
+            $appName = $app ?? $this->app->http->getName();
             $view    = $this->config['view_dir_name'];
 
             if (is_dir($this->app->getAppPath() . $view)) {
