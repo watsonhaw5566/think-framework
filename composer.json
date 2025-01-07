@@ -29,7 +29,7 @@
         "topthink/think-orm": "^3.0|^4.0",
         "topthink/think-helper": "^3.1",
         "topthink/think-container": "^3.0",
-        "topthink/think-validate": "^3.0",
+        "topthink/think-validate": "^3.0"
     },
     "require-dev": {
         "mikey179/vfsstream": "^1.6",
