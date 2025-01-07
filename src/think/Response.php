@@ -412,4 +412,14 @@ abstract class Response
     {
         return $this->code;
     }
+
+    /**
+     * 获取Cookie对象
+     * @access public
+     * @return Cookie
+     */
+    public function getCookie()
+    {
+        return $this->cookie;
+    }
 }
