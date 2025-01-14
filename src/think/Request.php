@@ -27,7 +27,7 @@ class Request implements ArrayAccess
      * 兼容PATH_INFO获取
      * @var array
      */
-    protected $pathinfoFetch = ['ORIG_PATH_INFO', 'REDIRECT_PATH_INFO', 'REDIRECT_URL'];
+    protected $pathinfoFetch = ['ORIG_PATH_INFO', 'REDIRECT_PATH_INFO', 'REDIRECT_URL', 'PHP_SELF'];
 
     /**
      * PATHINFO变量名 用于兼容模式
