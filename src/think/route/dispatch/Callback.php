@@ -13,6 +13,7 @@ declare (strict_types = 1);
 namespace think\route\dispatch;
 
 use think\exception\ClassNotFoundException;
+use think\helper\Str;
 use think\route\Dispatch;
 
 /**
@@ -31,7 +32,18 @@ class Callback extends Dispatch
                     $route = explode('/', $route, 3);
                 }
                 if (is_array($route)) {
-                    [$class, $action] = $route;
+                    // 检查分组命名空间绑定
+                    $bind = $this->rule->getBind();
+                    $type = substr($bind, 0, 1);
+                    if ('\\' == $type) {
+                        $class  = substr($bind, 1);
+                        $action = $route[0];
+                    } elseif (':' == $type) {
+                        [$class, $action] = $route;
+
+                        $namespace = substr($bind, 1);
+                        $class     = trim($namespace, '\\') . '\\' . Str::studly($class);
+                    }
                 } else {
                     $vars = $this->getActionBindVars();
                     return $this->app->invoke($route, $vars);

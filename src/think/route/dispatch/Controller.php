@@ -95,7 +95,12 @@ class Controller extends Dispatch
                 if ($route instanceof Closure) {
                     $vars = $this->getActionBindVars();
                     return $this->app->invoke($route, $vars);
-                } 
+                }
+                // 检查分组绑定
+                $prefix = $this->rule->getOption('prefix');
+                if (!str_starts_with($route, $prefix)) {
+                    $route = $prefix . $route;
+                }
                 $this->parseDispatch($route);
                 $instance = $this->controller($this->controller);
             } else {
