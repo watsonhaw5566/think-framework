@@ -25,6 +25,18 @@ class Callback extends Dispatch
         // 执行回调方法
         if (is_array($this->dispatch)) {
             [$class, $action] = $this->dispatch;
+            if ($this->miss && !method_exists($class, $action . $this->rule->config('action_suffix'))) {
+                $route = $this->miss->getRoute();
+                if (is_string($route)) {
+                    $route = explode('/', $route, 3);
+                }
+                if (is_array($route)) {
+                    [$class, $action] = $route;
+                } else {
+                    $vars = $this->getActionBindVars();
+                    return $this->app->invoke($route, $vars);
+                }
+            }
 
             // 设置当前请求的控制器、操作
             $controllerLayer = $this->rule->config('controller_layer') ?: 'controller';

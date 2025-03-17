@@ -179,12 +179,13 @@ class RuleGroup extends Rule
             }
         }
 
+        $miss = $this->getMissRule($method);
         if ($this->bind) {
             // 检查分组绑定
-            return $this->checkBind($request, $url, $option);
+            return $this->checkBind($request, $url, $option, $miss);
         }
 
-        if ($miss = $this->getMissRule($method)) {
+        if ($miss) {
             // MISS路由
             return $miss->parseRule($request, '', $miss->getRoute(), $url, $miss->getOption());
         }
@@ -492,9 +493,10 @@ class RuleGroup extends Rule
      * @param  Request   $request
      * @param  string    $url URL地址
      * @param  array     $option 分组参数
+     * @param  RuleItem  $miss
      * @return Dispatch
      */
-    public function checkBind(Request $request, string $url, array $option = []): Dispatch
+    public function checkBind(Request $request, string $url, array $option = [], ?RuleItem $miss = null): Dispatch
     {
         [$bind, $param] = $this->parseBindAppendParam($this->bind);
 
@@ -509,7 +511,7 @@ class RuleGroup extends Rule
         $name = $this->getFullName();
         $url  = trim(substr(str_replace('|', '/', $url), strlen($name)), '/');
 
-        return $this->$call($request, $url, $bind, $param, $option);
+        return $this->$call($request, $url, $bind, $param, $option, $miss);
     }
 
     protected function parseBindAppendParam(string $bind)
@@ -530,9 +532,10 @@ class RuleGroup extends Rule
      * @param  string    $class 类名（带命名空间）
      * @param  array     $param  路由变量
      * @param  array     $option 分组参数
+     * @param  RuleItem  $miss
      * @return CallbackDispatch
      */
-    protected function bindToClass(Request $request, string $url, string $class, array $param = [], array $option = []): CallbackDispatch
+    protected function bindToClass(Request $request, string $url, string $class, array $param = [], array $option = [], ?RuleItem $miss = null): CallbackDispatch
     {
         $array  = explode('/', $url, 2);
         $action = !empty($array[0]) ? $array[0] : $this->config('default_action');
@@ -541,7 +544,7 @@ class RuleGroup extends Rule
             $this->parseUrlParams($array[1], $param);
         }
 
-        return new CallbackDispatch($request, $this, [$class, $action], $param, $option);
+        return new CallbackDispatch($request, $this, [$class, $action], $param, $option, $miss);
     }
 
     /**
@@ -552,9 +555,10 @@ class RuleGroup extends Rule
      * @param  string    $namespace 命名空间
      * @param  array     $param  路由变量
      * @param  array     $option 分组参数
+     * @param  RuleItem  $miss
      * @return CallbackDispatch
      */
-    protected function bindToNamespace(Request $request, string $url, string $namespace, array $param = [], array $option = []): CallbackDispatch
+    protected function bindToNamespace(Request $request, string $url, string $namespace, array $param = [], array $option = [], ?RuleItem $miss = null): CallbackDispatch
     {
         $array  = explode('/', $url, 3);
         $class  = !empty($array[0]) ? $array[0] : $this->config('default_controller');
@@ -564,7 +568,7 @@ class RuleGroup extends Rule
             $this->parseUrlParams($array[2], $param);
         }
 
-        return new CallbackDispatch($request, $this, [trim($namespace, '\\') . '\\' . Str::studly($class), $method], $param, $option);
+        return new CallbackDispatch($request, $this, [trim($namespace, '\\') . '\\' . Str::studly($class), $method], $param, $option, $miss);
     }
 
     /**
@@ -575,9 +579,10 @@ class RuleGroup extends Rule
      * @param  string    $controller 控制器名
      * @param  array     $param  路由变量
      * @param  array     $option 分组参数
+     * @param  RuleItem  $miss
      * @return ControllerDispatch
      */
-    protected function bindToController(Request $request, string $url, string $controller, array $param = [], array $option = []): ControllerDispatch
+    protected function bindToController(Request $request, string $url, string $controller, array $param = [], array $option = [], ?RuleItem $miss = null): ControllerDispatch
     {
         $array  = explode('/', $url, 2);
         $action = !empty($array[0]) ? $array[0] : $this->config('default_action');
@@ -586,7 +591,7 @@ class RuleGroup extends Rule
             $this->parseUrlParams($array[1], $param);
         }
 
-        return new ControllerDispatch($request, $this, [$controller, $action], $param, $option);
+        return new ControllerDispatch($request, $this, [$controller, $action], $param, $option, $miss);
     }
 
     /**
@@ -597,9 +602,10 @@ class RuleGroup extends Rule
      * @param  string    $controller 控制器名
      * @param  array     $param  路由变量
      * @param  array     $option 分组参数
+     * @param  RuleItem  $miss
      * @return ControllerDispatch
      */
-    protected function bindToLayer(Request $request, string $url, string $layer, array $param = [], array $option = []): ControllerDispatch
+    protected function bindToLayer(Request $request, string $url, string $layer, array $param = [], array $option = [], ?RuleItem $miss = null): ControllerDispatch
     {
         $array      = explode('/', $url, 3);
         $controller = !empty($array[0]) ? $array[0] : $this->config('default_controller');
@@ -609,7 +615,7 @@ class RuleGroup extends Rule
             $this->parseUrlParams($array[2], $param);
         }
 
-        return new ControllerDispatch($request, $this, [$layer, $controller, $action], $param, $option);
+        return new ControllerDispatch($request, $this, [$layer, $controller, $action], $param, $option, $miss);
     }
 
     /**
