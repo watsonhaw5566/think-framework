@@ -55,7 +55,7 @@ class Controller extends Dispatch
 
         if ($layer && !empty($this->option['auto_middleware'])) {
             // 自动为顶层layer注册中间件
-            $alias = $app->config->get('middleware.alias', []);
+            $alias = $this->app->config->get('middleware.alias', []);
 
             if (isset($alias[$layer])) {
                 $this->app->middleware->add($layer, 'route');
