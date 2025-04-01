@@ -39,12 +39,12 @@ class Controller extends Dispatch
     public function init(App $app)
     {
         parent::init($app);
-        $this->parseDispatch($this->dispatch);
+        $this->parseDispatch();
     }
 
-    protected function parseDispatch($dispatch)
+    protected function parseDispatch()
     {
-        $path = $dispatch;
+        $path = $this->dispatch;
         if (is_string($path)) {
             $path = explode('/', $path);
         }
