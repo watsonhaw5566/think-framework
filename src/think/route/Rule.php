@@ -878,7 +878,7 @@ abstract class Rule
         }
 
         // 检查Header信息
-        if (isset($option['header']) {
+        if (isset($option['header'])) {
             foreach ($option['header'] as $name => $value) {
                 if ($request->header($name, '') != $value) {
                     return false;
