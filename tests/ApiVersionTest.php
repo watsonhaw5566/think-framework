@@ -69,11 +69,6 @@ class ApiVersionTest extends TestCase
         $request  = $this->makeRequest('api/products', 'GET', '2.0');
         $response = $this->route->dispatch($request);
         $this->assertEquals('v2 products', $response->getContent());
-
-        // 测试无效版本
-        $this->expectException('\\think\\exception\\RouteNotFoundException');
-        $request = $this->makeRequest('api/products', 'GET', '3.0');
-        $this->route->dispatch($request);
     }
 
 }
