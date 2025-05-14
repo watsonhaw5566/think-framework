@@ -86,7 +86,7 @@ class Channel implements LoggerInterface
         }
 
         if (!empty($msg) || 0 === $msg) {
-            $this->log[$type][] = $msg;
+            $this->log[] = [$type, $msg];
             if ($this->event) {
                 $this->event->trigger(new LogRecord($type, $msg));
             }
@@ -128,18 +128,18 @@ class Channel implements LoggerInterface
     public function save(): bool
     {
         $log = $this->log;
+
+        $this->log = [];
+
         if ($this->event) {
             $event = new LogWrite($this->name, $log);
             $this->event->trigger($event);
             $log = $event->log;
         }
 
-        if ($this->logger->save($log)) {
-            $this->clear();
-            return true;
-        }
+        $this->logger->save($log);
 
-        return false;
+        return true;
     }
 
     /**
