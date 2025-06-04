@@ -133,6 +133,27 @@ class RuleGroup extends Rule
     }
 
     /**
+     * 自动加载分组路由
+     * @access protected
+     * @return void
+     */
+    protected function loadRoutes(): void
+    {
+        // 加载路由定义
+        $routePath = root_path('route' . DIRECTORY_SEPARATOR . $this->fullName);
+
+        if (is_dir($routePath)) {
+            $origin = $this->router->getGroup();
+            $this->router->setGroup($this);
+            $files = glob($routePath . '*.php');
+            foreach ($files as $file) {
+                include_once $file;
+            }
+            $this->router->setGroup($origin);
+        }
+    }
+
+    /**
      * 检测分组路由
      * @access public
      * @param  Request $request       请求对象
@@ -142,6 +163,14 @@ class RuleGroup extends Rule
      */
     public function check(Request $request, string $url, bool $completeMatch = false)
     {
+        if ($this->fullName) {
+            $groupName = str_replace('/', '|', $this->fullName);
+            if ($groupName == $url || 0 === strpos($url, $groupName . '|')){
+                // 自动加载分组路由（子目录）
+                $this->loadRoutes();
+            }
+        }
+
         // 检查分组有效性
         if (!$this->checkOption($this->option, $request) || !$this->checkUrl($url)) {
             return false;
