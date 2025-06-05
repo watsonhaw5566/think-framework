@@ -77,15 +77,22 @@ class RuleGroup extends Rule
      * @param  string    $name   分组名称
      * @param  mixed     $rule   分组路由
      * @param  bool      $lazy   延迟解析
-     * @param  string    $sub    分组子目录
      */
-    public function __construct(Route $router, ?RuleGroup $parent = null, string $name = '', $rule = null, bool $lazy = false, string $sub = '')
+    public function __construct(Route $router, ?RuleGroup $parent = null, string $name = '', $rule = null, bool $lazy = false)
     {
         $this->router = $router;
         $this->parent = $parent;
         $this->rule   = $rule;
         $this->name   = trim($name, '/');
-        $this->sub    = $sub;
+
+        if ($name && is_string($rule) || is_null($rule)) {
+            if (is_subclass_of($rule, Dispatch::class, false)) {
+                $this->dispatcher($rule);
+                $this->rule = '';
+            } else {
+                $this->sub  =  $rule ?: $this->name;
+            }
+        }
 
         $this->setFullName();
 
@@ -95,7 +102,7 @@ class RuleGroup extends Rule
         }
 
         if (!$lazy) {
-            $this->parseGroupRule($rule);
+            $this->parseGroupRule();
         }
     }
 
@@ -113,7 +120,7 @@ class RuleGroup extends Rule
         if ($this->parent && $this->parent->getFullName()) {
             $this->fullName = $this->parent->getFullName() . ($this->name ? '/' . $this->name : '');
             if ($this->sub) {
-                $this->sub  = $this->parent->getFullName() . '/' . $this->sub ;                
+                $this->sub  = $this->parent->getFullName() . '/' . $this->sub;
             }
         } else {
             $this->fullName = $this->name;
@@ -178,7 +185,7 @@ class RuleGroup extends Rule
 
         // 解析分组路由
         if (!$this->hasParsed) {
-            $this->parseGroupRule($this->rule);
+            $this->parseGroupRule();
         }
 
         // 获取当前路由规则
@@ -270,23 +277,15 @@ class RuleGroup extends Rule
     /**
      * 解析分组和域名的路由规则及绑定
      * @access public
-     * @param  mixed $rule 路由规则
      * @return void
      */
-    public function parseGroupRule($rule): void
+    public function parseGroupRule(): void
     {
-        if (is_string($rule) && is_subclass_of($rule, Dispatch::class)) {
-            $this->dispatcher($rule);
-            return;
-        }
-
         $origin = $this->router->getGroup();
         $this->router->setGroup($this);
 
-        if ($rule instanceof Closure) {
-            Container::getInstance()->invokeFunction($rule);
-        } elseif (is_string($rule) && $rule) {
-            $this->bind($rule);
+        if ($this->rule instanceof Closure) {
+            Container::getInstance()->invokeFunction($this->rule);
         } elseif ($this->sub) {
             $this->loadRoutes($this->sub);
         }

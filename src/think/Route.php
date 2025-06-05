@@ -460,20 +460,6 @@ class Route
     }
 
     /**
-     * 注册子目录路由分组
-     * @access public
-     * @param string $name  分组名称或者参数
-     * @param string $subdir 分组子目录名（默认和分组名同名）
-     * @return RuleGroup
-     */
-    public function sub(string $group, string $subdir = ''): RuleGroup
-    {
-        return (new RuleGroup($this, $this->group, $group, null, $this->lazy, $subdir ?: $group))
-            ->removeSlash($this->removeSlash)
-            ->mergeRuleRegex($this->mergeRuleRegex);
-    }
-
-    /**
      * 注册路由分组
      * @access public
      * @param string|Closure $name  分组名称或者参数
