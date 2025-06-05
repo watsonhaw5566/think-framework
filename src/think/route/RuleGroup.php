@@ -86,7 +86,7 @@ class RuleGroup extends Rule
         $this->name   = trim($name, '/');
 
         if ($name && is_string($rule) || is_null($rule)) {
-            if (is_subclass_of($rule, Dispatch::class, false)) {
+            if ($rule && is_subclass_of($rule, Dispatch::class, false)) {
                 $this->dispatcher($rule);
                 $this->rule = '';
             } else {
