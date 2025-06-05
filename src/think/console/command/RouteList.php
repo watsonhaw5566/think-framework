@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 namespace think\console\command;
 
+use DirectoryIterator;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
@@ -17,6 +18,7 @@ use think\console\input\Option;
 use think\console\Output;
 use think\console\Table;
 use think\event\RouteLoaded;
+use think\facade\Route;
 
 class RouteList extends Command
 {
@@ -31,7 +33,6 @@ class RouteList extends Command
     protected function configure()
     {
         $this->setName('route:list')
-            ->addArgument('dir', Argument::OPTIONAL, 'dir name .')
             ->addArgument('style', Argument::OPTIONAL, "the style of the table.", 'default')
             ->addOption('sort', 's', Option::VALUE_OPTIONAL, 'order by rule name.', 0)
             ->addOption('more', 'm', Option::VALUE_NONE, 'show route options.')
@@ -40,9 +41,7 @@ class RouteList extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        $dir = $input->getArgument('dir') ?: '';
-
-        $filename = $this->app->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . ($dir ? $dir . DIRECTORY_SEPARATOR : '') . 'route_list.php';
+        $filename = $this->app->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . 'route_list.php';
 
         if (is_file($filename)) {
             unlink($filename);
@@ -50,8 +49,33 @@ class RouteList extends Command
             mkdir(dirname($filename), 0755);
         }
 
-        $content = $this->getRouteList($dir);
+        $content = $this->getRouteList();
         file_put_contents($filename, 'Route List' . PHP_EOL . $content);
+    }
+
+    protected function scanRoute($path, $root)
+    {
+        $iterator = new DirectoryIterator($path);
+        foreach ($iterator as $fileinfo) {
+            if ($fileinfo->isDot()) {
+                continue;
+            }
+
+            if ($fileinfo->getType() == 'file' && $fileinfo->getExtension() == 'php') {
+                $groupName = str_replace('\\', '/', substr_replace($fileinfo->getPath(), '', 0, strlen($root)));
+                if ($groupName) {
+                    Route::group($groupName, function()  use ($fileinfo) {
+                        include $fileinfo->getRealPath();
+                    });
+                } else {
+                    include $fileinfo->getRealPath();
+                }
+            }
+
+            if ($fileinfo->isDir()) {
+                $this->scanRoute($fileinfo->getPathname(), $root);
+            }
+        }
     }
 
     protected function getRouteList(?string $dir = null): string
@@ -59,19 +83,9 @@ class RouteList extends Command
         $this->app->route->clear();
         $this->app->route->lazy(false);
 
-        if ($dir) {
-            $path = $this->app->getRootPath() . 'route' . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR;
-        } else {
-            $path = $this->app->getRootPath() . 'route' . DIRECTORY_SEPARATOR;
-        }
+        $path = $this->app->getRootPath() . 'route' . DIRECTORY_SEPARATOR;
 
-        $files = is_dir($path) ? scandir($path) : [];
-
-        foreach ($files as $file) {
-            if (str_contains($file, '.php')) {
-                include $path . $file;
-            }
-        }
+        $this->scanRoute($path, $path);
 
         //触发路由载入完成事件
         $this->app->event->trigger(RouteLoaded::class);
