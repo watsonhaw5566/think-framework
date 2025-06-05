@@ -52,6 +52,12 @@ class RuleGroup extends Rule
     protected $alias;
 
     /**
+     * 分组子目录
+     * @var string
+     */
+    protected $sub;
+
+    /**
      * 分组绑定
      * @var string
      */
@@ -71,13 +77,15 @@ class RuleGroup extends Rule
      * @param  string    $name   分组名称
      * @param  mixed     $rule   分组路由
      * @param  bool      $lazy   延迟解析
+     * @param  string    $sub    分组子目录
      */
-    public function __construct(Route $router, ?RuleGroup $parent = null, string $name = '', $rule = null, bool $lazy = false)
+    public function __construct(Route $router, ?RuleGroup $parent = null, string $name = '', $rule = null, bool $lazy = false, string $sub = '')
     {
         $this->router = $router;
         $this->parent = $parent;
         $this->rule   = $rule;
         $this->name   = trim($name, '/');
+        $this->sub    = $sub;
 
         $this->setFullName();
 
@@ -104,6 +112,9 @@ class RuleGroup extends Rule
 
         if ($this->parent && $this->parent->getFullName()) {
             $this->fullName = $this->parent->getFullName() . ($this->name ? '/' . $this->name : '');
+            if ($this->sub) {
+                $this->sub  = $this->parent->getFullName() . '/' . $this->sub ;                
+            }
         } else {
             $this->fullName = $this->name;
         }
@@ -136,54 +147,18 @@ class RuleGroup extends Rule
     /**
      * 自动加载分组路由
      * @access protected
+     * @param  string  $dir 目录名
      * @return void
      */
-    protected function loadRoutes(): void
+    protected function loadRoutes(string $dir): void
     {
-        $routePath = root_path('route' . DIRECTORY_SEPARATOR . $this->fullName);
+        $routePath = root_path('route' . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR);
         if (is_dir($routePath)) {
-            $origin = $this->router->getGroup();
-            $this->router->setGroup($this);
-            $iterator = new DirectoryIterator($routePath);
-            $groups   = [];
-            foreach ($iterator as $fileinfo) {
-                if ($fileinfo->isDot()) {
-                    continue;
-                }
-
-                if ($fileinfo->getType() == 'file' && $fileinfo->getExtension() == 'php') {
-                    // 加载目录下的路由定义文件
-                    $groupName = str_replace('\\', '/', substr_replace($fileinfo->getPath(), '', 0, strlen($routePath)));
-                    if ($groupName) {
-                        $group   = $this->router->getRuleName->getGroup($groupName);
-                        $this->router->setGroup($group);
-                        include_once $fileinfo->getRealPath();
-                        $this->router->setGroup($this);
-                    } else {
-                        include_once $fileinfo->getRealPath();
-                    }
-                }
-
-                if ($fileinfo->isDir()) {
-                    // 子目录自动作为分组名
-                    $groups[] = str_replace('\\', '/', substr_replace($fileinfo->getPathname(), '', 0, strlen($routePath)));
-                }
+            $files = glob($routePath . '*.php');
+            foreach ($files as $file) {
+                include_once $file;
             }
-
-            foreach ($groups as $group) {
-                // 自动注册路由分组
-                if (!$this->hasGroup($group)) {
-                    $this->router->group($group);
-                }
-            }
-
-            $this->router->setGroup($origin);
         }
-    }
-
-    protected function hasGroup(string $name): bool 
-    {
-        return $this->router->getRuleName()->hasGroup($name);
     }
 
     /**
@@ -196,14 +171,6 @@ class RuleGroup extends Rule
      */
     public function check(Request $request, string $url, bool $completeMatch = false)
     {
-        if ($this->fullName) {
-            $groupName = str_replace('/', '|', $this->fullName);
-            if ($groupName == $url || 0 === strpos($url, $groupName . '|')){
-                // 自动加载分组路由（子目录）
-                $this->loadRoutes();
-            }
-        }
-
         // 检查分组有效性
         if (!$this->checkOption($this->option, $request) || !$this->checkUrl($url)) {
             return false;
@@ -320,6 +287,8 @@ class RuleGroup extends Rule
             Container::getInstance()->invokeFunction($rule);
         } elseif (is_string($rule) && $rule) {
             $this->bind($rule);
+        } elseif ($this->sub) {
+            $this->loadRoutes($this->sub);
         }
 
         $this->router->setGroup($origin);
