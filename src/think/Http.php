@@ -12,10 +12,12 @@ declare(strict_types=1);
 
 namespace think;
 
+use DirectoryIterator;
 use think\event\HttpEnd;
 use think\event\HttpRun;
 use think\event\RouteLoaded;
 use think\exception\Handle;
+use think\facade\Route;
 use Throwable;
 
 /**
@@ -229,9 +231,28 @@ class Http
         $routePath = $this->getRoutePath();
 
         if (is_dir($routePath)) {
-            $files = glob($routePath . '*.php');
-            foreach ($files as $file) {
-                include $file;
+            $iterator  = new DirectoryIterator($routePath);
+            $groupName = [];
+            foreach ($iterator as $fileinfo) {
+                if ($fileinfo->isDot()) {
+                    continue;
+                }
+
+                if ($fileinfo->getType() == 'file' && $fileinfo->getExtension() == 'php') {
+                    // 加载路由定义文件
+                    include_once $fileinfo->getRealPath();
+                }
+
+                if ($fileinfo->isDir()) {
+                    // 自动为子目录注册分组路由
+                    $groupName[] = str_replace('\\', '/', substr_replace($fileinfo->getPathname(), '', 0, strlen($routePath)));
+                }
+            }
+
+            foreach ($groupName as $group) {
+                if (!Route::getRuleName()->hasGroup($group)) {
+                    Route::group($group);
+                }
             }
         }
 

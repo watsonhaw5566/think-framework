@@ -13,6 +13,7 @@ declare (strict_types = 1);
 namespace think\route;
 
 use Closure;
+use DirectoryIterator;
 use think\Container;
 use think\Exception;
 use think\helper\Str;
@@ -139,18 +140,50 @@ class RuleGroup extends Rule
      */
     protected function loadRoutes(): void
     {
-        // 加载路由定义
         $routePath = root_path('route' . DIRECTORY_SEPARATOR . $this->fullName);
-
         if (is_dir($routePath)) {
             $origin = $this->router->getGroup();
             $this->router->setGroup($this);
-            $files = glob($routePath . '*.php');
-            foreach ($files as $file) {
-                include_once $file;
+            $iterator = new DirectoryIterator($routePath);
+            $groups   = [];
+            foreach ($iterator as $fileinfo) {
+                if ($fileinfo->isDot()) {
+                    continue;
+                }
+
+                if ($fileinfo->getType() == 'file' && $fileinfo->getExtension() == 'php') {
+                    // 加载目录下的路由定义文件
+                    $groupName = str_replace('\\', '/', substr_replace($fileinfo->getPath(), '', 0, strlen($routePath)));
+                    if ($groupName) {
+                        $group   = $this->router->getRuleName->getGroup($groupName);
+                        $this->router->setGroup($group);
+                        include_once $fileinfo->getRealPath();
+                        $this->router->setGroup($this);
+                    } else {
+                        include_once $fileinfo->getRealPath();
+                    }
+                }
+
+                if ($fileinfo->isDir()) {
+                    // 子目录自动作为分组名
+                    $groups[] = str_replace('\\', '/', substr_replace($fileinfo->getPathname(), '', 0, strlen($routePath)));
+                }
             }
+
+            foreach ($groups as $group) {
+                // 自动注册路由分组
+                if (!$this->hasGroup($group)) {
+                    $this->router->group($group);
+                }
+            }
+
             $this->router->setGroup($origin);
         }
+    }
+
+    protected function hasGroup(string $name): bool 
+    {
+        return $this->router->getRuleName()->hasGroup($name);
     }
 
     /**
