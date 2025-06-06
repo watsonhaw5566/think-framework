@@ -49,8 +49,8 @@ class Domain extends RuleGroup
         $origin = $this->router->getGroup();
         $this->router->setGroup($this);
 
-        if ($this->rule instanceof Closure) {
-            Container::getInstance()->invokeFunction($this->rule);
+        if ($rule instanceof Closure) {
+            Container::getInstance()->invokeFunction($rule);
         } elseif ($this->config('route_auto_group')) {
             $this->loadGroupRoutes();
         }
