@@ -101,8 +101,8 @@ class RuleGroup extends Rule
             $this->parent->addRuleItem($this);
         }
 
-        if (!$lazy) {
-            $this->parseGroupRule();
+        if (!$lazy && !is_null($rule)) {
+            $this->parseGroupRule($rule);
         }
     }
 
@@ -161,9 +161,19 @@ class RuleGroup extends Rule
     {
         $routePath = root_path('route' . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR);
         if (is_dir($routePath)) {
+            // 动态加载分组路由
             $files = glob($routePath . '*.php');
             foreach ($files as $file) {
                 include_once $file;
+            }
+
+            // 自动扫描下级分组
+            $dirs = $this->config('route_auto_group') ? glob($routePath . '*', GLOB_ONLYDIR) : [];
+            foreach ($dirs as $dir) {
+                $groupName = str_replace('\\', '/', substr_replace($dir, '', 0, strlen($routePath)));
+                if (!$this->router->getRuleName()->hasGroup($groupName)) {
+                    $this->router->group($groupName);
+                }
             }
         }
     }
@@ -185,7 +195,7 @@ class RuleGroup extends Rule
 
         // 解析分组路由
         if (!$this->hasParsed) {
-            $this->parseGroupRule();
+            $this->parseGroupRule($this->rule);
         }
 
         // 获取当前路由规则
@@ -277,15 +287,16 @@ class RuleGroup extends Rule
     /**
      * 解析分组和域名的路由规则及绑定
      * @access public
+     * @param  mixed $rule 路由规则
      * @return void
      */
-    public function parseGroupRule(): void
+    public function parseGroupRule($rule): void
     {
         $origin = $this->router->getGroup();
         $this->router->setGroup($this);
 
-        if ($this->rule instanceof Closure) {
-            Container::getInstance()->invokeFunction($this->rule);
+        if ($rule instanceof Closure) {
+            Container::getInstance()->invokeFunction($rule);
         } elseif ($this->sub) {
             $this->loadRoutes($this->sub);
         }

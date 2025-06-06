@@ -97,11 +97,11 @@ class Resource extends RuleGroup
     /**
      * 生成资源路由规则
      * @access public
+     * @param  mixed $rule 路由规则
      * @return void
      */
-    public function parseGroupRule(): void
+    public function parseGroupRule($rule): void
     {
-        $rule   = $this->rule;
         $option = $this->option;
         $origin = $this->router->getGroup();
         $this->router->setGroup($this);
