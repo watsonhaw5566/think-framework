@@ -10,7 +10,6 @@
 // +----------------------------------------------------------------------
 namespace think\console\command;
 
-use DirectoryIterator;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
@@ -18,7 +17,6 @@ use think\console\input\Option;
 use think\console\Output;
 use think\console\Table;
 use think\event\RouteLoaded;
-use think\facade\Route;
 
 class RouteList extends Command
 {
@@ -50,42 +48,21 @@ class RouteList extends Command
         }
 
         $content = $this->getRouteList();
-        file_put_contents($filename, 'Route List' . PHP_EOL . $content);
+        file_put_contents($filename, 'Route List:' . PHP_EOL . $content);
     }
 
-    protected function scanRoute($path, $root)
-    {
-        $iterator = new DirectoryIterator($path);
-        foreach ($iterator as $fileinfo) {
-            if ($fileinfo->isDot()) {
-                continue;
-            }
-
-            if ($fileinfo->getType() == 'file' && $fileinfo->getExtension() == 'php') {
-                $groupName = str_replace('\\', '/', substr_replace($fileinfo->getPath(), '', 0, strlen($root)));
-                if ($groupName) {
-                    Route::group($groupName, function()  use ($fileinfo) {
-                        include $fileinfo->getRealPath();
-                    });
-                } else {
-                    include $fileinfo->getRealPath();
-                }
-            }
-
-            if ($fileinfo->isDir()) {
-                $this->scanRoute($fileinfo->getPathname(), $root);
-            }
-        }
-    }
-
-    protected function getRouteList(?string $dir = null): string
+    protected function getRouteList(): string
     {
         $this->app->route->clear();
         $this->app->route->lazy(false);
+        $path  = $this->app->getRootPath() . 'route' . DIRECTORY_SEPARATOR;
+        $files = is_dir($path) ? scandir($path) : [];
 
-        $path = $this->app->getRootPath() . 'route' . DIRECTORY_SEPARATOR;
-
-        $this->scanRoute($path, $path);
+        foreach ($files as $file) {
+            if (str_contains($file, '.php')) {
+                include $path . $file;
+            }
+        }
 
         //触发路由载入完成事件
         $this->app->event->trigger(RouteLoaded::class);
