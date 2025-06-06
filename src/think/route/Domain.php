@@ -12,7 +12,9 @@ declare (strict_types = 1);
 
 namespace think\route;
 
+use Closure;
 use think\Route;
+use think\Container;
 
 /**
  * 域名路由
