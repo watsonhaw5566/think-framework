@@ -14,6 +14,7 @@ namespace think\log\driver;
 
 use think\App;
 use think\contract\LogHandlerInterface;
+use think\event\LogRecord;
 
 /**
  * 本地化调试输出到文件
@@ -59,7 +60,7 @@ class File implements LogHandlerInterface
     /**
      * 日志写入接口
      * @access public
-     * @param array $log 日志信息
+     * @param array<LogRecord> $log 日志信息
      * @return bool
      */
     public function save(array $log): bool
@@ -72,10 +73,10 @@ class File implements LogHandlerInterface
         $messages = [];
 
         // 日志信息封装
-        $time = \DateTime::createFromFormat('0.u00 U', microtime())
-            ->setTimezone(new \DateTimeZone(date_default_timezone_get()))->format($this->config['time_format']);
-
-        foreach ($log as [$type, $msg]) {
+        foreach ($log as $record) {
+            $type = $record->type;
+            $msg  = $record->message;
+            $time = $record->time->format($this->config['time_format']);
             if (!is_string($msg)) {
                 $msg = var_export($msg, true);
             }
