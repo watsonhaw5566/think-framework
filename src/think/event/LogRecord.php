@@ -20,7 +20,7 @@ class LogRecord
     /** @var string */
     public string $type;
 
-    /** @var string */
+    /** @var string|array */
     public $message;
 
     /** @var DateTimeImmutable */

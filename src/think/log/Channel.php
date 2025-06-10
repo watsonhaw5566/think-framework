@@ -115,7 +115,7 @@ class Channel implements LoggerInterface
 
     /**
      * 获取日志信息
-     * @return array
+     * @return array<LogRecord>
      */
     public function getLog(): array
     {
