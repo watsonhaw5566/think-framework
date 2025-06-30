@@ -15,6 +15,7 @@ use InvalidArgumentException;
 use LogicException;
 use think\console\Command;
 use think\console\command\Clear;
+use think\console\command\ConfigMerge;
 use think\console\command\Help;
 use think\console\command\Help as HelpCommand;
 use think\console\command\Lists;
@@ -60,6 +61,7 @@ class Console
         'help'             => Help::class,
         'list'             => Lists::class,
         'clear'            => Clear::class,
+        'config:merge'     => ConfigMerge::class,
         'make:command'     => MakeCommand::class,
         'make:controller'  => Controller::class,
         'make:model'       => Model::class,
