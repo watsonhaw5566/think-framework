@@ -101,7 +101,7 @@ class RuleGroup extends Rule
             $this->parent->addRuleItem($this);
         }
 
-        if (!$lazy && !is_null($rule)) {
+        if (!$lazy) {
             $this->parseGroupRule($rule);
         }
     }

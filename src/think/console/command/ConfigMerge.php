@@ -10,7 +10,7 @@ class ConfigMerge extends Command
     protected function configure()
     {
         $this->setName('config:merge')
-             ->setDescription('merge all config file to runtimepath');
+            ->setDescription('merge all config file to runtimepath');
     }
 
     protected function execute(Input $input, Output $output)
