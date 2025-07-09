@@ -101,13 +101,16 @@ class RouteList extends Command
         $rows      = [];
 
         foreach ($routeList as $item) {
-            $item['route'] = $item['route'] instanceof \Closure ? '<Closure>' : $item['route'];
-            $row           = [$item['rule'], $item['route'], $item['method'], $item['name']];
+            if (is_array($item['route'])) {
+                $item['route'] = '[' . $item['route'][0] .' , ' . $item['route'][1] . ']';
+            } else {
+                $item['route'] = $item['route'] instanceof \Closure ? '<Closure>' : $item['route'];
+            }
+            $row = [$item['rule'], $item['route'], $item['method'], $item['name']];
 
             if ($this->input->hasOption('more')) {
                 array_push($row, $item['domain'], json_encode($item['option']), json_encode($item['pattern']));
             }
-
             $rows[] = $row;
         }
 
@@ -121,7 +124,6 @@ class RouteList extends Command
             uasort($rows, function ($a, $b) use ($sort) {
                 $itemA = $a[$sort] ?? null;
                 $itemB = $b[$sort] ?? null;
-
                 return strcasecmp($itemA, $itemB);
             });
         }
