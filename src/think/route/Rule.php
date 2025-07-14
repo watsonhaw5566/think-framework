@@ -403,7 +403,7 @@ abstract class Rule
     /**
      * 检查Header信息
      * @access public
-     * @param  string $version 
+     * @param  array $header 
      * @return $this
      */
     public function header(array $header = [])

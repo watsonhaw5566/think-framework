@@ -31,7 +31,13 @@ class Route extends Command
         $dir = $input->getArgument('dir') ?: '';
 
         $path = $this->app->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . ($dir ? $dir . DIRECTORY_SEPARATOR : '');
-
+        if (!is_dir($path)) {
+            try {
+                mkdir($path, 0755, true);
+            } catch (\Exception $e) {
+                // 创建失败
+            }
+        }
         $filename = $path . 'route.php';
         if (is_file($filename)) {
             unlink($filename);

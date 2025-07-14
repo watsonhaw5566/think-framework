@@ -15,7 +15,6 @@ use InvalidArgumentException;
 use LogicException;
 use think\console\Command;
 use think\console\command\Clear;
-use think\console\command\ConfigMerge;
 use think\console\command\Help;
 use think\console\command\Help as HelpCommand;
 use think\console\command\Lists;
@@ -28,6 +27,7 @@ use think\console\command\make\Model;
 use think\console\command\make\Service;
 use think\console\command\make\Subscribe;
 use think\console\command\make\Validate;
+use think\console\command\optimize\Config;
 use think\console\command\optimize\Route;
 use think\console\command\optimize\Schema;
 use think\console\command\RouteList;
@@ -61,7 +61,6 @@ class Console
         'help'             => Help::class,
         'list'             => Lists::class,
         'clear'            => Clear::class,
-        'config:merge'     => ConfigMerge::class,
         'make:command'     => MakeCommand::class,
         'make:controller'  => Controller::class,
         'make:model'       => Model::class,
@@ -71,6 +70,7 @@ class Console
         'make:listener'    => Listener::class,
         'make:service'     => Service::class,
         'make:subscribe'   => Subscribe::class,
+        'optimize:config'  => Config::class,
         'optimize:route'   => Route::class,
         'optimize:schema'  => Schema::class,
         'run'              => RunServer::class,
