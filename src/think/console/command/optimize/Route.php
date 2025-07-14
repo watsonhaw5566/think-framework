@@ -38,12 +38,7 @@ class Route extends Command
                 // 创建失败
             }
         }
-        $filename = $path . 'route.php';
-        if (is_file($filename)) {
-            unlink($filename);
-        }
-
-        file_put_contents($filename, $this->buildRouteCache($dir));
+        file_put_contents($path . 'route.php', $this->buildRouteCache($dir));
         $output->writeln('<info>Succeed!</info>');
     }
 
