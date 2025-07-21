@@ -122,11 +122,12 @@ class Config
      * 注册配置获取器
      * @access public
      * @param  Closure $callback
+     * @param  string|null $key
      * @return void
      */
-    public function hook(Closure $callback)
+    public function hook(Closure $callback, ?string $key = null)
     {
-        $this->hook = $callback;
+        $this->hook = [$callback, $key];
     }
 
     /**
@@ -175,9 +176,12 @@ class Config
     protected function lazy(?string $name, $value = null, $default = null)
     {
         // 通过获取器返回
-        $result = call_user_func_array($this->hook, [$name, $value]);
-        if (is_null($result)) {
-            return $default;
+        [$call, $key] = $this->hook;
+        if (is_null($key) || 0 === strpos($name . '.', $key . '.')) {
+            $result = call_user_func_array($call, [$name, $value]);
+            if (is_null($result)) {
+                return $default;
+            }
         }
         return $result;
     }
