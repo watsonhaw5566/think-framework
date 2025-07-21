@@ -28,9 +28,9 @@ class Config
 
     /**
      * 注册配置获取器
-     * @var Closure
+     * @var Closure[]
      */
-    protected $hook;
+    protected $hook = [];
 
     /**
      * 构造方法
@@ -127,7 +127,7 @@ class Config
      */
     public function hook(Closure $callback, ?string $key = null)
     {
-        $this->hook = [$callback, $key];
+        $this->hook[$key ?? 'global'] = $callback;
     }
 
     /**
@@ -173,11 +173,16 @@ class Config
      * @param  mixed   $default 默认值
      * @return mixed
      */
-    protected function lazy(?string $name, $value = null, $default = null)
+    protected function lazy(string $name, $value = null, $default = null)
     {
         // 通过获取器返回
-        [$call, $key] = $this->hook;
-        if (is_null($key) || 0 === strpos($name . '.', $key . '.')) {
+        $key = strpos($name, '.') ? strstr($name, '.', true) : $name;
+        if (isset($this->hook[$key])) {
+            $call = $this->hook[$key];
+        } elseif (isset($this->hook['global'])) {
+            $call = $this->hook['global'];
+        }
+        if (isset($call)) {
             $result = call_user_func_array($call, [$name, $value]);
             if (is_null($result)) {
                 return $default;
