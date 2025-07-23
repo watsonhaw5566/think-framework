@@ -188,7 +188,7 @@ class Config
                 return $default;
             }
         }
-        return $result ?? $value;
+        return $result ?? ($value ?: $default);
     }
 
     /**
