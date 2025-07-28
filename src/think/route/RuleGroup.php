@@ -679,12 +679,7 @@ class RuleGroup extends Rule
     public function addRule(string $rule, $route = null, string $method = '*'): RuleItem
     {
         // 读取路由标识
-        if (is_string($route)) {
-            $name = $this->fullName ? $this->fullName . '/' . $route : $route;
-        } else {
-            $name = null;
-        }
-
+        $name   = is_string($route) ? $route : null;
         $method = strtolower($method);
         if ('' === $rule || '/' === $rule) {
             $rule .= '$';
