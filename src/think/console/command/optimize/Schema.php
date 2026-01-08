@@ -108,7 +108,7 @@ class Schema extends Command
     /**
      * 缓存模型
      */
-    private function cacheModel(string $dir = null): void
+    private function cacheModel(?string $dir = null): void
     {
         if ($dir) {
             $modelDir = $this->app->getAppPath() . $dir . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR;
