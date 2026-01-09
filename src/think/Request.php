@@ -358,7 +358,7 @@ class Request implements ArrayAccess
      */
     public function subDomain(): string
     {
-        if (is_null($this->subDomain)) {
+        if ($this->subDomain === '') {
             // 获取当前主域名
             $rootDomain = $this->rootDomain();
 
