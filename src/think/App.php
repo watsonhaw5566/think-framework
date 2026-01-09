@@ -458,9 +458,8 @@ class App extends Container
     public function initialize()
     {
         $this->initialized = true;
-
-        $this->beginTime = microtime(true);
-        $this->beginMem  = memory_get_usage();
+        $this->beginTime   = microtime(true);
+        $this->beginMem    = memory_get_usage();
 
         // 加载环境变量
         if ($this->baseEnvName) {
