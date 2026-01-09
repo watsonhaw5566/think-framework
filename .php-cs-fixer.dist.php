@@ -9,9 +9,12 @@ $finder = (new Finder())
 
 return (new Config())
     ->setRules([
-        '@PhpCsFixer'            => true,
-        'binary_operator_spaces' => [
-            'default' => 'align_single_space_minimal',
+        '@PhpCsFixer'                 => true,
+        'binary_operator_spaces'      => [
+            'default'   => 'align_single_space_minimal',
+            'operators' => [
+                '=>' => 'align_single_space_minimal_by_scope',
+            ],
         ],
         'blank_line_before_statement' => [
             'statements' => [
@@ -22,10 +25,10 @@ return (new Config())
                 'try',
             ],
         ],
-        'concat_space' => [
+        'concat_space'                => [
             'spacing' => 'one',
         ],
-        'global_namespace_import' => [
+        'global_namespace_import'     => [
             'import_classes'   => true,
             'import_constants' => false,
             'import_functions' => false,
