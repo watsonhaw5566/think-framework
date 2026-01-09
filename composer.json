@@ -55,6 +55,6 @@
         "sort-packages": true
     },
     "scripts": {
-        "php-cs-fixer": "php-cs-fixer fix src/ --rules=@PER-CS2.0 --dry-run --diff"
+        "php-cs-fixer": "php-cs-fixer fix src/ --dry-run --diff"
     }
 }
