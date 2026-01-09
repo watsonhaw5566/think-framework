@@ -10,6 +10,7 @@ $finder = (new Finder())
 return (new Config())
     ->setRules([
         '@PhpCsFixer'                 => true,
+        '@PHP8x0Migration'            => true,
         'binary_operator_spaces'      => [
             'default'   => 'align_single_space_minimal',
             'operators' => [
@@ -32,6 +33,15 @@ return (new Config())
             'import_classes'   => true,
             'import_constants' => false,
             'import_functions' => false,
+        ],
+        'ordered_class_elements'      => [
+            'order' => [
+                'use_trait',
+                'case',
+                'constant',
+                'property',
+                'construct',
+            ],
         ],
     ])
     ->setFinder($finder)
