@@ -244,7 +244,7 @@ class Redis extends Driver
     {
         $name = $this->getTagKey($tag);
         $key  = $this->getCacheKey($name);
-        return $this->handler()->sMembers($key);
+        return $this->handler()->sMembers($key) ?: [];
     }
 
     public function __call($method, $args)
