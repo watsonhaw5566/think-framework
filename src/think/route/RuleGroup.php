@@ -613,6 +613,7 @@ class RuleGroup extends Rule
         $array  = explode('/', $url, 3);
         $class  = !empty($array[0]) ? $array[0] : $this->config('default_controller');
         $method = !empty($array[1]) ? $array[1] : $this->config('default_action');
+        $class .= $this->config('controller_suffix') ? 'Controller' : '';
 
         if (!empty($array[2])) {
             $this->parseUrlParams($array[2], $param);
