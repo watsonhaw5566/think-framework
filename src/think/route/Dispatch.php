@@ -98,7 +98,14 @@ abstract class Dispatch
         // 添加中间件
         if (!empty($option['middleware'])) {
             if (isset($option['without_middleware'])) {
-                $middleware = !empty($option['without_middleware']) ? array_diff($option['middleware'], $option['without_middleware']) : [];
+                $middleware = [];
+                foreach ($option['middleware'] as $item) {
+                    $middlewareName = is_array($item) ? $item[0] : $item;
+
+                    if (!in_array($middlewareName, $option['without_middleware'], true)) {
+                        $middleware[] = $item;
+                    }
+                }
             } else {
                 $middleware = $option['middleware'];
             }
