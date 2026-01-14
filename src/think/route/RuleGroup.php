@@ -265,7 +265,7 @@ class RuleGroup extends Rule
                 $str = $this->fullName;
             }
 
-            if ($str && 0 !== stripos($url, $str)) {
+            if ($str && 0 !== stripos($url . '/', $str . '/')) {
                 return false;
             }
         }
