@@ -17,9 +17,6 @@ use ArrayAccess;
 use think\facade\Lang;
 use think\file\UploadedFile;
 use think\route\Rule;
-use think\traits\UrlHandler;
-use think\traits\DomainHandler;
-use think\traits\HttpMethodHandler;
 
 /**
  * 请求管理类
@@ -27,7 +24,6 @@ use think\traits\HttpMethodHandler;
  */
 class Request implements ArrayAccess
 {
-    use UrlHandler, DomainHandler, HttpMethodHandler;
     /**
      * 兼容PATH_INFO获取
      * @var array
@@ -40,7 +36,36 @@ class Request implements ArrayAccess
      */
     protected $varPathinfo = 's';
 
-    
+    /**
+     * 请求类型
+     * @var string
+     */
+    protected $varMethod = '_method';
+
+    /**
+     * 表单ajax伪装变量
+     * @var string
+     */
+    protected $varAjax = '_ajax';
+
+    /**
+     * 表单pjax伪装变量
+     * @var string
+     */
+    protected $varPjax = '_pjax';
+
+    /**
+     * 域名根
+     * @var string
+     */
+    protected $rootDomain = '';
+
+    /**
+     * 特殊域名根标识 用于识别com.cn org.cn 这种
+     * @var array
+     */
+    protected $domainSpecialSuffix = ['com', 'net', 'org', 'edu', 'gov', 'mil', 'co', 'info'];
+
     /**
      * HTTPS代理标识
      * @var string
@@ -59,8 +84,60 @@ class Request implements ArrayAccess
      */
     protected $proxyServerIpHeader = ['HTTP_X_REAL_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'HTTP_X_CLIENT_IP', 'HTTP_X_CLUSTER_CLIENT_IP'];
 
-    
-    
+    /**
+     * 请求类型
+     * @var string
+     */
+    protected $method;
+
+    /**
+     * 域名（含协议及端口）
+     * @var string
+     */
+    protected $domain;
+
+    /**
+     * HOST（含端口）
+     * @var string
+     */
+    protected $host;
+
+    /**
+     * 子域名
+     * @var string
+     */
+    protected $subDomain;
+
+    /**
+     * 泛域名
+     * @var string
+     */
+    protected $panDomain;
+
+    /**
+     * 当前URL地址
+     * @var string
+     */
+    protected $url;
+
+    /**
+     * 基础URL
+     * @var string
+     */
+    protected $baseUrl;
+
+    /**
+     * 当前执行的文件
+     * @var string
+     */
+    protected $baseFile;
+
+    /**
+     * 访问的ROOT地址
+     * @var string
+     */
+    protected $root;
+
     /**
      * pathinfo
      * @var string
