@@ -260,7 +260,7 @@ class RuleGroup extends Rule
             $pos = strpos($this->fullName, '<');
 
             if (false !== $pos) {
-                $str = substr($this->fullName, 0, $pos);
+                $str = substr($this->fullName, 0, $pos - 1);
             } else {
                 $str = $this->fullName;
             }
