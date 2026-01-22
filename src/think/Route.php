@@ -462,10 +462,23 @@ class Route
     }
 
     /**
+     * 注册模块路由
+     * @access public
+     * @param string  $name  模块名称
+     * @param Closure $route 分组路由
+     * @return RuleGroup
+     */
+    public function module(string $name, Closure $route): RuleGroup
+    {
+        return $this->group($name, $route)
+            ->namespace('app\\' . $name . '\\controller');
+    }
+
+    /**
      * 注册路由分组
      * @access public
      * @param string|Closure $name  分组名称或者参数
-     * @param mixed           $route 分组路由
+     * @param mixed          $route 分组路由
      * @return RuleGroup
      */
     public function group(string | Closure $name, $route = null): RuleGroup
