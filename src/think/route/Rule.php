@@ -789,10 +789,8 @@ abstract class Rule
     protected function dispatchMethod(Request $request, string | array $route, array $option = []): CallbackDispatch
     {
         if (is_string($route)) {
-            $path = $this->parseUrlPath($route);
-
-            $route  = str_replace('/', '@', implode('/', $path));
-            $method = str_contains($route, '@') ? explode('@', $route) : $route;
+            $path   = $this->parseUrlPath($route);
+            $method = count($path) > 1 ? [str_replace('.', '\\', $path[0]), $path[1]] : $route;
         } else {
             $method = $route;
         }

@@ -465,11 +465,11 @@ class Route
      * 注册模块路由
      * @access public
      * @param string      $name       模块名称
-     * @param Closure     $route      分组路由
+     * @param mixed       $route      分组路由
      * @param bool|string $bindDomain 绑定域名
      * @return RuleGroup
      */
-    public function module(string $name, Closure $route, bool | string $bindDomain = false): RuleGroup
+    public function module(string $name, $route = null, bool | string $bindDomain = false): RuleGroup
     {
         if ($bindDomain) {
             $group = $this->domain(is_string($bindDomain) ? $bindDomain : $name, $route);

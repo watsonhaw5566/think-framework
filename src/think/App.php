@@ -625,20 +625,21 @@ class App extends Container
     }
 
     /**
-     * 解析应用类的类名
+     * 解析应用类名
      * @access public
      * @param string $layer 层名 controller model ...
      * @param string $name  类名
+     * @param string $app   应用名
      * @return string
      */
-    public function parseClass(string $layer, string $name): string
+    public function parseClass(string $layer, string $name, string $app = ''): string
     {
         $name  = str_replace(['/', '.'], '\\', $name);
         $array = explode('\\', $name);
         $class = Str::studly(array_pop($array));
         $path  = $array ? implode('\\', $array) . '\\' : '';
 
-        return $this->namespace . '\\' . $layer . '\\' . $path . $class;
+        return $this->namespace . '\\' . ($app ? $app . '\\' : '') . $layer . '\\' . $path . $class;
     }
 
     /**
