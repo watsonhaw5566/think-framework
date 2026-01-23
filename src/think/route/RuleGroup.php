@@ -512,6 +512,22 @@ class RuleGroup extends Rule
     }
 
     /**
+     * 分组绑定到模块
+     * @access public
+     * @param  string $name
+     * @param  bool   $prefix
+     * @return $this
+     */
+    public function module(string $name, bool $prefix = true)
+    {
+        $this->bind = ':app\\' . $name . '\\controller';
+        if ($prefix) {
+            $this->prefix('app\\'. $name . '\\controller\\');
+        }
+        return $this;
+    }
+
+    /**
      * 分组绑定到控制器分级
      * @access public
      * @param  string $namespace

@@ -477,7 +477,7 @@ class Route
             $group = $this->group($name, $route);
         }
         
-        return $group->namespace('app\\' . $name . '\\controller');
+        return $group->module($name);
     }
 
     /**
