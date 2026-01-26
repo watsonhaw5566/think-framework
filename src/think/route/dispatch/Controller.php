@@ -123,7 +123,6 @@ class Controller extends Dispatch
         $emptyController = $this->rule->config('empty_controller') ?: 'Error';
 
         $class = $this->app->parseClass($controllerLayer, $this->controller . $suffix, $this->layer);
-
         if (class_exists($class)) {
             return $this->app->make($class, [], true);
         } elseif ($emptyController && class_exists($emptyClass = $this->app->parseClass($controllerLayer, $emptyController . $suffix, $this->layer))) {

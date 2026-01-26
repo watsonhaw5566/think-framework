@@ -625,21 +625,28 @@ class App extends Container
     }
 
     /**
-     * 解析应用类名
+     * 解析应用类名（支持多模块）
      * @access public
      * @param string $layer 层名 controller model ...
      * @param string $name  类名
-     * @param string $app   应用名
+     * @param string $module 模块名
      * @return string
      */
-    public function parseClass(string $layer, string $name, string $app = ''): string
+    public function parseClass(string $layer, string $name, ?string $module = ''): string
     {
+        $module = $module ? $module . '\\' : '';
+        if ($this->config->get('route.multi_module')) {
+            // 多模块模式
+            $layer = $module . $layer;
+        } else {
+            $name  = $module . $name;
+        }
         $name  = str_replace(['/', '.'], '\\', $name);
         $array = explode('\\', $name);
         $class = Str::studly(array_pop($array));
         $path  = $array ? implode('\\', $array) . '\\' : '';
 
-        return $this->namespace . '\\' . ($app ? $app . '\\' : '') . $layer . '\\' . $path . $class;
+        return $this->namespace . '\\' . $layer . '\\' . $path . $class;
     }
 
     /**

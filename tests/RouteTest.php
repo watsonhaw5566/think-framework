@@ -110,11 +110,11 @@ class RouteTest extends TestCase
 
     public function testControllerDispatch()
     {
-        $this->route->get('foo', 'foo/bar');
+        $this->route->get('foo', 'Foo/bar');
 
         $controller = m::Mock(\stdClass::class);
 
-        $this->app->shouldReceive('parseClass')->with('controller', 'Foo')->andReturn($controller->mockery_getName());
+        $this->app->shouldReceive('parseClass')->with('controller', 'Foo', '')->andReturn($controller->mockery_getName());
         $this->app->shouldReceive('make')->with($controller->mockery_getName(), [], true)->andReturn($controller);
 
         $controller->shouldReceive('bar')->andReturn('bar');
@@ -126,11 +126,11 @@ class RouteTest extends TestCase
 
     public function testEmptyControllerDispatch()
     {
-        $this->route->get('foo', 'foo/bar');
+        $this->route->get('foo', 'Foo/bar');
 
         $controller = m::Mock(\stdClass::class);
 
-        $this->app->shouldReceive('parseClass')->with('controller', 'Error')->andReturn($controller->mockery_getName());
+        $this->app->shouldReceive('parseClass')->with('controller', 'Error', '')->andReturn($controller->mockery_getName());
         $this->app->shouldReceive('make')->with($controller->mockery_getName(), [], true)->andReturn($controller);
 
         $controller->shouldReceive('bar')->andReturn('bar');
@@ -153,7 +153,7 @@ class RouteTest extends TestCase
 
     public function testControllerWithMiddleware()
     {
-        $this->route->get('foo', 'foo/bar');
+        $this->route->get('foo', 'Foo/bar');
 
         $controller = m::mock(FooClass::class);
 
@@ -167,7 +167,7 @@ class RouteTest extends TestCase
             ],
         ];
 
-        $this->app->shouldReceive('parseClass')->with('controller', 'Foo')->andReturn($controller->mockery_getName());
+        $this->app->shouldReceive('parseClass')->with('controller', 'Foo', '')->andReturn($controller->mockery_getName());
         $this->app->shouldReceive('make')->with($controller->mockery_getName(), [], true)->andReturn($controller);
 
         $controller->shouldReceive('bar')->once()->andReturn('bar');
@@ -356,6 +356,85 @@ class RouteTest extends TestCase
         $this->assertIsArray($names);
     }
 
+    public function testGroupWithVariables()
+    {
+        // 测试分组内包含变量的路由
+        $this->route->group('api/<version>', function () {
+            // 更具体的路由先注册
+            $this->route->get('users/<id>', function ($version, $id) {
+                return "API Version: $version - User ID: $id";
+            });
+
+            $this->route->get('users', function ($version) {
+                return "API Version: $version - Users List";
+            });
+
+            $this->route->post('users', function ($version) {
+                return "API Version: $version - Create User";
+            });
+        });
+
+        // 测试GET请求到 api/v1/users
+        $request = $this->makeRequest('api/v1/users', 'get');
+        $response = $this->route->dispatch($request);
+        $this->assertEquals('API Version: v1 - Users List', $response->getContent());
+        $this->assertEquals(200, $response->getCode());
+
+        // 测试GET请求到 api/v2/users/123 
+        $request = $this->makeRequest('api/v2/users/123', 'get');
+        $response = $this->route->dispatch($request);
+        $this->assertEquals('API Version: v2 - User ID: 123', $response->getContent());
+        $this->assertEquals(200, $response->getCode());
+
+        // 测试POST请求到 api/v1/users
+        $request = $this->makeRequest('api/v1/users', 'post');
+        $response = $this->route->dispatch($request);
+        $this->assertEquals('API Version: v1 - Create User', $response->getContent());
+        $this->assertEquals(200, $response->getCode());
+    }
+
+    public function testGroupWithVariablesAndMiddleware()
+    {
+        // 测试分组内包含变量的路由与中间件
+        $middleware = $this->createMiddleware();
+        
+        $this->route->group('api/<version>', function () use ($middleware) {
+            $this->route->get('data', function ($version) {
+                return "API $version Data";
+            })->middleware($middleware->mockery_getName());
+        });
+
+        $request = $this->makeRequest('api/v3/data', 'get');
+        $response = $this->route->dispatch($request);
+        $this->assertEquals('API v3 Data', $response->getContent());
+        $this->assertEquals(200, $response->getCode());
+    }
+
+    public function testVariableRouteWithConstraints()
+    {
+        // 测试变量路由的参数约束
+        $this->route->group('api/<version>', function () {
+            $this->route->get('users', function ($version) {
+                return "API Version: $version";
+            })->pattern(['version' => 'v[1-9]']); // 约束版本号为v1-v9
+        });
+
+        // 测试有效版本号
+        $request = $this->makeRequest('api/v1/users', 'get');
+        $response = $this->route->dispatch($request);
+        $this->assertEquals('API Version: v1', $response->getContent());
+
+        // 测试无效版本号应该不匹配
+        $request = $this->makeRequest('api/v10/users', 'get');
+        try {
+            $response = $this->route->dispatch($request);
+            // 如果没有异常，检查是否返回错误页面
+            $this->assertStringContainsString('系统发生错误', $response->getContent());
+        } catch (\think\exception\RouteNotFoundException $e) {
+            // 如果抛出路由未找到异常，这是预期的
+            $this->assertTrue(true);
+        }
+    }
 }
 
 class FooClass

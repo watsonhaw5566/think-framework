@@ -32,7 +32,7 @@ class UrlRouteTest extends TestCase
         $controller = m::mock(FooClass::class);
         $controller->shouldReceive('index')->andReturn('bar');
 
-        $this->app->shouldReceive('parseClass')->once()->with('controller', 'Foo')
+        $this->app->shouldReceive('parseClass')->once()->with('controller', 'foo', '')
             ->andReturn($controller->mockery_getName());
         $this->app->shouldReceive('make')->with($controller->mockery_getName(), [], true)->andReturn($controller);
 
