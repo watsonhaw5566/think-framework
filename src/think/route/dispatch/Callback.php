@@ -71,22 +71,22 @@ class Callback extends Dispatch
             }
         }
 
-        // 设置当前请求的控制器、操作
-        $controllerLayer = $this->rule->config('controller_layer') ?: 'controller';
-        if (str_contains($class, '\\' . $controllerLayer . '\\')) {
-            [$layer, $controller] = explode('/' . $controllerLayer . '/', trim(str_replace('\\', '/', $class), '/'));
-            $layer                = trim(str_replace('app', '', $layer), '/');
+        // 设置当前请求的模块、控制器、操作
+        $layer      = $this->rule->config('controller_layer') ?: 'controller';
+        $controller = trim(str_replace('\\', '/', $class), '/');
+        if (str_contains($class, '\\' . $layer . '\\')) {
+            [$module, $controller] = explode('/' . $layer . '/', $controller, 2);
+            $module                = trim(str_replace('app/', '', $module . '/'), '/');
         } else {
-            $layer      = '';
-            $controller = trim(str_replace('\\', '/', $class), '/');
+            $module      = '';
         }
 
-        if ($layer && !empty($this->option['auto_middleware'])) {
-            // 自动为顶层layer注册中间件
+        if ($module && !empty($this->option['auto_middleware'])) {
+            // 自动注册模块中间件
             $alias = $this->app->config->get('middleware.alias', []);
 
-            if (isset($alias[$layer])) {
-                $this->option['middleware'] = array_merge($this->option['middleware'] ?? [], [$layer]);
+            if (isset($alias[$module])) {
+                $this->option['middleware'] = array_merge($this->option['middleware'] ?? [], [$module]);
             }
         }
 
@@ -94,7 +94,7 @@ class Callback extends Dispatch
         $this->class  = $class;
 
         $this->request
-            ->setLayer($layer)
+            ->setLayer($module)
             ->setController($controller)
             ->setAction($action);
     }
