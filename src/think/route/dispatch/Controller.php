@@ -45,20 +45,19 @@ class Controller extends Dispatch
     public function init(App $app)
     {
         $this->app = $app;
-        $this->parseDispatch();
+        $this->parseDispatch($this->dispatch);
         $this->doRouteAfter();
     }
 
-    protected function parseDispatch()
+    protected function parseDispatch($path)
     {
-        $path = $this->dispatch;
         if (is_string($path)) {
             $path = explode('/', $path);
         }
 
         $action     = !empty($path) ? array_pop($path) : $this->rule->config('default_action');
         $controller = !empty($path) ? array_pop($path) : $this->rule->config('default_controller');
-        $layer      = !empty($path) ? implode('\\', $path) : '';
+        $layer      = !empty($path) ? implode('/', $path) : '';
 
         if ($layer && !empty($this->option['auto_middleware'])) {
             // 自动为顶层layer注册中间件
