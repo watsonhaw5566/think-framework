@@ -30,80 +30,68 @@ abstract class Rule
 {
     /**
      * 路由标识.
-     *
-     * @var string
      */
-    protected $name;
+    protected ?string $name = null;
 
     /**
      * 所在域名.
-     *
-     * @var string
      */
-    protected $domain;
+    protected ?string $domain = null;
 
     /**
      * 路由对象
-     *
-     * @var Route
      */
-    protected $router;
+    protected Route $router;
 
     /**
      * 路由所属分组.
-     *
-     * @var RuleGroup
      */
-    protected $parent;
+    protected ?RuleGroup $parent = null;
 
     /**
      * 路由规则.
-     *
-     * @var mixed
      */
-    protected $rule;
+    protected mixed $rule = null;
 
     /**
      * 路由地址
-     *
-     * @var Closure|string
      */
-    protected $route;
+    protected Closure|string|null $route = null;
 
     /**
      * 请求类型.
      *
      * @var string
      */
-    protected $method = '*';
+    protected string $method = '*';
 
     /**
      * 路由变量.
      *
      * @var array
      */
-    protected $vars = [];
+    protected array $vars = [];
 
     /**
      * 路由参数.
      *
      * @var array
      */
-    protected $option = [];
+    protected array $option = [];
 
     /**
      * 路由变量规则.
      *
      * @var array
      */
-    protected $pattern = [];
+    protected array $pattern = [];
 
     /**
      * 预定义变量规则.
      *
      * @var array
      */
-    protected $regex = [
+    protected array $regex = [
         'int'       => '\d+',
         'float'     => '\d+\.\d+',
         'alpha'     => '[A-Za-z]+',
@@ -116,7 +104,7 @@ abstract class Rule
      *
      * @var array
      */
-    protected $mergeOptions = ['model', 'append', 'middleware'];
+    protected array $mergeOptions = ['model', 'append', 'middleware'];
 
     abstract public function check(Request $request, string $url, bool $completeMatch = false);
 
@@ -127,7 +115,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function option(array $option)
+    public function option(array $option): static
     {
         $this->option = array_merge($this->option, $option);
 
@@ -142,7 +130,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function setOption(string $name, $value)
+    public function setOption(string $name, mixed $value): static
     {
         $this->option[$name] = $value;
 
@@ -156,7 +144,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function regex(array $regex)
+    public function regex(array $regex): static
     {
         $this->regex = array_merge($this->regex, $regex);
 
@@ -170,7 +158,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function pattern(array $pattern)
+    public function pattern(array $pattern): static
     {
         $this->pattern = array_merge($this->pattern, $pattern);
 
@@ -185,7 +173,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function when(array|string $name, $rule = null)
+    public function when(array|string $name, mixed $rule = null): static
     {
         if (is_array($name)) {
             $this->option['var_rule'] = $name;
@@ -203,7 +191,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function name(string $name)
+    public function name(string $name): static
     {
         $this->name = $name;
 
@@ -224,20 +212,16 @@ abstract class Rule
 
     /**
      * 获取当前路由规则.
-     *
-     * @return mixed
      */
-    public function getRule()
+    public function getRule(): mixed
     {
         return $this->rule;
     }
 
     /**
      * 获取当前路由地址
-     *
-     * @return mixed
      */
-    public function getRoute()
+    public function getRoute(): Closure|string|null
     {
         return $this->route;
     }
@@ -250,10 +234,8 @@ abstract class Rule
 
     /**
      * 获取Parent对象
-     *
-     * @return null|$this
      */
-    public function getParent()
+    public function getParent(): ?RuleGroup
     {
         return $this->parent;
     }
@@ -268,10 +250,8 @@ abstract class Rule
      * 获取路由参数.
      *
      * @param string $name 变量名
-     *
-     * @return mixed
      */
-    public function config(string $name = '')
+    public function config(string $name = ''): mixed
     {
         return $this->router->config($name);
     }
@@ -280,10 +260,8 @@ abstract class Rule
      * 获取变量规则定义.
      *
      * @param string $name 变量名
-     *
-     * @return mixed
      */
-    public function getPattern(string $name = '')
+    public function getPattern(string $name = ''): array|string|null
     {
         $pattern = $this->pattern;
 
@@ -303,10 +281,8 @@ abstract class Rule
      *
      * @param string $name    参数名
      * @param mixed  $default 默认值
-     *
-     * @return mixed
      */
-    public function getOption(string $name = '', $default = null)
+    public function getOption(string $name = '', mixed $default = null): mixed
     {
         $option = $this->option;
 
@@ -341,7 +317,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function method(string $method)
+    public function method(string $method): static
     {
         return $this->setOption('method', strtolower($method));
     }
@@ -353,7 +329,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function ext(string $ext = '')
+    public function ext(string $ext = ''): static
     {
         return $this->setOption('ext', $ext);
     }
@@ -365,7 +341,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function denyExt(string $ext = '')
+    public function denyExt(string $ext = ''): static
     {
         return $this->setOption('deny_ext', $ext);
     }
@@ -377,7 +353,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function domain(string $domain)
+    public function domain(string $domain): static
     {
         $this->domain = $domain;
 
@@ -391,7 +367,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function caseUrl(bool $case)
+    public function caseUrl(bool $case): static
     {
         return $this->setOption('case_sensitive', $case);
     }
@@ -403,7 +379,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function filter(array $filter)
+    public function filter(array $filter): static
     {
         return $this->setOption('filter', $filter);
     }
@@ -413,7 +389,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function header(array $header = [])
+    public function header(array $header = []): static
     {
         return $this->setOption('header', $header);
     }
@@ -423,7 +399,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function version(string $version)
+    public function version(string $version): static
     {
         $key = $this->config('api_version');
 
@@ -437,7 +413,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function default(array $default)
+    public function default(array $default): static
     {
         return $this->setOption('default', $default);
     }
@@ -447,7 +423,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function autoMiddleware(bool $auto = true)
+    public function autoMiddleware(bool $auto = true): static
     {
         return $this->setOption('auto_middleware', $auto);
     }
@@ -461,7 +437,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function model(array|Closure|string $var, Closure|string|null $model = null, bool $exception = true)
+    public function model(array|Closure|string $var, Closure|string|null $model = null, bool $exception = true): static
     {
         if ($var instanceof Closure) {
             $this->option['model'][] = $var;
@@ -483,7 +459,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function append(array $append = [])
+    public function append(array $append = []): static
     {
         $this->option['append'] = array_merge($this->option['append'] ?? [], $append);
 
@@ -500,7 +476,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function validate($validate, array|string $scene = '', array $message = [], bool $batch = false)
+    public function validate(mixed $validate, array|string $scene = '', array $message = [], bool $batch = false): static
     {
         return $this->setOption('validate', [$validate, $scene, $message, $batch]);
     }
@@ -513,7 +489,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function middleware(array|Closure|string $middleware, ...$params)
+    public function middleware(array|Closure|string $middleware, mixed ...$params): static
     {
         if (empty($params) && is_array($middleware)) {
             $this->option['middleware'] = array_merge($this->option['middleware'] ?? [], $middleware);
@@ -533,7 +509,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function withoutMiddleware(array $middleware = [])
+    public function withoutMiddleware(array $middleware = []): static
     {
         return $this->setOption('without_middleware', $middleware);
     }
@@ -545,7 +521,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function allowCrossDomain(array $header = [])
+    public function allowCrossDomain(array $header = []): static
     {
         return $this->middleware(AllowCrossDomain::class, $header);
     }
@@ -557,7 +533,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function token(string $token = '__token__')
+    public function token(string $token = '__token__'): static
     {
         return $this->middleware(FormTokenCheck::class, $token);
     }
@@ -569,7 +545,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function cache(array|int|string $cache)
+    public function cache(array|int|string $cache): static
     {
         return $this->middleware(CheckRequestCache::class, $cache);
     }
@@ -581,7 +557,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function depr(string $depr)
+    public function depr(string $depr): static
     {
         return $this->setOption('param_depr', $depr);
     }
@@ -593,7 +569,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function mergeOptions(array $option = [])
+    public function mergeOptions(array $option = []): static
     {
         $this->mergeOptions = array_merge($this->mergeOptions, $option);
 
@@ -607,7 +583,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function https(bool $https = true)
+    public function https(bool $https = true): static
     {
         return $this->setOption('https', $https);
     }
@@ -619,7 +595,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function json(bool $json = true)
+    public function json(bool $json = true): static
     {
         return $this->setOption('json', $json);
     }
@@ -631,7 +607,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function ajax(bool $ajax = true)
+    public function ajax(bool $ajax = true): static
     {
         return $this->setOption('ajax', $ajax);
     }
@@ -643,7 +619,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function pjax(bool $pjax = true)
+    public function pjax(bool $pjax = true): static
     {
         return $this->setOption('pjax', $pjax);
     }
@@ -655,7 +631,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function view(array $view = [])
+    public function view(array $view = []): static
     {
         return $this->setOption('view', $view);
     }
@@ -667,7 +643,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function match(callable $match)
+    public function match(callable $match): static
     {
         return $this->setOption('match', $match);
     }
@@ -679,7 +655,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function completeMatch(bool $match = true)
+    public function completeMatch(bool $match = true): static
     {
         return $this->setOption('complete_match', $match);
     }
@@ -691,7 +667,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function removeSlash(bool $remove = true)
+    public function removeSlash(bool $remove = true): static
     {
         return $this->setOption('remove_slash', $remove);
     }
@@ -701,7 +677,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function crossDomainRule()
+    public function crossDomainRule(): static
     {
         $this->router->setCrossDomainRule($this);
 
@@ -718,7 +694,7 @@ abstract class Rule
      * @param array   $option  路由参数
      * @param array   $matches 匹配的变量
      */
-    public function parseRule(Request $request, string $rule, $route, string $url, array $option = [], array $matches = []): Dispatch
+    public function parseRule(Request $request, string $rule, Closure|string|null $route, string $url, array $option = [], array $matches = []): Dispatch
     {
         if (is_string($route) && isset($option['prefix'])) {
             // 路由地址前缀
@@ -779,7 +755,7 @@ abstract class Rule
      * @param mixed   $route   路由地址
      * @param array   $option  路由参数
      */
-    protected function dispatch(Request $request, $route, array $option): Dispatch
+    protected function dispatch(Request $request, Closure|string|null $route, array $option): Dispatch
     {
         if (isset($option['dispatcher']) && is_subclass_of($option['dispatcher'], Dispatch::class)) {
             // 指定分组的调度处理对象
@@ -792,13 +768,13 @@ abstract class Rule
         } elseif (is_array($route)) {
             // 路由到类的方法
             $result = $this->dispatchMethod($request, $route, $option);
-        } elseif (str_contains($route, '@') || str_contains($route, '::') || str_contains($route, '\\')) {
+        } elseif (is_string($route) && (str_contains($route, '@') || str_contains($route, '::') || str_contains($route, '\\'))) {
             // 路由到类的方法
             $route  = str_replace('::', '@', $route);
             $result = $this->dispatchMethod($request, $route, $option);
         } else {
             // 路由到模块/控制器/操作
-            $result = $this->dispatchController($request, $route, $option);
+            $result = $this->dispatchController($request, (string) $route, $option);
         }
 
         return $result;
@@ -1039,7 +1015,7 @@ abstract class Rule
      *
      * @return $this
      */
-    public function __call($method, $args)
+    public function __call(string $method, array $args): static
     {
         if (count($args) > 1) {
             $args[0] = $args;
@@ -1075,7 +1051,7 @@ abstract class Rule
         $this->router = Container::pull('route');
     }
 
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             'name'    => $this->name,

@@ -17,21 +17,49 @@ class RuleGroup extends Rule
     use RuleBinder;
     use RuleConfig;
 
-    protected $rules = [];
+    /**
+     * 路由规则列表
+     * @var RuleItem[]
+     */
+    protected array $rules = [];
 
-    protected $miss;
+    /**
+     * MISS规则列表
+     * @var RuleItem[]
+     */
+    protected array $miss = [];
 
-    protected $fullName;
+    /**
+     * 完整路由标识
+     * @var string|null
+     */
+    protected ?string $fullName = null;
 
-    protected $alias;
+    /**
+     * 别名
+     * @var string|null
+     */
+    protected ?string $alias = null;
 
-    protected $sub;
+    /**
+     * 子路由规则
+     * @var string|null
+     */
+    protected ?string $sub = null;
 
-    protected $bind;
+    /**
+     * 绑定信息
+     * @var mixed
+     */
+    protected mixed $bind = null;
 
-    protected $hasParsed;
+    /**
+     * 是否已解析
+     * @var bool
+     */
+    protected bool $hasParsed = false;
 
-    public function __construct(Route $router, ?RuleGroup $parent = null, string $name = '', $rule = null, bool $lazy = false)
+    public function __construct(Route $router, ?RuleGroup $parent = null, string $name = '', mixed $rule = null, bool $lazy = false)
     {
         $this->router = $router;
         $this->parent = $parent;

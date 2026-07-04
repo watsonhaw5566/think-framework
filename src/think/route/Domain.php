@@ -30,7 +30,7 @@ class Domain extends RuleGroup
      * @param mixed  $rule   域名路由
      * @param bool   $lazy   延迟解析
      */
-    public function __construct(Route $router, ?string $name = null, $rule = null, bool $lazy = false)
+    public function __construct(Route $router, ?string $name = null, mixed $rule = null, bool $lazy = false)
     {
         $this->router = $router;
         $this->domain = $name;
@@ -46,7 +46,7 @@ class Domain extends RuleGroup
      *
      * @param mixed $rule 路由规则
      */
-    public function parseGroupRule($rule): void
+    public function parseGroupRule(mixed $rule): void
     {
         $origin = $this->router->getGroup();
         $this->router->setGroup($this);

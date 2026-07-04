@@ -29,14 +29,14 @@ class RuleItem extends Rule
      *
      * @var bool
      */
-    protected $miss = false;
+    protected bool $miss = false;
 
     /**
      * 是否为额外自动注册的OPTIONS规则.
      *
      * @var bool
      */
-    protected $autoOption = false;
+    protected bool $autoOption = false;
 
     /**
      * 架构函数.
@@ -48,7 +48,7 @@ class RuleItem extends Rule
      * @param Closure|string $route  路由地址
      * @param string         $method 请求类型
      */
-    public function __construct(Route $router, RuleGroup $parent, ?string $name = null, string $rule = '', $route = null, string $method = '*')
+    public function __construct(Route $router, RuleGroup $parent, ?string $name = null, string $rule = '', Closure|string|null $route = null, string $method = '*')
     {
         $this->router = $router;
         $this->parent = $parent;
@@ -65,7 +65,7 @@ class RuleItem extends Rule
      *
      * @return $this
      */
-    public function setMiss()
+    public function setMiss(): static
     {
         $this->miss = true;
 
@@ -125,7 +125,7 @@ class RuleItem extends Rule
      *
      * @return $this
      */
-    public function name(string $name)
+    public function name(string $name): static
     {
         $this->name = $name;
         $this->setRuleName(true);
@@ -155,7 +155,7 @@ class RuleItem extends Rule
      *
      * @return Dispatch|false
      */
-    public function checkRule(Request $request, string $url, ?array $match = null, bool $completeMatch = false)
+    public function checkRule(Request $request, string $url, ?array $match = null, bool $completeMatch = false): Dispatch|false
     {
         // 检查参数有效性
         if (!$this->checkOption($this->option, $request)) {
@@ -187,7 +187,7 @@ class RuleItem extends Rule
      *
      * @return Dispatch|false
      */
-    public function check(Request $request, string $url, bool $completeMatch = false)
+    public function check(Request $request, string $url, bool $completeMatch = false): Dispatch|false
     {
         return $this->checkRule($request, $url, null, $completeMatch);
     }
@@ -225,7 +225,7 @@ class RuleItem extends Rule
      *
      * @return array|false
      */
-    private function checkMatch(string $url, array $option, array $pattern, bool $completeMatch)
+    private function checkMatch(string $url, array $option, array $pattern, bool $completeMatch): array|false
     {
         if (isset($option['complete_match'])) {
             $completeMatch = $option['complete_match'];
@@ -313,7 +313,7 @@ class RuleItem extends Rule
      *
      * @return $this
      */
-    public function group(string $name)
+    public function group(string $name): static
     {
         $group = $this->router->getRuleName()->getGroup($name);
 

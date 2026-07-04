@@ -34,25 +34,25 @@ abstract class Dispatch
     /**
      * 控制器名.
      *
-     * @var string
+     * @var string|null
      */
-    protected $controller;
+    protected ?string $controller = null;
 
     /**
      * 操作名.
      *
-     * @var string
+     * @var string|null
      */
-    protected $actionName;
+    protected ?string $actionName = null;
 
     /**
      * 应用对象
      *
      * @var App
      */
-    protected $app;
+    protected App $app;
 
-    public function __construct(protected Request $request, protected Rule $rule, protected $dispatch, protected array $param = [], protected array $option = [], protected ?RuleItem $miss = null)
+    public function __construct(protected Request $request, protected Rule $rule, protected Closure|array|string $dispatch, protected array $param = [], protected array $option = [], protected ?RuleItem $miss = null)
     {
     }
 
@@ -64,7 +64,7 @@ abstract class Dispatch
         return $this->autoResponse($data);
     }
 
-    protected function autoResponse($data): Response
+    protected function autoResponse(mixed $data): Response
     {
         if ($data instanceof Response) {
             $response = $data;
@@ -150,7 +150,7 @@ abstract class Dispatch
      * @param object $instance 控制器实例
      * @param string $action
      */
-    protected function responseWithMiddlewarePipeline($instance, $action)
+    protected function responseWithMiddlewarePipeline(object $instance, string $action): Response
     {
         // 注册控制器中间件
         $this->registerControllerMiddleware($instance);
@@ -196,7 +196,7 @@ abstract class Dispatch
      *
      * @param object $controller 控制器实例
      */
-    protected function registerControllerMiddleware($controller): void
+    protected function registerControllerMiddleware(object $controller): void
     {
         $class = new ReflectionClass($controller);
 
@@ -241,9 +241,9 @@ abstract class Dispatch
         }
     }
 
-    protected function parseActions($actions)
+    protected function parseActions(array|string $actions): array
     {
-        return array_map(function ($item) {
+        return array_map(function (string $item): string {
             return strtolower($item);
         }, is_string($actions) ? explode(',', $actions) : $actions);
     }
@@ -324,7 +324,7 @@ abstract class Dispatch
         ;
     }
 
-    public function getDispatch()
+    public function getDispatch(): Closure|array|string
     {
         return $this->dispatch;
     }
