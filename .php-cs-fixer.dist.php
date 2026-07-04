@@ -9,15 +9,15 @@ $finder = (new Finder())
 
 return (new Config())
     ->setRules([
-        '@PhpCsFixer'                 => true,
-        '@PHP8x0Migration'            => true,
-        'binary_operator_spaces'      => [
+        '@PhpCsFixer'                         => true,
+        '@PHP8x0Migration'                    => true,
+        'binary_operator_spaces'              => [
             'default'   => 'align_single_space_minimal',
             'operators' => [
                 '=>' => 'align_single_space_minimal_by_scope',
             ],
         ],
-        'blank_line_before_statement' => [
+        'blank_line_before_statement'         => [
             'statements' => [
                 'continue',
                 'declare',
@@ -26,15 +26,15 @@ return (new Config())
                 'try',
             ],
         ],
-        'concat_space'                => [
+        'concat_space'                        => [
             'spacing' => 'one',
         ],
-        'global_namespace_import'     => [
+        'global_namespace_import'             => [
             'import_classes'   => true,
             'import_constants' => false,
             'import_functions' => false,
         ],
-        'ordered_class_elements'      => [
+        'ordered_class_elements'              => [
             'order' => [
                 'use_trait',
                 'case',
@@ -43,6 +43,7 @@ return (new Config())
                 'construct',
             ],
         ],
+        'phpdoc_add_missing_param_annotation' => false,
     ])
     ->setFinder($finder)
 ;
