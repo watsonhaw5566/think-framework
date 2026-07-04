@@ -1,5 +1,11 @@
 {
-  "name": "topthink/framework",
+  "name": "watsonhaw/think-framework",
+  "replace": {
+    "topthink/framework": "^8.0"
+  },
+  "provide": {
+    "topthink/framework": "^8.0"
+  },
   "description": "The ThinkPHP Framework.",
   "keywords": [
     "framework",
