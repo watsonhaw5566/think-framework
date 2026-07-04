@@ -14,19 +14,19 @@ use think\route\Rule;
  */
 trait InteractsWithRouting
 {
-    public function setRule(Rule $rule)
+    public function setRule(Rule $rule): static
     {
         $this->rule = $rule;
 
         return $this;
     }
 
-    public function rule()
+    public function rule(): ?Rule
     {
         return $this->rule;
     }
 
-    public function setRoute(array $route)
+    public function setRoute(array $route): static
     {
         $this->route      = array_merge($this->route, $route);
         $this->mergeParam = false;
@@ -34,7 +34,7 @@ trait InteractsWithRouting
         return $this;
     }
 
-    public function setLayer(string $layer)
+    public function setLayer(string $layer): static
     {
         $this->layer = $layer;
 
@@ -48,7 +48,7 @@ trait InteractsWithRouting
         return $convert ? strtolower($name) : $name;
     }
 
-    public function setController(string $controller)
+    public function setController(string $controller): static
     {
         $this->controller = $controller;
 
@@ -65,7 +65,7 @@ trait InteractsWithRouting
         return $convert ? strtolower($name) : $name;
     }
 
-    public function setAction(string $action)
+    public function setAction(string $action): static
     {
         $this->action = $action;
 

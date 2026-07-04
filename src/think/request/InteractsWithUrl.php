@@ -6,7 +6,7 @@ namespace think\request;
 
 trait InteractsWithUrl
 {
-    public function setDomain(string $domain)
+    public function setDomain(string $domain): static
     {
         $this->domain = $domain;
 
@@ -18,7 +18,7 @@ trait InteractsWithUrl
         return $this->scheme() . '://' . $this->host($port);
     }
 
-    public function setRootDomain(string $domain)
+    public function setRootDomain(string $domain): static
     {
         $this->rootDomain = $domain;
 
@@ -44,7 +44,7 @@ trait InteractsWithUrl
         return $root;
     }
 
-    public function setSubDomain(string $domain)
+    public function setSubDomain(string $domain): static
     {
         $this->subDomain = $domain;
 
@@ -66,7 +66,7 @@ trait InteractsWithUrl
         return $this->subDomain;
     }
 
-    public function setPanDomain(string $domain)
+    public function setPanDomain(string $domain): static
     {
         $this->panDomain = $domain;
 
@@ -78,7 +78,7 @@ trait InteractsWithUrl
         return $this->panDomain ?: '';
     }
 
-    public function setUrl(string $url)
+    public function setUrl(string $url): static
     {
         $this->url = $url;
 
@@ -104,7 +104,7 @@ trait InteractsWithUrl
         return $complete ? $this->domain() . $url : $url;
     }
 
-    public function setBaseUrl(string $url)
+    public function setBaseUrl(string $url): static
     {
         $this->baseUrl = $url;
 
@@ -145,7 +145,7 @@ trait InteractsWithUrl
         return $complete ? $this->domain() . $this->baseFile : $this->baseFile;
     }
 
-    public function setRoot(string $url)
+    public function setRoot(string $url): static
     {
         $this->root = $url;
 
@@ -176,7 +176,7 @@ trait InteractsWithUrl
         return $root;
     }
 
-    public function setPathinfo(string $pathinfo)
+    public function setPathinfo(string $pathinfo): static
     {
         $this->pathinfo = $pathinfo;
 
@@ -216,7 +216,7 @@ trait InteractsWithUrl
         return pathinfo($this->pathinfo(), PATHINFO_EXTENSION);
     }
 
-    public function time(bool $float = false)
+    public function time(bool $float = false): int|float
     {
         return $float ? $this->server('REQUEST_TIME_FLOAT') : $this->server('REQUEST_TIME');
     }
@@ -231,7 +231,7 @@ trait InteractsWithUrl
         return $this->server('QUERY_STRING', '');
     }
 
-    public function setHost(string $host)
+    public function setHost(string $host): static
     {
         $this->host = $host;
 
