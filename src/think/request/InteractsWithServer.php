@@ -6,7 +6,7 @@ namespace think\request;
 
 trait InteractsWithServer
 {
-    public function setMethod(string $method)
+    public function setMethod(string $method): static
     {
         $this->method = strtoupper($method);
 
@@ -259,7 +259,7 @@ trait InteractsWithServer
         return '';
     }
 
-    public function mimeType($type, $val = ''): void
+    public function mimeType(array|string $type, string $val = ''): void
     {
         if (is_array($type)) {
             $this->mimeType = array_merge($this->mimeType, $type);

@@ -18,7 +18,7 @@ use InvalidArgumentException;
  */
 trait InteractsWithInput
 {
-    public function param($name = '', $default = null, array|string|null $filter = '')
+    public function param(array|string $name = '', mixed $default = null, array|string|null $filter = ''): mixed
     {
         if (empty($this->mergeParam)) {
             $method = $this->method(true);
@@ -37,7 +37,7 @@ trait InteractsWithInput
         return $this->input($this->param, $name, $default, $filter);
     }
 
-    public function all(array|string $name = '', array|string|null $filter = '')
+    public function all(array|string $name = '', array|string|null $filter = ''): mixed
     {
         $data = array_merge($this->param(), $this->file() ?: []);
         if (is_array($name)) {
@@ -49,7 +49,7 @@ trait InteractsWithInput
         return $data;
     }
 
-    public function route(array|bool|string $name = '', $default = null, array|string|null $filter = '')
+    public function route(array|bool|string $name = '', mixed $default = null, array|string|null $filter = ''): mixed
     {
         if (is_array($name)) {
             return $this->only($name, $this->route, $filter);
@@ -58,7 +58,7 @@ trait InteractsWithInput
         return $this->input($this->route, $name, $default, $filter);
     }
 
-    public function get(array|bool|string $name = '', $default = null, array|string|null $filter = '')
+    public function get(array|bool|string $name = '', mixed $default = null, array|string|null $filter = ''): mixed
     {
         if (is_array($name)) {
             return $this->only($name, $this->get, $filter);
@@ -67,7 +67,7 @@ trait InteractsWithInput
         return $this->input($this->get, $name, $default, $filter);
     }
 
-    public function middleware(?string $name = null, $default = null)
+    public function middleware(?string $name = null, mixed $default = null): mixed
     {
         if (is_null($name)) {
             return $this->middleware;
@@ -76,7 +76,7 @@ trait InteractsWithInput
         return $this->middleware[$name] ?? $default;
     }
 
-    public function post(array|bool|string $name = '', $default = null, array|string|null $filter = '')
+    public function post(array|bool|string $name = '', mixed $default = null, array|string|null $filter = ''): mixed
     {
         if (is_array($name)) {
             return $this->only($name, $this->post, $filter);
@@ -85,7 +85,7 @@ trait InteractsWithInput
         return $this->input($this->post, $name, $default, $filter);
     }
 
-    public function put(array|bool|string $name = '', $default = null, array|string|null $filter = '')
+    public function put(array|bool|string $name = '', mixed $default = null, array|string|null $filter = ''): mixed
     {
         if (is_array($name)) {
             return $this->only($name, $this->put, $filter);
@@ -94,17 +94,17 @@ trait InteractsWithInput
         return $this->input($this->put, $name, $default, $filter);
     }
 
-    public function delete(array|bool|string $name = '', $default = null, array|string|null $filter = '')
+    public function delete(array|bool|string $name = '', mixed $default = null, array|string|null $filter = ''): mixed
     {
         return $this->put($name, $default, $filter);
     }
 
-    public function patch(array|bool|string $name = '', $default = null, array|string|null $filter = '')
+    public function patch(array|bool|string $name = '', mixed $default = null, array|string|null $filter = ''): mixed
     {
         return $this->put($name, $default, $filter);
     }
 
-    public function request(array|bool|string $name = '', $default = null, array|string|null $filter = '')
+    public function request(array|bool|string $name = '', mixed $default = null, array|string|null $filter = ''): mixed
     {
         if (is_array($name)) {
             return $this->only($name, $this->request, $filter);
@@ -113,7 +113,7 @@ trait InteractsWithInput
         return $this->input($this->request, $name, $default, $filter);
     }
 
-    public function env(string $name = '', ?string $default = null)
+    public function env(string $name = '', ?string $default = null): mixed
     {
         if (empty($name)) {
             return $this->env->get();
@@ -122,7 +122,7 @@ trait InteractsWithInput
         return $this->env->get(strtoupper($name), $default);
     }
 
-    public function session(string $name = '', $default = null)
+    public function session(string $name = '', mixed $default = null): mixed
     {
         if ('' === $name) {
             return $this->session->all();
@@ -131,7 +131,7 @@ trait InteractsWithInput
         return $this->session->get($name, $default);
     }
 
-    public function cookie(string $name = '', $default = null, array|string|null $filter = '')
+    public function cookie(string $name = '', mixed $default = null, array|string|null $filter = ''): mixed
     {
         if (!empty($name)) {
             $data = $this->getData($this->cookie, $name, $default);
@@ -148,7 +148,7 @@ trait InteractsWithInput
         return $data;
     }
 
-    public function server(string $name = '', string $default = '')
+    public function server(string $name = '', string $default = ''): mixed
     {
         if (empty($name)) {
             return $this->server;
@@ -157,7 +157,7 @@ trait InteractsWithInput
         return $this->server[strtoupper($name)] ?? $default;
     }
 
-    public function header(string $name = '', ?string $default = null)
+    public function header(string $name = '', ?string $default = null): mixed
     {
         if ('' === $name) {
             return $this->header;
@@ -167,7 +167,7 @@ trait InteractsWithInput
         return $this->header[$name] ?? $default;
     }
 
-    public function file(string $name = '')
+    public function file(string $name = ''): mixed
     {
         $files = $this->file;
         if (!empty($files)) {
@@ -185,6 +185,8 @@ trait InteractsWithInput
                 return $array[$name];
             }
         }
+
+        return null;
     }
 
     protected function dealUploadFile(array $files, string $name): array
@@ -229,7 +231,7 @@ trait InteractsWithInput
         return $array;
     }
 
-    protected function throwUploadFileError($error)
+    protected function throwUploadFileError(int $error): never
     {
         static $fileUploadErrors = [
             1 => 'upload File size exceeds the maximum value',
@@ -259,7 +261,7 @@ trait InteractsWithInput
         return [];
     }
 
-    public function input(array $data = [], bool|string $name = '', $default = null, array|string|null $filter = '')
+    public function input(array $data = [], bool|string $name = '', mixed $default = null, array|string|null $filter = ''): mixed
     {
         if (false === $name) {
             return $data;
@@ -275,7 +277,7 @@ trait InteractsWithInput
         return $this->filterData($data, $filter, $name, $default, $type ?? '');
     }
 
-    protected function filterData($data, $filter, $name, $default, $type)
+    protected function filterData(mixed $data, array|string|null $filter, string $name, mixed $default, string $type): mixed
     {
         if (is_null($data)) {
             return $default;
@@ -296,7 +298,7 @@ trait InteractsWithInput
         return $data;
     }
 
-    protected function typeCast(&$data, string $type)
+    protected function typeCast(mixed &$data, string $type): void
     {
         $data = match (strtolower($type)) {
             'a'     => (array) $data,
@@ -308,7 +310,7 @@ trait InteractsWithInput
         };
     }
 
-    protected function getData(array $data, string $name, $default = null)
+    protected function getData(array $data, string $name, mixed $default = null): mixed
     {
         foreach (explode('.', $name) as $val) {
             if (isset($data[$val])) {
@@ -321,7 +323,7 @@ trait InteractsWithInput
         return $data;
     }
 
-    public function filter($filter = null)
+    public function filter(callable|array|string|null $filter = null): mixed
     {
         if (is_null($filter)) {
             return $this->filter;
@@ -331,7 +333,7 @@ trait InteractsWithInput
         return $this;
     }
 
-    protected function getFilter($filter, $default): array
+    protected function getFilter(array|string|null $filter, mixed $default): array
     {
         if (is_null($filter)) {
             $filter = [];
@@ -348,7 +350,7 @@ trait InteractsWithInput
         return $filter;
     }
 
-    public function filterValue(&$value, $key, $filters)
+    public function filterValue(mixed &$value, mixed $key, array $filters): mixed
     {
         $default = array_pop($filters);
         foreach ($filters as $filter) {
@@ -396,7 +398,7 @@ trait InteractsWithInput
         return !(($checkEmpty && '' === $param));
     }
 
-    public function only(array $name, $data = 'param', array|string|null $filter = ''): array
+    public function only(array $name, array|string $data = 'param', array|string|null $filter = ''): array
     {
         $data = is_array($data) ? $data : $this->{$data}();
         $item = [];

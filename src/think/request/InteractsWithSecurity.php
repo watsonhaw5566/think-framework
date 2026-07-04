@@ -12,7 +12,7 @@ namespace think\request;
  */
 trait InteractsWithSecurity
 {
-    public function buildToken(string $name = '__token__', $type = 'md5'): string
+    public function buildToken(string $name = '__token__', callable|string $type = 'md5'): string
     {
         $type  = is_callable($type) ? $type : 'md5';
         $token = call_user_func($type, $this->server('REQUEST_TIME_FLOAT'));
