@@ -112,6 +112,8 @@ trait AppConfig
     public function setAppPath(string $path)
     {
         $this->appPath = $path;
+
+        return $this;
     }
 
     /** 获取应用运行时目录. */
@@ -169,6 +171,6 @@ trait AppConfig
     /** 获取应用根目录. */
     protected function getDefaultRootPath(): string
     {
-        return dirname($this->thinkPath, 4) . DIRECTORY_SEPARATOR;
+        return getcwd() . DIRECTORY_SEPARATOR;
     }
 }
