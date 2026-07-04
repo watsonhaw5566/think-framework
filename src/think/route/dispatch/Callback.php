@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\route\dispatch;
 
@@ -18,18 +19,20 @@ use think\helper\Str;
 use think\route\Dispatch;
 
 /**
- * Callback Dispatcher
+ * Callback Dispatcher.
  */
 class Callback extends Dispatch
 {
     /**
-     * 类名
+     * 类名.
+     *
      * @var string
      */
     protected $class;
 
     /**
-     * 操作名
+     * 操作名.
+     *
      * @var string
      */
     protected $action;
@@ -67,6 +70,7 @@ class Callback extends Dispatch
                 }
             } else {
                 $vars = $this->getActionBindVars();
+
                 return $this->app->invoke($route, $vars);
             }
         }
@@ -78,7 +82,7 @@ class Callback extends Dispatch
             [$module, $controller] = explode('/' . $layer . '/', $controller, 2);
             $module                = trim(str_replace('app/', '', $module . '/'), '/');
         } else {
-            $module      = '';
+            $module = '';
         }
 
         if ($module && !empty($this->option['auto_middleware'])) {
@@ -96,7 +100,8 @@ class Callback extends Dispatch
         $this->request
             ->setLayer($module)
             ->setController($controller)
-            ->setAction($action);
+            ->setAction($action)
+        ;
     }
 
     public function exec()
@@ -108,10 +113,11 @@ class Callback extends Dispatch
                 throw new ClassNotFoundException('class not exists:' . $this->class, $this->class);
             }
 
-            return $this->responseWithMiddlewarePipeline($instance, $this->action);            
+            return $this->responseWithMiddlewarePipeline($instance, $this->action);
         }
 
         $vars = $this->getActionBindVars();
+
         return $this->app->invoke($this->dispatch, $vars);
     }
 }

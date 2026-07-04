@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -36,14 +37,7 @@ class AllowCrossDomain
         $this->cookieDomain = $config->get('cookie.domain', '');
     }
 
-    /**
-     * 允许跨域请求
-     * @access public
-     * @param Request $request
-     * @param Closure $next
-     * @param array   $header
-     * @return Response
-     */
+    /** 允许跨域请求 */
     public function handle(Request $request, Closure $next, array $header = []): Response
     {
         $header = !empty($header) ? array_merge($this->header, $header) : $this->header;

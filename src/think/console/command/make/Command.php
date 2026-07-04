@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -16,14 +17,15 @@ use think\console\input\Argument;
 
 class Command extends Make
 {
-    protected $type = "Command";
+    protected $type = 'Command';
 
     protected function configure()
     {
         parent::configure();
         $this->setName('make:command')
-            ->addArgument('commandName', Argument::OPTIONAL, "The name of the command")
-            ->setDescription('Create a new command class');
+            ->addArgument('commandName', Argument::OPTIONAL, 'The name of the command')
+            ->setDescription('Create a new command class')
+        ;
     }
 
     protected function buildClass(string $name): string
@@ -49,6 +51,6 @@ class Command extends Make
 
     protected function getNamespace(string $app): string
     {
-        return parent::getNamespace($app) . '\\command';
+        return parent::getNamespace($app) . '\command';
     }
 }

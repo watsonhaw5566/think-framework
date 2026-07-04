@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -16,13 +17,13 @@ use think\helper\Arr;
 use think\session\Store;
 
 /**
- * Session管理类
- * @package think
+ * Session管理类.
+ *
  * @mixin Store
  */
 class Session extends Manager
 {
-    protected $namespace = '\\think\\session\\driver\\';
+    protected $namespace = '\think\session\driver\\';
 
     protected function createDriver(string $name)
     {
@@ -32,10 +33,11 @@ class Session extends Manager
     }
 
     /**
-     * 获取Session配置
-     * @access public
+     * 获取Session配置.
+     *
      * @param null|string $name    名称
      * @param mixed       $default 默认值
+     *
      * @return mixed
      */
     public function getConfig(?string $name = null, $default = null)
@@ -51,12 +53,14 @@ class Session extends Manager
     {
         $config = $this->app->config->get('session', []);
         Arr::forget($config, 'type');
+
         return $config;
     }
 
     /**
-     * 默认驱动
-     * @return string|null
+     * 默认驱动.
+     *
+     * @return null|string
      */
     public function getDefaultDriver()
     {

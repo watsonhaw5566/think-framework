@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -13,7 +14,7 @@ declare(strict_types=1);
 namespace think\event;
 
 /**
- * HttpEnd事件类
+ * HttpEnd事件类.
  */
 class HttpEnd
 {

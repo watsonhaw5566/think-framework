@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,11 +9,12 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
+
 namespace think\exception;
 
 /**
- * 非法缓存数据异常
+ * 非法缓存数据异常.
  */
 class InvalidCacheException extends InvalidArgumentException
 {

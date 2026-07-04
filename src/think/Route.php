@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think;
 
@@ -26,13 +27,13 @@ use think\route\RuleName;
 use think\route\Url as UrlBuild;
 
 /**
- * 路由管理类
- * @package think
+ * 路由管理类.
  */
 class Route
 {
     /**
-     * REST定义
+     * REST定义.
+     *
      * @var array
      */
     protected $rest = [
@@ -46,7 +47,8 @@ class Route
     ];
 
     /**
-     * 配置参数
+     * 配置参数.
+     *
      * @var array
      */
     protected $config = [
@@ -94,53 +96,59 @@ class Route
 
     /**
      * 请求对象
+     *
      * @var Request
      */
     protected $request;
 
-    /**
-     * @var RuleName
-     */
+    /** @var RuleName */
     protected $ruleName;
 
     /**
-     * 当前HOST
+     * 当前HOST.
+     *
      * @var string
      */
     protected $host;
 
     /**
      * 当前分组对象
+     *
      * @var RuleGroup
      */
     protected $group;
 
     /**
      * 域名对象
+     *
      * @var Domain[]
      */
     protected $domains = [];
 
     /**
-     * 跨域路由规则
+     * 跨域路由规则.
+     *
      * @var RuleGroup
      */
     protected $cross;
 
     /**
-     * 路由是否延迟解析
+     * 路由是否延迟解析.
+     *
      * @var bool
      */
     protected $lazy = false;
 
     /**
-     * （分组）路由规则是否合并解析
+     * （分组）路由规则是否合并解析.
+     *
      * @var bool
      */
     protected $mergeRuleRegex = false;
 
     /**
      * 是否去除URL最后的斜线
+     *
      * @var bool
      */
     protected $removeSlash = false;
@@ -188,21 +196,24 @@ class Route
     }
 
     /**
-     * 设置路由域名及分组（包括资源路由）是否延迟解析
-     * @access public
+     * 设置路由域名及分组（包括资源路由）是否延迟解析.
+     *
      * @param bool $lazy 路由是否延迟解析
+     *
      * @return $this
      */
     public function lazy(bool $lazy = true)
     {
         $this->lazy = $lazy;
+
         return $this;
     }
 
     /**
-     * 设置路由域名及分组（包括资源路由）是否合并解析
-     * @access public
+     * 设置路由域名及分组（包括资源路由）是否合并解析.
+     *
      * @param bool $merge 路由是否合并解析
+     *
      * @return $this
      */
     public function mergeRuleRegex(bool $merge = true)
@@ -213,11 +224,7 @@ class Route
         return $this;
     }
 
-    /**
-     * 初始化默认域名
-     * @access protected
-     * @return void
-     */
+    /** 初始化默认域名. */
     protected function setDefaultDomain(): void
     {
         // 注册默认域名
@@ -230,10 +237,9 @@ class Route
     }
 
     /**
-     * 设置当前分组
-     * @access public
+     * 设置当前分组.
+     *
      * @param RuleGroup $group 域名
-     * @return void
      */
     public function setGroup(RuleGroup $group): void
     {
@@ -241,9 +247,10 @@ class Route
     }
 
     /**
-     * 获取指定标识的路由分组 不指定则获取当前分组
-     * @access public
+     * 获取指定标识的路由分组 不指定则获取当前分组.
+     *
      * @param string $name 分组标识
+     *
      * @return RuleGroup
      */
     public function getGroup(?string $name = null)
@@ -252,9 +259,10 @@ class Route
     }
 
     /**
-     * 注册变量规则
-     * @access public
+     * 注册变量规则.
+     *
      * @param array $pattern 变量规则
+     *
      * @return $this
      */
     public function pattern(array $pattern)
@@ -265,9 +273,10 @@ class Route
     }
 
     /**
-     * 注册路由参数
-     * @access public
+     * 注册路由参数.
+     *
      * @param array $option 参数
+     *
      * @return $this
      */
     public function option(array $option)
@@ -278,13 +287,12 @@ class Route
     }
 
     /**
-     * 注册域名路由
-     * @access public
-     * @param string|array $name 子域名
+     * 注册域名路由.
+     *
+     * @param array|string $name 子域名
      * @param mixed        $rule 路由规则
-     * @return Domain
      */
-    public function domain(string | array $name, $rule = null): Domain
+    public function domain(array|string $name, $rule = null): Domain
     {
         // 支持多个域名使用相同路由规则
         $domainName = is_array($name) ? array_shift($name) : $name;
@@ -292,7 +300,8 @@ class Route
         if (!isset($this->domains[$domainName])) {
             $domain = (new Domain($this, $domainName, $rule, $this->lazy))
                 ->removeSlash($this->removeSlash)
-                ->mergeRuleRegex($this->mergeRuleRegex);
+                ->mergeRuleRegex($this->mergeRuleRegex)
+            ;
 
             $this->domains[$domainName] = $domain;
         } else {
@@ -310,21 +319,18 @@ class Route
         return $domain;
     }
 
-    /**
-     * 获取域名
-     * @access public
-     * @return array
-     */
+    /** 获取域名. */
     public function getDomains(): array
     {
         return $this->domains;
     }
 
     /**
-     * 获取域名路由的绑定信息
-     * @access public
+     * 获取域名路由的绑定信息.
+     *
      * @param string $domain 子域名
-     * @return string|null
+     *
+     * @return null|string
      */
     public function getDomainBind(?string $domain = null)
     {
@@ -333,27 +339,23 @@ class Route
             if (is_string($item)) {
                 $item = $this->domains[$item];
             }
+
             return $item->getBind();
         }
     }
 
-    /**
-     * 获取RuleName对象
-     * @access public
-     * @return RuleName
-     */
+    /** 获取RuleName对象 */
     public function getRuleName(): RuleName
     {
         return $this->ruleName;
     }
 
     /**
-     * 读取路由标识
-     * @access public
+     * 读取路由标识.
+     *
      * @param string $name   路由标识
      * @param string $domain 域名
      * @param string $method 请求类型
-     * @return array
      */
     public function getName(?string $name = null, ?string $domain = null, string $method = '*'): array
     {
@@ -361,10 +363,9 @@ class Route
     }
 
     /**
-     * 批量导入路由标识
-     * @access public
+     * 批量导入路由标识.
+     *
      * @param array $name 路由标识
-     * @return void
      */
     public function import(array $name): void
     {
@@ -372,12 +373,11 @@ class Route
     }
 
     /**
-     * 注册路由标识
-     * @access public
+     * 注册路由标识.
+     *
      * @param string   $name     路由标识
      * @param RuleItem $ruleItem 路由规则
      * @param bool     $first    是否优先
-     * @return void
      */
     public function setName(string $name, RuleItem $ruleItem, bool $first = false): void
     {
@@ -385,11 +385,10 @@ class Route
     }
 
     /**
-     * 保存路由规则
-     * @access public
+     * 保存路由规则.
+     *
      * @param string   $rule     路由规则
      * @param RuleItem $ruleItem RuleItem对象
-     * @return void
      */
     public function setRule(string $rule, ?RuleItem $ruleItem = null): void
     {
@@ -397,9 +396,10 @@ class Route
     }
 
     /**
-     * 读取路由
-     * @access public
+     * 读取路由.
+     *
      * @param string $rule 路由规则
+     *
      * @return RuleItem[]
      */
     public function getRule(string $rule): array
@@ -407,21 +407,13 @@ class Route
         return $this->ruleName->getRule($rule);
     }
 
-    /**
-     * 读取路由列表
-     * @access public
-     * @return array
-     */
+    /** 读取路由列表. */
     public function getRuleList(): array
     {
         return $this->ruleName->getRuleList();
     }
 
-    /**
-     * 清空路由规则
-     * @access public
-     * @return void
-     */
+    /** 清空路由规则. */
     public function clear(): void
     {
         $this->ruleName->clear();
@@ -432,12 +424,11 @@ class Route
     }
 
     /**
-     * 注册路由规则
-     * @access public
+     * 注册路由规则.
+     *
      * @param string $rule   路由规则
      * @param mixed  $route  路由地址
      * @param string $method 请求类型
-     * @return RuleItem
      */
     public function rule(string $rule, $route = null, string $method = '*'): RuleItem
     {
@@ -445,9 +436,10 @@ class Route
     }
 
     /**
-     * 设置路由规则全局有效
-     * @access public
-     * @param Rule   $rule   路由规则
+     * 设置路由规则全局有效.
+     *
+     * @param Rule $rule 路由规则
+     *
      * @return $this
      */
     public function setCrossDomainRule(Rule $rule)
@@ -462,32 +454,30 @@ class Route
     }
 
     /**
-     * 注册模块路由
-     * @access public
+     * 注册模块路由.
+     *
      * @param string      $name       模块名称
      * @param mixed       $route      分组路由
      * @param bool|string $bindDomain 绑定域名
-     * @return RuleGroup
      */
-    public function module(string $name, $route = null, bool | string $bindDomain = false): RuleGroup
+    public function module(string $name, $route = null, bool|string $bindDomain = false): RuleGroup
     {
         if ($bindDomain) {
             $group = $this->domain(is_string($bindDomain) ? $bindDomain : $name, $route);
         } else {
             $group = $this->group($name, $route);
         }
-        
+
         return $group->module($name);
     }
 
     /**
-     * 注册路由分组
-     * @access public
-     * @param string|Closure $name  分组名称或者参数
+     * 注册路由分组.
+     *
+     * @param Closure|string $name  分组名称或者参数
      * @param mixed          $route 分组路由
-     * @return RuleGroup
      */
-    public function group(string | Closure $name, $route = null): RuleGroup
+    public function group(Closure|string $name, $route = null): RuleGroup
     {
         if ($name instanceof Closure) {
             $route = $name;
@@ -496,15 +486,15 @@ class Route
 
         return (new RuleGroup($this, $this->group, $name, $route, $this->lazy))
             ->removeSlash($this->removeSlash)
-            ->mergeRuleRegex($this->mergeRuleRegex);
+            ->mergeRuleRegex($this->mergeRuleRegex)
+        ;
     }
 
     /**
-     * 注册路由
-     * @access public
+     * 注册路由.
+     *
      * @param string $rule  路由规则
      * @param mixed  $route 路由地址
-     * @return RuleItem
      */
     public function any(string $rule, $route): RuleItem
     {
@@ -512,11 +502,10 @@ class Route
     }
 
     /**
-     * 注册GET路由
-     * @access public
+     * 注册GET路由.
+     *
      * @param string $rule  路由规则
      * @param mixed  $route 路由地址
-     * @return RuleItem
      */
     public function get(string $rule, $route): RuleItem
     {
@@ -524,11 +513,10 @@ class Route
     }
 
     /**
-     * 注册POST路由
-     * @access public
+     * 注册POST路由.
+     *
      * @param string $rule  路由规则
      * @param mixed  $route 路由地址
-     * @return RuleItem
      */
     public function post(string $rule, $route): RuleItem
     {
@@ -536,11 +524,10 @@ class Route
     }
 
     /**
-     * 注册PUT路由
-     * @access public
+     * 注册PUT路由.
+     *
      * @param string $rule  路由规则
      * @param mixed  $route 路由地址
-     * @return RuleItem
      */
     public function put(string $rule, $route): RuleItem
     {
@@ -548,11 +535,10 @@ class Route
     }
 
     /**
-     * 注册DELETE路由
-     * @access public
+     * 注册DELETE路由.
+     *
      * @param string $rule  路由规则
      * @param mixed  $route 路由地址
-     * @return RuleItem
      */
     public function delete(string $rule, $route): RuleItem
     {
@@ -560,11 +546,10 @@ class Route
     }
 
     /**
-     * 注册PATCH路由
-     * @access public
+     * 注册PATCH路由.
+     *
      * @param string $rule  路由规则
      * @param mixed  $route 路由地址
-     * @return RuleItem
      */
     public function patch(string $rule, $route): RuleItem
     {
@@ -572,11 +557,10 @@ class Route
     }
 
     /**
-     * 注册HEAD路由
-     * @access public
+     * 注册HEAD路由.
+     *
      * @param string $rule  路由规则
      * @param mixed  $route 路由地址
-     * @return RuleItem
      */
     public function head(string $rule, $route): RuleItem
     {
@@ -584,11 +568,10 @@ class Route
     }
 
     /**
-     * 注册OPTIONS路由
-     * @access public
+     * 注册OPTIONS路由.
+     *
      * @param string $rule  路由规则
      * @param mixed  $route 路由地址
-     * @return RuleItem
      */
     public function options(string $rule, $route): RuleItem
     {
@@ -596,12 +579,13 @@ class Route
     }
 
     /**
-     * 注册资源路由
-     * @access public
-     * @param string $rule  路由规则
-     * @param string $route 路由地址
+     * 注册资源路由.
+     *
+     * @param string  $rule   路由规则
+     * @param string  $route  路由地址
      * @param Closure $extend 扩展规则
-     * @return Resource|ResourceRegister
+     *
+     * @return resource|ResourceRegister
      */
     public function resource(string $rule, string $route, ?Closure $extend = null)
     {
@@ -615,12 +599,11 @@ class Route
     }
 
     /**
-     * 注册视图路由
-     * @access public
+     * 注册视图路由.
+     *
      * @param string $rule     路由规则
      * @param string $template 路由模板地址
      * @param array  $vars     模板变量
-     * @return RuleItem
      */
     public function view(string $rule, string $template = '', array $vars = []): RuleItem
     {
@@ -630,17 +613,16 @@ class Route
     }
 
     /**
-     * 注册重定向路由
-     * @access public
+     * 注册重定向路由.
+     *
      * @param string $rule   路由规则
      * @param string $route  路由地址
      * @param int    $status 状态码
-     * @return RuleItem
      */
     public function redirect(string $rule, string $route = '', int $status = 301): RuleItem
     {
         return $this->rule($rule, function (Request $request) use ($status, $route) {
-            $search  = $replace  = [];
+            $search  = $replace = [];
             $matches = $request->rule()->getVars();
 
             foreach ($matches as $key => $value) {
@@ -653,18 +635,20 @@ class Route
             }
 
             $route = str_replace($search, $replace, $route);
+
             return Response::create($route, 'redirect')->code($status);
         }, '*');
     }
 
     /**
-     * rest方法定义和修改
-     * @access public
-     * @param string|array $name     方法名称
+     * rest方法定义和修改.
+     *
+     * @param array|string $name     方法名称
      * @param array|bool   $resource 资源
+     *
      * @return $this
      */
-    public function rest(string | array $name, array | bool $resource = [])
+    public function rest(array|string $name, array|bool $resource = [])
     {
         if (is_array($name)) {
             $this->rest = $resource ? $name : array_merge($this->rest, $name);
@@ -676,10 +660,11 @@ class Route
     }
 
     /**
-     * 获取rest方法定义的参数
-     * @access public
+     * 获取rest方法定义的参数.
+     *
      * @param string $name 方法名称
-     * @return array|null
+     *
+     * @return null|array
      */
     public function getRest(?string $name = null)
     {
@@ -691,24 +676,22 @@ class Route
     }
 
     /**
-     * 注册未匹配路由规则后的处理
-     * @access public
-     * @param string|Closure $route  路由地址
+     * 注册未匹配路由规则后的处理.
+     *
+     * @param Closure|string $route  路由地址
      * @param string         $method 请求类型
-     * @return RuleItem
      */
-    public function miss(string | Closure $route, string $method = '*'): RuleItem
+    public function miss(Closure|string $route, string $method = '*'): RuleItem
     {
         return $this->group->miss($route, $method);
     }
 
     /**
-     * 路由调度
-     * @param Request $request
-     * @param Closure|bool $withRoute
+     * 路由调度.
+     *
      * @return Response
      */
-    public function dispatch(Request $request, Closure | bool $withRoute = true)
+    public function dispatch(Request $request, bool|Closure $withRoute = true)
     {
         $this->request = $request;
         $this->host    = $this->request->host(true);
@@ -734,14 +717,15 @@ class Route
             ->send($request)
             ->then(function () use ($dispatch) {
                 return $dispatch->run();
-            });
+            })
+        ;
     }
 
     /**
-     * 检测URL路由
-     * @access public
-     * @param  bool $completeMatch
+     * 检测URL路由.
+     *
      * @return Dispatch|false
+     *
      * @throws RouteNotFoundException
      */
     public function check(string $url, bool $completeMatch = false)
@@ -762,11 +746,7 @@ class Route
         return $result;
     }
 
-    /**
-     * 获取当前请求URL的pathinfo信息(不含URL后缀)
-     * @access protected
-     * @return string
-     */
+    /** 获取当前请求URL的pathinfo信息(不含URL后缀). */
     protected function path(): string
     {
         $suffix   = $this->config['url_html_suffix'];
@@ -787,12 +767,11 @@ class Route
     }
 
     /**
-     * 自动多模块URL路由 如使用多模块在路由定义文件最后定义
-     * @access public
-     * @param  string $rule    路由规则
-     * @param  mixed  $route   路由地址
-     * @param  bool   $middleware  自动注册中间件
-     * @return RuleItem
+     * 自动多模块URL路由 如使用多模块在路由定义文件最后定义.
+     *
+     * @param string $rule       路由规则
+     * @param mixed  $route      路由地址
+     * @param bool   $middleware 自动注册中间件
      */
     public function auto(string $rule = '[:__module__]/[:__controller__]/[:__action__]', $route = ':__module__/:__controller__/:__action__', bool $middleware = false): RuleItem
     {
@@ -806,18 +785,18 @@ class Route
                 '__module__'     => $this->config['default_module'],
                 '__controller__' => $this->config['default_controller'],
                 '__action__'     => $this->config['default_action'],
-            ])->autoMiddleware($middleware);
+            ])->autoMiddleware($middleware)
+        ;
     }
 
     /**
-     * 检测默认URL解析路由
-     * @access public
-     * @param  string   $url URL
-     * @return Dispatch
+     * 检测默认URL解析路由.
+     *
+     * @param string $url URL
      */
     protected function checkUrlDispatch(string $url): Dispatch
     {
-        if ($this->request->method() == 'OPTIONS') {
+        if ('OPTIONS' == $this->request->method()) {
             // 自动响应options请求
             return new Callback($this->request, $this->group, function () {
                 return Response::create('', 'html', 204)->header(['Allow' => 'GET, POST, PUT, DELETE']);
@@ -827,11 +806,7 @@ class Route
         return $this->group->auto()->checkBind($this->request, $url);
     }
 
-    /**
-     * 检测域名的路由规则
-     * @access protected
-     * @return Domain
-     */
+    /** 检测域名的路由规则. */
     protected function checkDomain(): Domain
     {
         $item = false;
@@ -883,11 +858,10 @@ class Route
     }
 
     /**
-     * URL生成 支持路由反射
-     * @access public
+     * URL生成 支持路由反射.
+     *
      * @param string $url  路由地址
      * @param array  $vars 参数 ['a'=>'val1', 'b'=>'val2']
-     * @return UrlBuild
      */
     public function buildUrl(string $url = '', array $vars = []): UrlBuild
     {
@@ -895,10 +869,11 @@ class Route
     }
 
     /**
-     * 设置全局的路由分组参数
-     * @access public
+     * 设置全局的路由分组参数.
+     *
      * @param string $method 方法名
      * @param array  $args   调用参数
+     *
      * @return RuleGroup
      */
     public function __call($method, $args)

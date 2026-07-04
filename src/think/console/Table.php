@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,54 +9,61 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\console;
 
 class Table
 {
-    const ALIGN_LEFT   = 1;
-    const ALIGN_RIGHT  = 0;
-    const ALIGN_CENTER = 2;
+    public const ALIGN_LEFT   = 1;
+    public const ALIGN_RIGHT  = 0;
+    public const ALIGN_CENTER = 2;
 
     /**
-     * 头信息数据
+     * 头信息数据.
+     *
      * @var array
      */
     protected $header = [];
 
     /**
-     * 头部对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
+     * 头部对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER.
+     *
      * @var int
      */
     protected $headerAlign = 1;
 
     /**
-     * 表格数据（二维数组）
+     * 表格数据（二维数组）.
+     *
      * @var array
      */
     protected $rows = [];
 
     /**
-     * 单元格对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
+     * 单元格对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER.
+     *
      * @var int
      */
     protected $cellAlign = 1;
 
     /**
-     * 单元格宽度信息
+     * 单元格宽度信息.
+     *
      * @var array
      */
     protected $colWidth = [];
 
     /**
-     * 表格输出样式
+     * 表格输出样式.
+     *
      * @var string
      */
     protected $style = 'default';
 
     /**
-     * 表格样式定义
+     * 表格样式定义.
+     *
      * @var array
      */
     protected $format = [
@@ -103,11 +111,10 @@ class Table
     ];
 
     /**
-     * 设置表格头信息 以及对齐方式
-     * @access public
-     * @param array $header     要输出的Header信息
-     * @param int   $align      对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
-     * @return void
+     * 设置表格头信息 以及对齐方式.
+     *
+     * @param array $header 要输出的Header信息
+     * @param int   $align  对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
      */
     public function setHeader(array $header, int $align = 1): void
     {
@@ -118,11 +125,10 @@ class Table
     }
 
     /**
-     * 设置输出表格数据 及对齐方式
-     * @access public
-     * @param array $rows       要输出的表格数据（二维数组）
-     * @param int   $align      对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
-     * @return void
+     * 设置输出表格数据 及对齐方式.
+     *
+     * @param array $rows  要输出的表格数据（二维数组）
+     * @param int   $align 对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
      */
     public function setRows(array $rows, int $align = 1): void
     {
@@ -135,21 +141,23 @@ class Table
     }
 
     /**
-     * 设置全局单元格对齐方式
+     * 设置全局单元格对齐方式.
+     *
      * @param int $align 对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
+     *
      * @return $this
      */
     public function setCellAlign(int $align = 1)
     {
         $this->cellAlign = $align;
+
         return $this;
     }
 
     /**
-     * 检查列数据的显示宽度
-     * @access public
-     * @param  mixed $row       行数据
-     * @return void
+     * 检查列数据的显示宽度.
+     *
+     * @param mixed $row 行数据
      */
     protected function checkColWidth($row): void
     {
@@ -164,11 +172,10 @@ class Table
     }
 
     /**
-     * 增加一行表格数据
-     * @access public
-     * @param  mixed $row       行数据
-     * @param  bool  $first     是否在开头插入
-     * @return void
+     * 增加一行表格数据.
+     *
+     * @param mixed $row   行数据
+     * @param bool  $first 是否在开头插入
      */
     public function addRow($row, bool $first = false): void
     {
@@ -182,10 +189,9 @@ class Table
     }
 
     /**
-     * 设置输出表格的样式
-     * @access public
-     * @param  string $style       样式名
-     * @return void
+     * 设置输出表格的样式.
+     *
+     * @param string $style 样式名
      */
     public function setStyle(string $style): void
     {
@@ -193,10 +199,9 @@ class Table
     }
 
     /**
-     * 输出分隔行
-     * @access public
-     * @param  string $pos       位置
-     * @return string
+     * 输出分隔行.
+     *
+     * @param string $pos 位置
      */
     protected function renderSeparator(string $pos): string
     {
@@ -210,11 +215,7 @@ class Table
         return $style[0] . implode($style[2], $array) . $style[3] . PHP_EOL;
     }
 
-    /**
-     * 输出表格头部
-     * @access public
-     * @return string
-     */
+    /** 输出表格头部. */
     protected function renderHeader(): string
     {
         $style   = $this->getStyle('cell');
@@ -248,9 +249,8 @@ class Table
 
     /**
      * 输出表格
-     * @access public
-     * @param  array $dataList       表格数据
-     * @return string
+     *
+     * @param array $dataList 表格数据
      */
     public function render(array $dataList = []): string
     {

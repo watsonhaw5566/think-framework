@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace think\cache;
 
@@ -16,13 +17,13 @@ use DateInterval;
 use DateTimeInterface;
 
 /**
- * 标签集合
+ * 标签集合.
  */
 class TagSet
 {
     /**
-     * 架构函数
-     * @access public
+     * 架构函数.
+     *
      * @param array  $tag     缓存标签
      * @param Driver $handler 缓存对象
      */
@@ -31,12 +32,11 @@ class TagSet
     }
 
     /**
-     * 写入缓存
-     * @access public
+     * 写入缓存.
+     *
      * @param string                             $name   缓存变量名
      * @param mixed                              $value  存储数据
-     * @param int|DateInterval|DateTimeInterface $expire 有效时间（秒）
-     * @return bool
+     * @param DateInterval|DateTimeInterface|int $expire 有效时间（秒）
      */
     public function set($name, $value, $expire = null): bool
     {
@@ -48,10 +48,9 @@ class TagSet
     }
 
     /**
-     * 追加缓存标识到标签
-     * @access public
+     * 追加缓存标识到标签.
+     *
      * @param string $name 缓存变量名
-     * @return void
      */
     public function append(string $name): void
     {
@@ -64,11 +63,10 @@ class TagSet
     }
 
     /**
-     * 写入缓存
-     * @access public
+     * 写入缓存.
+     *
      * @param iterable                                $values 缓存数据
-     * @param null|int|DateInterval|DateTimeInterface $ttl    有效时间 0为永久
-     * @return bool
+     * @param null|DateInterval|DateTimeInterface|int $ttl    有效时间 0为永久
      */
     public function setMultiple($values, $ttl = null): bool
     {
@@ -84,11 +82,12 @@ class TagSet
     }
 
     /**
-     * 如果不存在则写入缓存
-     * @access public
+     * 如果不存在则写入缓存.
+     *
      * @param string $name   缓存变量名
      * @param mixed  $value  存储数据
      * @param int    $expire 有效时间 0为永久
+     *
      * @return mixed
      */
     public function remember($name, $value, $expire = null)
@@ -100,17 +99,15 @@ class TagSet
         return $result;
     }
 
-    /**
-     * 清除缓存
-     * @access public
-     * @return bool
-     */
+    /** 清除缓存. */
     public function clear(): bool
     {
         // 指定标签清除
         foreach ($this->tag as $tag) {
             $keys = $this->handler->getTagItems($tag);
-            if (!empty($keys)) $this->handler->clearTag($keys);
+            if (!empty($keys)) {
+                $this->handler->clearTag($keys);
+            }
 
             $key = $this->handler->getTagKey($tag);
             $this->handler->delete($key);

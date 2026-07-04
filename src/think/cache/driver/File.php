@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,23 +9,26 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\cache\driver;
 
+use DateInterval;
 use DateTimeInterface;
+use Exception;
 use FilesystemIterator;
 use think\App;
 use think\cache\Driver;
 use think\exception\InvalidCacheException;
 
 /**
- * 文件缓存类
+ * 文件缓存类.
  */
 class File extends Driver
 {
     /**
-     * 配置参数
+     * 配置参数.
+     *
      * @var array
      */
     protected $options = [
@@ -40,8 +44,8 @@ class File extends Driver
     ];
 
     /**
-     * 架构函数
-     * @param App   $app
+     * 架构函数.
+     *
      * @param array $options 参数
      */
     public function __construct(App $app, array $options = [])
@@ -60,10 +64,9 @@ class File extends Driver
     }
 
     /**
-     * 取得变量的存储文件名
-     * @access public
+     * 取得变量的存储文件名.
+     *
      * @param string $name 缓存变量名
-     * @return string
      */
     public function getCacheKey(string $name): string
     {
@@ -82,9 +85,11 @@ class File extends Driver
     }
 
     /**
-     * 获取缓存数据
+     * 获取缓存数据.
+     *
      * @param string $name 缓存标识名
-     * @return array|null
+     *
+     * @return null|array
      */
     protected function getRaw(string $name)
     {
@@ -99,15 +104,16 @@ class File extends Driver
         if (false !== $content) {
             $expire = (int) substr($content, 8, 12);
             if (0 != $expire && time() - $expire > filemtime($filename)) {
-                //缓存过期删除缓存文件
+                // 缓存过期删除缓存文件
                 $this->unlink($filename);
+
                 return;
             }
 
             $content = substr($content, 32);
 
             if ($this->options['data_compress'] && function_exists('gzcompress')) {
-                //启用数据压缩
+                // 启用数据压缩
                 $content = gzuncompress($content);
             }
 
@@ -116,22 +122,20 @@ class File extends Driver
     }
 
     /**
-     * 判断缓存是否存在
-     * @access public
+     * 判断缓存是否存在.
+     *
      * @param string $name 缓存变量名
-     * @return bool
      */
     public function has($name): bool
     {
-        return $this->getRaw($name) !== null;
+        return null !== $this->getRaw($name);
     }
 
     /**
-     * 读取缓存
-     * @access public
+     * 读取缓存.
+     *
      * @param string $name    缓存变量名
      * @param mixed  $default 默认值
-     * @return mixed
      */
     public function get($name, $default = null): mixed
     {
@@ -145,12 +149,11 @@ class File extends Driver
     }
 
     /**
-     * 写入缓存
-     * @access public
-     * @param string                                   $name   缓存变量名
-     * @param mixed                                    $value  存储数据
-     * @param int|\DateInterval|DateTimeInterface|null $expire 有效时间 0为永久
-     * @return bool
+     * 写入缓存.
+     *
+     * @param string                                  $name   缓存变量名
+     * @param mixed                                   $value  存储数据
+     * @param null|DateInterval|DateTimeInterface|int $expire 有效时间 0为永久
      */
     public function set($name, $value, $expire = null): bool
     {
@@ -166,7 +169,7 @@ class File extends Driver
         if (!is_dir($dir)) {
             try {
                 mkdir($dir, 0755, true);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // 创建失败
             }
         }
@@ -174,14 +177,14 @@ class File extends Driver
         $data = $this->serialize($value);
 
         if ($this->options['data_compress'] && function_exists('gzcompress')) {
-            //数据压缩
+            // 数据压缩
             $data = gzcompress($data, 3);
         }
 
         $data = "<?php\n//" . sprintf('%012d', $expire) . "\n exit();?>\n" . $data;
 
         if (str_contains($filename, '://') && !str_starts_with($filename, 'file://')) {
-            //虚拟文件不加锁
+            // 虚拟文件不加锁
             $result = file_put_contents($filename, $data);
         } else {
             $result = file_put_contents($filename, $data, LOCK_EX);
@@ -189,6 +192,7 @@ class File extends Driver
 
         if ($result) {
             clearstatcache();
+
             return true;
         }
 
@@ -196,10 +200,11 @@ class File extends Driver
     }
 
     /**
-     * 自增缓存（针对数值缓存）
-     * @access public
+     * 自增缓存（针对数值缓存）.
+     *
      * @param string $name 缓存变量名
      * @param int    $step 步长
+     *
      * @return false|int
      */
     public function inc($name, $step = 1)
@@ -216,10 +221,11 @@ class File extends Driver
     }
 
     /**
-     * 自减缓存（针对数值缓存）
-     * @access public
+     * 自减缓存（针对数值缓存）.
+     *
      * @param string $name 缓存变量名
      * @param int    $step 步长
+     *
      * @return false|int
      */
     public function dec($name, $step = 1)
@@ -228,21 +234,16 @@ class File extends Driver
     }
 
     /**
-     * 删除缓存
-     * @access public
+     * 删除缓存.
+     *
      * @param string $name 缓存变量名
-     * @return bool
      */
     public function delete($name): bool
     {
         return $this->unlink($this->getCacheKey($name));
     }
 
-    /**
-     * 清除缓存
-     * @access public
-     * @return bool
-     */
+    /** 清除缓存. */
     public function clear(): bool
     {
         $dirname = $this->options['path'] . $this->options['prefix'];
@@ -253,10 +254,9 @@ class File extends Driver
     }
 
     /**
-     * 删除缓存标签
-     * @access public
+     * 删除缓存标签.
+     *
      * @param array $keys 缓存标识列表
-     * @return void
      */
     public function clearTag($keys): void
     {
@@ -265,24 +265,19 @@ class File extends Driver
         }
     }
 
-    /**
-     * 判断文件是否存在后，删除
-     * @access private
-     * @param string $path
-     * @return bool
-     */
+    /** 判断文件是否存在后，删除. */
     private function unlink(string $path): bool
     {
         try {
             return is_file($path) && unlink($path);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
 
     /**
-     * 删除文件夹
-     * @param $dirname
+     * 删除文件夹.
+     *
      * @return bool
      */
     private function rmdir($dirname)

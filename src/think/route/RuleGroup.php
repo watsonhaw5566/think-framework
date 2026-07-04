@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,12 +9,11 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\route;
 
 use Closure;
-use DirectoryIterator;
 use think\Container;
 use think\Exception;
 use think\helper\Str;
@@ -23,60 +23,67 @@ use think\route\dispatch\Callback as CallbackDispatch;
 use think\route\dispatch\Controller as ControllerDispatch;
 
 /**
- * 路由分组类
+ * 路由分组类.
  */
 class RuleGroup extends Rule
 {
     /**
-     * 分组路由（包括子分组）
+     * 分组路由（包括子分组）.
+     *
      * @var Rule[]
      */
     protected $rules = [];
 
     /**
-     * MISS路由
+     * MISS路由.
+     *
      * @var RuleItem
      */
     protected $miss;
 
     /**
-     * 完整名称
+     * 完整名称.
+     *
      * @var string
      */
     protected $fullName;
 
     /**
-     * 分组别名
+     * 分组别名.
+     *
      * @var string
      */
     protected $alias;
 
     /**
-     * 分组子目录
+     * 分组子目录.
+     *
      * @var string
      */
     protected $sub;
 
     /**
-     * 分组绑定
+     * 分组绑定.
+     *
      * @var string
      */
     protected $bind;
 
     /**
-     * 是否已经解析
+     * 是否已经解析.
+     *
      * @var bool
      */
     protected $hasParsed;
 
     /**
-     * 架构函数
-     * @access public
-     * @param  Route     $router 路由对象
-     * @param  RuleGroup $parent 上级对象
-     * @param  string    $name   分组名称
-     * @param  mixed     $rule   分组路由
-     * @param  bool      $lazy   延迟解析
+     * 架构函数.
+     *
+     * @param Route     $router 路由对象
+     * @param RuleGroup $parent 上级对象
+     * @param string    $name   分组名称
+     * @param mixed     $rule   分组路由
+     * @param bool      $lazy   延迟解析
      */
     public function __construct(Route $router, ?RuleGroup $parent = null, string $name = '', $rule = null, bool $lazy = false)
     {
@@ -90,7 +97,7 @@ class RuleGroup extends Rule
                 $this->dispatcher($rule);
                 $this->rule = '';
             } else {
-                $this->sub  =  $rule ?: $this->name;
+                $this->sub = $rule ?: $this->name;
             }
         }
 
@@ -106,11 +113,7 @@ class RuleGroup extends Rule
         }
     }
 
-    /**
-     * 设置分组的路由规则
-     * @access public
-     * @return void
-     */
+    /** 设置分组的路由规则. */
     protected function setFullName(): void
     {
         if (str_contains($this->name, ':')) {
@@ -120,7 +123,7 @@ class RuleGroup extends Rule
         if ($this->parent && $this->parent->getFullName()) {
             $this->fullName = $this->parent->getFullName() . ($this->name ? '/' . $this->name : '');
             if ($this->sub) {
-                $this->sub  = $this->parent->getFullName() . '/' . $this->sub;
+                $this->sub = $this->parent->getFullName() . '/' . $this->sub;
             }
         } else {
             $this->fullName = $this->name;
@@ -131,31 +134,22 @@ class RuleGroup extends Rule
         }
     }
 
-    /**
-     * 获取所属域名
-     * @access public
-     * @return string
-     */
+    /** 获取所属域名. */
     public function getDomain(): string
     {
         return $this->domain ?: '-';
     }
 
-    /**
-     * 获取分组别名
-     * @access public
-     * @return string
-     */
+    /** 获取分组别名. */
     public function getAlias(): string
     {
         return $this->alias ?: '';
     }
 
     /**
-     * 自动加载分组路由
-     * @access protected
-     * @param  string  $dir 目录名
-     * @return void
+     * 自动加载分组路由.
+     *
+     * @param string $dir 目录名
      */
     protected function loadRoutes(string $dir): void
     {
@@ -179,11 +173,12 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 检测分组路由
-     * @access public
-     * @param  Request $request       请求对象
-     * @param  string  $url           访问地址
-     * @param  bool    $completeMatch 路由是否完全匹配
+     * 检测分组路由.
+     *
+     * @param Request $request       请求对象
+     * @param string  $url           访问地址
+     * @param bool    $completeMatch 路由是否完全匹配
+     *
      * @return Dispatch|false
      */
     public function check(Request $request, string $url, bool $completeMatch = false)
@@ -240,17 +235,16 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 分组URL匹配检查
-     * @access protected
-     * @param  string $url URL
-     * @return bool
+     * 分组URL匹配检查.
+     *
+     * @param string $url URL
      */
     protected function checkUrl(string $url): bool
     {
         $url = str_replace('|', '/', $url);
         if (!$this->config('url_route_must')) {
             $item = $this->router->getRuleName()->getName($url);
-            if (!empty($item) && $item[0]['rule'] != $url){
+            if (!empty($item) && $item[0]['rule'] != $url) {
                 // 定义过路由地址的 不支持访问
                 return false;
             }
@@ -274,9 +268,10 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 设置路由分组别名
-     * @access public
-     * @param  string $alias 路由分组别名
+     * 设置路由分组别名.
+     *
+     * @param string $alias 路由分组别名
+     *
      * @return $this
      */
     public function alias(string $alias)
@@ -288,10 +283,9 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 解析分组和域名的路由规则及绑定
-     * @access public
-     * @param  mixed $rule 路由规则
-     * @return void
+     * 解析分组和域名的路由规则及绑定.
+     *
+     * @param mixed $rule 路由规则
      */
     public function parseGroupRule($rule): void
     {
@@ -309,12 +303,13 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 检测分组路由
-     * @access public
-     * @param  Request $request       请求对象
-     * @param  array   $rules         路由规则
-     * @param  string  $url           访问地址
-     * @param  bool    $completeMatch 路由是否完全匹配
+     * 检测分组路由.
+     *
+     * @param Request $request       请求对象
+     * @param array   $rules         路由规则
+     * @param string  $url           访问地址
+     * @param bool    $completeMatch 路由是否完全匹配
+     *
      * @return Dispatch|false
      */
     protected function checkMergeRuleRegex(Request $request, array &$rules, string $url, bool $completeMatch)
@@ -329,6 +324,7 @@ class RuleGroup extends Rule
                 $rule = $depr . str_replace('/', $depr, $item->getRule());
                 if ($depr == $rule && $depr != $url) {
                     unset($rules[$key]);
+
                     continue;
                 }
 
@@ -340,6 +336,7 @@ class RuleGroup extends Rule
                     }
 
                     unset($rules[$key]);
+
                     continue;
                 }
 
@@ -348,6 +345,7 @@ class RuleGroup extends Rule
                 if ($matchRule = preg_split('/[' . $slash . ']<\w+\??>/', $rule, 2)) {
                     if ($matchRule[0] && 0 !== strncasecmp($rule, $url, strlen($matchRule[0]))) {
                         unset($rules[$key]);
+
                         continue;
                     }
                 }
@@ -362,6 +360,7 @@ class RuleGroup extends Rule
                 }
             } elseif ($item instanceof RuleGroup) {
                 $array = $item->getrules();
+
                 return $this->checkMergeRuleRegex($request, $array, ltrim($url, $depr), $completeMatch);
             }
         }
@@ -413,13 +412,12 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 注册MISS路由
-     * @access public
-     * @param  string|Closure $route  路由地址
-     * @param  string         $method 请求类型
-     * @return RuleItem
+     * 注册MISS路由.
+     *
+     * @param Closure|string $route  路由地址
+     * @param string         $method 请求类型
      */
-    public function miss(string | Closure $route, string $method = '*'): RuleItem
+    public function miss(Closure|string $route, string $method = '*'): RuleItem
     {
         // 创建路由规则实例
         $method   = strtolower($method);
@@ -431,10 +429,9 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 获取分组下的MISS路由
-     * @access public
-     * @param  string $method 请求类型
-     * @return RuleItem|null
+     * 获取分组下的MISS路由.
+     *
+     * @param string $method 请求类型
      */
     public function getMissRule(string $method = '*'): ?RuleItem
     {
@@ -443,17 +440,19 @@ class RuleGroup extends Rule
         } elseif (isset($this->miss['*'])) {
             $miss = $this->miss['*'];
         }
+
         return $miss ?? null;
     }
 
     /**
-     * 分组自动URL调度  默认绑定到当前分组名所在的控制器分级
-     * @access public
-     * @param  string       $bind 绑定资源 绑定规则 class @controller :namespace /layer
-     * @param  string|array $middleware 中间件
+     * 分组自动URL调度  默认绑定到当前分组名所在的控制器分级.
+     *
+     * @param string       $bind       绑定资源 绑定规则 class @controller :namespace /layer
+     * @param array|string $middleware 中间件
+     *
      * @return $this
      */
-    public function auto(string $bind = '', string | array $middleware = '')
+    public function auto(string $bind = '', array|string $middleware = '')
     {
         $this->bind = $bind ?: '/' . $this->getFullName();
         if ($middleware) {
@@ -464,10 +463,8 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 分组绑定到类
-     * @access public
-     * @param  string $class
-     * @param  bool   $prefix
+     * 分组绑定到类.
+     *
      * @return $this
      */
     public function class(string $class, bool $prefix = true)
@@ -476,14 +473,13 @@ class RuleGroup extends Rule
         if ($prefix) {
             $this->prefix('\\' . $class . '@');
         }
+
         return $this;
     }
 
     /**
-     * 分组绑定到控制器
-     * @access public
-     * @param  string $controller
-     * @param  bool   $prefix
+     * 分组绑定到控制器.
+     *
      * @return $this
      */
     public function controller(string $controller, bool $prefix = true)
@@ -492,14 +488,13 @@ class RuleGroup extends Rule
         if ($prefix) {
             $this->prefix($controller . '/');
         }
+
         return $this;
     }
 
     /**
-     * 分组绑定到命名空间
-     * @access public
-     * @param  string $namespace
-     * @param  bool   $prefix
+     * 分组绑定到命名空间.
+     *
      * @return $this
      */
     public function namespace(string $namespace, bool $prefix = true)
@@ -508,30 +503,28 @@ class RuleGroup extends Rule
         if ($prefix) {
             $this->prefix($namespace . '\\');
         }
+
         return $this;
     }
 
     /**
-     * 分组绑定到模块
-     * @access public
-     * @param  string $name
-     * @param  bool   $prefix
+     * 分组绑定到模块.
+     *
      * @return $this
      */
     public function module(string $name, bool $prefix = true)
     {
-        $this->bind = ':app\\' . $name . '\\controller';
+        $this->bind = ':app\\' . $name . '\controller';
         if ($prefix) {
-            $this->prefix('app\\'. $name . '\\controller\\');
+            $this->prefix('app\\' . $name . '\controller\\');
         }
+
         return $this;
     }
 
     /**
-     * 分组绑定到控制器分级
-     * @access public
-     * @param  string $namespace
-     * @param  bool   $prefix
+     * 分组绑定到控制器分级.
+     *
      * @return $this
      */
     public function layer(string $layer, bool $prefix = true)
@@ -540,12 +533,13 @@ class RuleGroup extends Rule
         if ($prefix) {
             $this->prefix($layer . '/');
         }
+
         return $this;
     }
 
     /**
-     * 获取分组绑定信息
-     * @access public
+     * 获取分组绑定信息.
+     *
      * @return string
      */
     public function getBind()
@@ -554,30 +548,27 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 检测URL绑定
-     * @access private
-     * @param  Request   $request
-     * @param  string    $url URL地址
-     * @param  array     $option 分组参数
-     * @param  RuleItem  $miss
-     * @return Dispatch
+     * 检测URL绑定.
+     *
+     * @param string $url    URL地址
+     * @param array  $option 分组参数
      */
     public function checkBind(Request $request, string $url, array $option = [], ?RuleItem $miss = null): Dispatch
     {
         [$bind, $param] = $this->parseBindAppendParam($this->bind);
 
         [$call, $bind] = match (substr($bind, 0, 1)) {
-            '\\' => ['bindToClass', substr($bind, 1)],
-            '@' => ['bindToController', substr($bind, 1)],
-            '/' => ['bindToLayer', substr($bind, 1)],
-            ':' => ['bindToNamespace', substr($bind, 1)],
+            '\\'    => ['bindToClass', substr($bind, 1)],
+            '@'     => ['bindToController', substr($bind, 1)],
+            '/'     => ['bindToLayer', substr($bind, 1)],
+            ':'     => ['bindToNamespace', substr($bind, 1)],
             default => ['bindToClass', $bind],
         };
 
         $name = $this->getFullName();
         $url  = trim(substr(str_replace('|', '/', $url), strlen($name)), '/');
 
-        return $this->$call($request, $url, $bind, $param, $option, $miss);
+        return $this->{$call}($request, $url, $bind, $param, $option, $miss);
     }
 
     protected function parseBindAppendParam(string $bind)
@@ -587,19 +578,17 @@ class RuleGroup extends Rule
             [$bind, $query] = explode('?', $bind);
             parse_str($query, $vars);
         }
+
         return [$bind, $vars];
     }
 
     /**
-     * 绑定到类
-     * @access protected
-     * @param  Request   $request
-     * @param  string    $url URL地址
-     * @param  string    $class 类名（带命名空间）
-     * @param  array     $param  路由变量
-     * @param  array     $option 分组参数
-     * @param  RuleItem  $miss
-     * @return CallbackDispatch
+     * 绑定到类.
+     *
+     * @param string $url    URL地址
+     * @param string $class  类名（带命名空间）
+     * @param array  $param  路由变量
+     * @param array  $option 分组参数
      */
     protected function bindToClass(Request $request, string $url, string $class, array $param = [], array $option = [], ?RuleItem $miss = null): CallbackDispatch
     {
@@ -614,15 +603,12 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 绑定到命名空间
-     * @access protected
-     * @param  Request   $request
-     * @param  string    $url URL地址
-     * @param  string    $namespace 命名空间
-     * @param  array     $param  路由变量
-     * @param  array     $option 分组参数
-     * @param  RuleItem  $miss
-     * @return CallbackDispatch
+     * 绑定到命名空间.
+     *
+     * @param string $url       URL地址
+     * @param string $namespace 命名空间
+     * @param array  $param     路由变量
+     * @param array  $option    分组参数
      */
     protected function bindToNamespace(Request $request, string $url, string $namespace, array $param = [], array $option = [], ?RuleItem $miss = null): CallbackDispatch
     {
@@ -639,15 +625,12 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 绑定到控制器
-     * @access protected
-     * @param  Request   $request
-     * @param  string    $url URL地址
-     * @param  string    $controller 控制器名
-     * @param  array     $param  路由变量
-     * @param  array     $option 分组参数
-     * @param  RuleItem  $miss
-     * @return ControllerDispatch
+     * 绑定到控制器.
+     *
+     * @param string $url        URL地址
+     * @param string $controller 控制器名
+     * @param array  $param      路由变量
+     * @param array  $option     分组参数
      */
     protected function bindToController(Request $request, string $url, string $controller, array $param = [], array $option = [], ?RuleItem $miss = null): ControllerDispatch
     {
@@ -662,15 +645,11 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 绑定到控制器分级
-     * @access protected
-     * @param  Request   $request
-     * @param  string    $url URL地址
-     * @param  string    $controller 控制器名
-     * @param  array     $param  路由变量
-     * @param  array     $option 分组参数
-     * @param  RuleItem  $miss
-     * @return ControllerDispatch
+     * 绑定到控制器分级.
+     *
+     * @param string $url    URL地址
+     * @param array  $param  路由变量
+     * @param array  $option 分组参数
      */
     protected function bindToLayer(Request $request, string $url, string $layer, array $param = [], array $option = [], ?RuleItem $miss = null): ControllerDispatch
     {
@@ -686,12 +665,11 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 添加分组下的路由规则
-     * @access public
-     * @param  string $rule   路由规则
-     * @param  mixed  $route  路由地址
-     * @param  string $method 请求类型
-     * @return RuleItem
+     * 添加分组下的路由规则.
+     *
+     * @param string $rule   路由规则
+     * @param mixed  $route  路由地址
+     * @param string $method 请求类型
      */
     public function addRule(string $rule, $route = null, string $method = '*'): RuleItem
     {
@@ -711,21 +689,24 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 注册分组下的路由规则
-     * @access public
-     * @param  Rule   $rule   路由规则
+     * 注册分组下的路由规则.
+     *
+     * @param Rule $rule 路由规则
+     *
      * @return $this
      */
     public function addRuleItem(Rule $rule)
     {
         $this->rules[] = $rule;
+
         return $this;
     }
 
     /**
      * 设置分组的路由前缀
-     * @access public
-     * @param  string $prefix 路由前缀
+     *
+     * @param string $prefix 路由前缀
+     *
      * @return $this
      */
     public function prefix(string $prefix)
@@ -738,9 +719,10 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 合并分组的路由规则正则
-     * @access public
-     * @param  bool $merge 是否合并
+     * 合并分组的路由规则正则.
+     *
+     * @param bool $merge 是否合并
+     *
      * @return $this
      */
     public function mergeRuleRegex(bool $merge = true)
@@ -749,9 +731,10 @@ class RuleGroup extends Rule
     }
 
     /**
-     * 设置分组的Dispatch调度
-     * @access public
-     * @param  string $dispatch 调度类
+     * 设置分组的Dispatch调度.
+     *
+     * @param string $dispatch 调度类
+     *
      * @return $this
      */
     public function dispatcher(string $dispatch)
@@ -759,21 +742,16 @@ class RuleGroup extends Rule
         return $this->setOption('dispatcher', $dispatch);
     }
 
-    /**
-     * 获取完整分组Name
-     * @access public
-     * @return string
-     */
+    /** 获取完整分组Name. */
     public function getFullName(): string
     {
         return $this->fullName ?: '';
     }
 
     /**
-     * 获取分组的路由规则
-     * @access public
-     * @param  string $method 请求类型
-     * @return array
+     * 获取分组的路由规则.
+     *
+     * @param string $method 请求类型
      */
     public function getRules(string $method = ''): array
     {
@@ -783,15 +761,12 @@ class RuleGroup extends Rule
 
         return array_filter($this->rules, function ($item) use ($method) {
             $ruleMethod = $item->getMethod();
+
             return '*' == $ruleMethod || str_contains($ruleMethod, $method);
         });
     }
 
-    /**
-     * 清空分组下的路由规则
-     * @access public
-     * @return void
-     */
+    /** 清空分组下的路由规则. */
     public function clear(): void
     {
         $this->rules = [];

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -19,31 +20,34 @@ use think\exception\Handle;
 use Throwable;
 
 /**
- * Web应用管理类
- * @package think
+ * Web应用管理类.
  */
 class Http
 {
     /**
-     * 应用名称
+     * 应用名称.
+     *
      * @var string
      */
     protected $name;
 
     /**
-     * 应用路径
+     * 应用路径.
+     *
      * @var string
      */
     protected $path;
 
     /**
-     * 路由路径
+     * 路由路径.
+     *
      * @var string
      */
     protected $routePath;
 
     /**
-     * 是否绑定应用
+     * 是否绑定应用.
+     *
      * @var bool
      */
     protected $isBind = false;
@@ -54,31 +58,30 @@ class Http
     }
 
     /**
-     * 设置应用名称
-     * @access public
+     * 设置应用名称.
+     *
      * @param string $name 应用名称
+     *
      * @return $this
      */
     public function name(string $name)
     {
         $this->name = $name;
+
         return $this;
     }
 
-    /**
-     * 获取应用名称
-     * @access public
-     * @return string
-     */
+    /** 获取应用名称. */
     public function getName(): string
     {
         return $this->name ?: '';
     }
 
     /**
-     * 设置应用目录
-     * @access public
+     * 设置应用目录.
+     *
      * @param string $path 应用目录
+     *
      * @return $this
      */
     public function path(string $path)
@@ -88,32 +91,25 @@ class Http
         }
 
         $this->path = $path;
+
         return $this;
     }
 
-    /**
-     * 获取应用路径
-     * @access public
-     * @return string
-     */
+    /** 获取应用路径. */
     public function getPath(): string
     {
         return $this->path ?: '';
     }
 
-    /**
-     * 获取路由目录
-     * @access public
-     * @return string
-     */
+    /** 获取路由目录. */
     public function getRoutePath(): string
     {
         return $this->routePath;
     }
 
     /**
-     * 设置路由目录
-     * @access public
+     * 设置路由目录.
+     *
      * @param string $path 路由定义目录
      */
     public function setRoutePath(string $path): void
@@ -122,40 +118,33 @@ class Http
     }
 
     /**
-     * 设置应用绑定
-     * @access public
+     * 设置应用绑定.
+     *
      * @param bool $bind 是否绑定
+     *
      * @return $this
      */
     public function setBind(bool $bind = true)
     {
         $this->isBind = $bind;
+
         return $this;
     }
 
-    /**
-     * 是否绑定应用
-     * @access public
-     * @return bool
-     */
+    /** 是否绑定应用. */
     public function isBind(): bool
     {
         return $this->isBind;
     }
 
-    /**
-     * 执行应用程序
-     * @access public
-     * @param Request|null $request
-     * @return Response
-     */
+    /** 执行应用程序. */
     public function run(?Request $request = null): Response
     {
-        //初始化
+        // 初始化
         $this->initialize();
 
-        //自动创建request对象
-        $request = $request ?? $this->app->make('request', [], true);
+        // 自动创建request对象
+        $request ??= $this->app->make('request', [], true);
         $this->app->instance('request', $request);
 
         try {
@@ -169,9 +158,7 @@ class Http
         return $response;
     }
 
-    /**
-     * 初始化
-     */
+    /** 初始化. */
     protected function initialize()
     {
         if (!$this->app->initialized()) {
@@ -180,8 +167,8 @@ class Http
     }
 
     /**
-     * 执行应用程序
-     * @param Request $request
+     * 执行应用程序.
+     *
      * @return mixed
      */
     protected function runWithRequest(Request $request)
@@ -196,7 +183,8 @@ class Http
             ->send($request)
             ->then(function ($request) {
                 return $this->dispatchToRoute($request);
-            });
+            })
+        ;
     }
 
     protected function dispatchToRoute($request)
@@ -208,9 +196,7 @@ class Http
         return $this->app->route->dispatch($request, $withRoute);
     }
 
-    /**
-     * 加载全局中间件
-     */
+    /** 加载全局中间件. */
     protected function loadMiddleware(): void
     {
         if (is_file($this->app->getBasePath() . 'middleware.php')) {
@@ -218,11 +204,7 @@ class Http
         }
     }
 
-    /**
-     * 加载路由
-     * @access protected
-     * @return void
-     */
+    /** 加载路由. */
     protected function loadRoutes(): void
     {
         // 加载路由定义
@@ -238,12 +220,7 @@ class Http
         $this->app->event->trigger(RouteLoaded::class);
     }
 
-    /**
-     * Report the exception to the exception handler.
-     *
-     * @param Throwable $e
-     * @return void
-     */
+    /** Report the exception to the exception handler. */
     protected function reportException(Throwable $e)
     {
         $this->app->make(Handle::class)->report($e);
@@ -252,8 +229,8 @@ class Http
     /**
      * Render the exception to a response.
      *
-     * @param Request   $request
-     * @param Throwable $e
+     * @param Request $request
+     *
      * @return Response
      */
     protected function renderException($request, Throwable $e)
@@ -261,11 +238,7 @@ class Http
         return $this->app->make(Handle::class)->render($request, $e);
     }
 
-/**
-     * HttpEnd
-     * @param Response $response
-     * @return void
-     */
+    /** HttpEnd. */
     public function end(Response $response): void
     {
         try {

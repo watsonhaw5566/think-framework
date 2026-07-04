@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: 麦当苗儿 <zuojiazi@vip.qq.com> <http://zjzit.cn>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\initializer;
 
@@ -19,19 +20,14 @@ use think\exception\Handle;
 use Throwable;
 
 /**
- * 错误和异常处理
+ * 错误和异常处理.
  */
 class Error
 {
     /** @var App */
     protected $app;
 
-    /**
-     * 注册异常处理
-     * @access public
-     * @param App $app
-     * @return void
-     */
+    /** 注册异常处理. */
     public function init(App $app)
     {
         $this->app = $app;
@@ -42,11 +38,7 @@ class Error
         register_shutdown_function([$this, 'appShutdown']);
     }
 
-    /**
-     * Exception Handler
-     * @access public
-     * @param \Throwable $e
-     */
+    /** Exception Handler. */
     public function appException(Throwable $e): void
     {
         $handler = $this->getExceptionHandler();
@@ -54,7 +46,7 @@ class Error
         $handler->report($e);
 
         if ($this->app->runningInConsole()) {
-            $handler->renderForConsole(new ConsoleOutput, $e);
+            $handler->renderForConsole(new ConsoleOutput(), $e);
         } else {
             $response = $handler->render($this->app->request, $e);
             $response->send();
@@ -63,12 +55,13 @@ class Error
     }
 
     /**
-     * Error Handler
-     * @access public
+     * Error Handler.
+     *
      * @param int    $errno   错误编号
      * @param string $errstr  详细错误信息
      * @param string $errfile 出错的文件
      * @param int    $errline 出错行号
+     *
      * @throws ErrorException
      */
     public function appError(int $errno, string $errstr, string $errfile = '', int $errline = 0): void
@@ -81,10 +74,7 @@ class Error
         }
     }
 
-    /**
-     * Shutdown Handler
-     * @access public
-     */
+    /** Shutdown Handler. */
     public function appShutdown(): void
     {
         if (!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
@@ -95,13 +85,7 @@ class Error
         }
     }
 
-    /**
-     * 确定错误类型是否致命
-     *
-     * @access protected
-     * @param int $type
-     * @return bool
-     */
+    /** 确定错误类型是否致命. */
     protected function isFatal(int $type): bool
     {
         return in_array($type, [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE]);
@@ -110,7 +94,6 @@ class Error
     /**
      * Get an instance of the exception handler.
      *
-     * @access protected
      * @return Handle
      */
     protected function getExceptionHandler()

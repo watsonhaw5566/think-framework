@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,19 +9,21 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command\make;
 
 use think\console\command\Make;
 
 class Subscribe extends Make
 {
-    protected $type = "Subscribe";
+    protected $type = 'Subscribe';
 
     protected function configure()
     {
         parent::configure();
         $this->setName('make:subscribe')
-            ->setDescription('Create a new subscribe class');
+            ->setDescription('Create a new subscribe class')
+        ;
     }
 
     protected function getStub(): string
@@ -30,6 +33,6 @@ class Subscribe extends Make
 
     protected function getNamespace(string $app): string
     {
-        return parent::getNamespace($app) . '\\subscribe';
+        return parent::getNamespace($app) . '\subscribe';
     }
 }

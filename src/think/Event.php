@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think;
 
@@ -17,25 +18,27 @@ use ReflectionMethod;
 use think\helper\Str;
 
 /**
- * 事件管理类
- * @package think
+ * 事件管理类.
  */
 class Event
 {
     /**
-     * 监听者
+     * 监听者.
+     *
      * @var array
      */
     protected $listener = [];
 
     /**
-     * 观察者
+     * 观察者.
+     *
      * @var array
      */
     protected $observer = [];
 
     /**
-     * 事件别名
+     * 事件别名.
+     *
      * @var array
      */
     protected $bind = [
@@ -49,6 +52,7 @@ class Event
 
     /**
      * 应用对象
+     *
      * @var App
      */
     protected $app;
@@ -59,9 +63,10 @@ class Event
     }
 
     /**
-     * 批量注册事件监听
-     * @access public
+     * 批量注册事件监听.
+     *
      * @param array $events 事件定义
+     *
      * @return $this
      */
     public function listenEvents(array $events)
@@ -78,11 +83,12 @@ class Event
     }
 
     /**
-     * 注册事件监听
-     * @access public
+     * 注册事件监听.
+     *
      * @param string $event    事件名称
      * @param mixed  $listener 监听操作（或者类名）
      * @param bool   $first    是否优先执行
+     *
      * @return $this
      */
     public function listen(string $event, $listener, bool $first = false)
@@ -101,10 +107,9 @@ class Event
     }
 
     /**
-     * 是否存在事件监听
-     * @access public
+     * 是否存在事件监听.
+     *
      * @param string $event 事件名称
-     * @return bool
      */
     public function hasListener(string $event): bool
     {
@@ -116,10 +121,9 @@ class Event
     }
 
     /**
-     * 移除事件监听
-     * @access public
+     * 移除事件监听.
+     *
      * @param string $event 事件名称
-     * @return void
      */
     public function remove(string $event): void
     {
@@ -131,9 +135,10 @@ class Event
     }
 
     /**
-     * 指定事件别名标识 便于调用
-     * @access public
+     * 指定事件别名标识 便于调用.
+     *
      * @param array $events 事件别名
+     *
      * @return $this
      */
     public function bind(array $events)
@@ -144,9 +149,10 @@ class Event
     }
 
     /**
-     * 注册事件订阅者
-     * @access public
+     * 注册事件订阅者.
+     *
      * @param mixed $subscriber 订阅者
+     *
      * @return $this
      */
     public function subscribe($subscriber)
@@ -174,10 +180,11 @@ class Event
     }
 
     /**
-     * 自动注册事件监听
-     * @access public
-     * @param string|object $observer 观察者
+     * 自动注册事件监听.
+     *
+     * @param object|string $observer 观察者
      * @param null|string   $prefix   事件名前缀
+     *
      * @return $this
      */
     public function observe($observer, string $prefix = '')
@@ -211,11 +218,12 @@ class Event
     }
 
     /**
-     * 触发事件
-     * @access public
-     * @param string|object $event  事件名称
+     * 触发事件.
+     *
+     * @param object|string $event  事件名称
      * @param mixed         $params 传入参数
      * @param bool          $once   只获取一个有效返回值
+     *
      * @return mixed
      */
     public function trigger($event, $params = null, bool $once = false)
@@ -263,9 +271,10 @@ class Event
     }
 
     /**
-     * 触发事件(只获取一个有效返回值)
-     * @param      $event
+     * 触发事件(只获取一个有效返回值).
+     *
      * @param null $params
+     *
      * @return mixed
      */
     public function until($event, $params = null)
@@ -274,10 +283,11 @@ class Event
     }
 
     /**
-     * 执行事件调度
-     * @access protected
+     * 执行事件调度.
+     *
      * @param mixed $event  事件方法
      * @param mixed $params 参数
+     *
      * @return mixed
      */
     protected function dispatch($event, $params = null)

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -22,14 +23,10 @@ use think\Response;
  */
 class FormTokenCheck
 {
-
     /**
-     * 表单令牌检测
-     * @access public
-     * @param Request $request
-     * @param Closure $next
-     * @param string  $token 表单令牌Token名称
-     * @return Response
+     * 表单令牌检测.
+     *
+     * @param string $token 表单令牌Token名称
      */
     public function handle(Request $request, Closure $next, ?string $token = null): Response
     {

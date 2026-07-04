@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -17,19 +18,22 @@ use think\helper\Arr;
 class Store
 {
     /**
-     * Session数据
+     * Session数据.
+     *
      * @var array
      */
     protected $data = [];
 
     /**
-     * 是否初始化
+     * 是否初始化.
+     *
      * @var bool
      */
-    protected $init = null;
+    protected $init;
 
     /**
-     * 记录Session Id
+     * 记录Session Id.
+     *
      * @var string
      */
     protected $id;
@@ -46,22 +50,13 @@ class Store
         $this->setId();
     }
 
-    /**
-     * 设置数据
-     * @access public
-     * @param array $data
-     * @return void
-     */
+    /** 设置数据. */
     public function setData(array $data): void
     {
         $this->data = $data;
     }
 
-    /**
-     * session初始化
-     * @access public
-     * @return void
-     */
+    /** session初始化. */
     public function init(): void
     {
         // 读取缓存数据
@@ -75,62 +70,48 @@ class Store
     }
 
     /**
-     * 设置SessionName
-     * @access public
+     * 设置SessionName.
+     *
      * @param string $name session_name
-     * @return void
      */
     public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * 获取sessionName
-     * @access public
-     * @return string
-     */
+    /** 获取sessionName. */
     public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * session_id设置
-     * @access public
+     * session_id设置.
+     *
      * @param string $id session_id
-     * @return void
      */
     public function setId(?string $id = null): void
     {
-        $this->id = is_string($id) && strlen($id) === 32 && ctype_alnum($id) ? $id : md5(microtime(true) . session_create_id());
+        $this->id = is_string($id) && 32 === strlen($id) && ctype_alnum($id) ? $id : md5(microtime(true) . session_create_id());
     }
 
-    /**
-     * 获取session_id
-     * @access public
-     * @return string
-     */
+    /** 获取session_id. */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * 获取所有数据
-     * @return array
-     */
+    /** 获取所有数据. */
     public function all(): array
     {
         return $this->data;
     }
 
     /**
-     * session设置
-     * @access public
+     * session设置.
+     *
      * @param string $name  session名称
      * @param mixed  $value session值
-     * @return void
      */
     public function set(string $name, $value): void
     {
@@ -138,10 +119,11 @@ class Store
     }
 
     /**
-     * session获取
-     * @access public
+     * session获取.
+     *
      * @param string $name    session名称
      * @param mixed  $default 默认值
+     *
      * @return mixed
      */
     public function get(string $name, $default = null)
@@ -150,10 +132,11 @@ class Store
     }
 
     /**
-     * session获取并删除
-     * @access public
-     * @param string $name session名称
+     * session获取并删除.
+     *
+     * @param string $name    session名称
      * @param mixed  $default 默认值
+     *
      * @return mixed
      */
     public function pull(string $name, $default = null)
@@ -162,11 +145,9 @@ class Store
     }
 
     /**
-     * 添加数据到一个session数组
-     * @access public
-     * @param string $key
-     * @param mixed  $value
-     * @return void
+     * 添加数据到一个session数组.
+     *
+     * @param mixed $value
      */
     public function push(string $key, $value): void
     {
@@ -178,10 +159,9 @@ class Store
     }
 
     /**
-     * 判断session数据
-     * @access public
+     * 判断session数据.
+     *
      * @param string $name session名称
-     * @return bool
      */
     public function has(string $name): bool
     {
@@ -189,29 +169,22 @@ class Store
     }
 
     /**
-     * 删除session数据
-     * @access public
+     * 删除session数据.
+     *
      * @param string $name session名称
-     * @return void
      */
     public function delete(string $name): void
     {
         Arr::forget($this->data, $name);
     }
 
-    /**
-     * 清空session数据
-     * @access public
-     * @return void
-     */
+    /** 清空session数据. */
     public function clear(): void
     {
         $this->data = [];
     }
 
-    /**
-     * 销毁session
-     */
+    /** 销毁session. */
     public function destroy(): void
     {
         $this->clear();
@@ -219,10 +192,7 @@ class Store
         $this->regenerate(true);
     }
 
-    /**
-     * 重新生成session id
-     * @param bool $destroy
-     */
+    /** 重新生成session id. */
     public function regenerate(bool $destroy = false): void
     {
         if ($destroy) {
@@ -232,11 +202,7 @@ class Store
         $this->setId();
     }
 
-    /**
-     * 保存session数据
-     * @access public
-     * @return void
-     */
+    /** 保存session数据. */
     public function save(): void
     {
         $this->clearFlashData();
@@ -255,11 +221,10 @@ class Store
     }
 
     /**
-     * session设置 下一次请求有效
-     * @access public
+     * session设置 下一次请求有效.
+     *
      * @param string $name  session名称
      * @param mixed  $value session值
-     * @return void
      */
     public function flash(string $name, $value): void
     {
@@ -268,11 +233,7 @@ class Store
         $this->set('__flash__.__current__', Arr::except($this->get('__flash__.__current__', []), $name));
     }
 
-    /**
-     * 将本次闪存数据推迟到下次请求
-     *
-     * @return void
-     */
+    /** 将本次闪存数据推迟到下次请求 */
     public function reflash(): void
     {
         $keys   = $this->get('__flash__.__current__', []);
@@ -281,11 +242,7 @@ class Store
         $this->set('__flash__.__current__', []);
     }
 
-    /**
-     * 清空当前请求的session数据
-     * @access public
-     * @return void
-     */
+    /** 清空当前请求的session数据. */
     public function clearFlashData(): void
     {
         Arr::forget($this->data, $this->get('__flash__.__current__', []));
@@ -298,10 +255,9 @@ class Store
     }
 
     /**
-     * 序列化数据
-     * @access protected
+     * 序列化数据.
+     *
      * @param mixed $data
-     * @return string
      */
     protected function serialize($data): string
     {
@@ -310,12 +266,7 @@ class Store
         return $serialize($data);
     }
 
-    /**
-     * 反序列化数据
-     * @access protected
-     * @param string $data
-     * @return array
-     */
+    /** 反序列化数据. */
     protected function unserialize(string $data): array
     {
         $unserialize = $this->serialize[1] ?? 'unserialize';

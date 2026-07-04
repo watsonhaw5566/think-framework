@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -12,6 +13,8 @@ declare(strict_types=1);
 
 namespace think\exception;
 
-class FileException extends \RuntimeException
+use RuntimeException;
+
+class FileException extends RuntimeException
 {
 }

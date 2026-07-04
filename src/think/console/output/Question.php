@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -11,9 +12,14 @@
 
 namespace think\console\output;
 
+use Closure;
+use Countable;
+use InvalidArgumentException;
+use LogicException;
+use Traversable;
+
 class Question
 {
-
     private $question;
     private $attempts;
     private $hidden         = false;
@@ -24,7 +30,8 @@ class Question
     private $normalizer;
 
     /**
-     * 构造方法
+     * 构造方法.
+     *
      * @param string $question 问题
      * @param mixed  $default  默认答案
      */
@@ -35,7 +42,8 @@ class Question
     }
 
     /**
-     * 获取问题
+     * 获取问题.
+     *
      * @return string
      */
     public function getQuestion()
@@ -44,7 +52,8 @@ class Question
     }
 
     /**
-     * 获取默认答案
+     * 获取默认答案.
+     *
      * @return mixed
      */
     public function getDefault()
@@ -53,7 +62,8 @@ class Question
     }
 
     /**
-     * 是否隐藏答案
+     * 是否隐藏答案.
+     *
      * @return bool
      */
     public function isHidden()
@@ -62,14 +72,16 @@ class Question
     }
 
     /**
-     * 隐藏答案
+     * 隐藏答案.
+     *
      * @param bool $hidden
+     *
      * @return Question
      */
     public function setHidden($hidden)
     {
         if ($this->autocompleterValues) {
-            throw new \LogicException('A hidden question cannot use the autocompleter.');
+            throw new LogicException('A hidden question cannot use the autocompleter.');
         }
 
         $this->hidden = (bool) $hidden;
@@ -79,6 +91,7 @@ class Question
 
     /**
      * 不能被隐藏是否撤销
+     *
      * @return bool
      */
     public function isHiddenFallback()
@@ -87,8 +100,10 @@ class Question
     }
 
     /**
-     * 设置不能被隐藏的时候的操作
+     * 设置不能被隐藏的时候的操作.
+     *
      * @param bool $fallback
+     *
      * @return Question
      */
     public function setHiddenFallback($fallback)
@@ -99,8 +114,9 @@ class Question
     }
 
     /**
-     * 获取自动完成
-     * @return null|array|\Traversable
+     * 获取自动完成.
+     *
+     * @return null|array|Traversable
      */
     public function getAutocompleterValues()
     {
@@ -109,10 +125,13 @@ class Question
 
     /**
      * 设置自动完成的值
-     * @param null|array|\Traversable $values
+     *
+     * @param null|array|Traversable $values
+     *
      * @return Question
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
+     *
+     * @throws InvalidArgumentException
+     * @throws LogicException
      */
     public function setAutocompleterValues($values)
     {
@@ -121,13 +140,13 @@ class Question
         }
 
         if (null !== $values && !is_array($values)) {
-            if (!$values instanceof \Traversable || $values instanceof \Countable) {
-                throw new \InvalidArgumentException('Autocompleter values can be either an array, `null` or an object implementing both `Countable` and `Traversable` interfaces.');
+            if (!$values instanceof Traversable || $values instanceof Countable) {
+                throw new InvalidArgumentException('Autocompleter values can be either an array, `null` or an object implementing both `Countable` and `Traversable` interfaces.');
             }
         }
 
         if ($this->hidden) {
-            throw new \LogicException('A hidden question cannot use the autocompleter.');
+            throw new LogicException('A hidden question cannot use the autocompleter.');
         }
 
         $this->autocompleterValues = $values;
@@ -136,8 +155,10 @@ class Question
     }
 
     /**
-     * 设置答案的验证器
+     * 设置答案的验证器.
+     *
      * @param null|callable $validator
+     *
      * @return Question The current instance
      */
     public function setValidator($validator)
@@ -148,7 +169,8 @@ class Question
     }
 
     /**
-     * 获取验证器
+     * 获取验证器.
+     *
      * @return null|callable
      */
     public function getValidator()
@@ -157,15 +179,18 @@ class Question
     }
 
     /**
-     * 设置最大重试次数
+     * 设置最大重试次数.
+     *
      * @param null|int $attempts
+     *
      * @return Question
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     public function setMaxAttempts($attempts)
     {
         if (null !== $attempts && $attempts < 1) {
-            throw new \InvalidArgumentException('Maximum number of attempts must be a positive value.');
+            throw new InvalidArgumentException('Maximum number of attempts must be a positive value.');
         }
 
         $this->attempts = $attempts;
@@ -174,7 +199,8 @@ class Question
     }
 
     /**
-     * 获取最大重试次数
+     * 获取最大重试次数.
+     *
      * @return null|int
      */
     public function getMaxAttempts()
@@ -183,8 +209,10 @@ class Question
     }
 
     /**
-     * 设置响应的回调
-     * @param string|\Closure $normalizer
+     * 设置响应的回调.
+     *
+     * @param Closure|string $normalizer
+     *
      * @return Question
      */
     public function setNormalizer($normalizer)
@@ -197,7 +225,8 @@ class Question
     /**
      * 获取响应回调
      * The normalizer can ba a callable (a string), a closure or a class implementing __invoke.
-     * @return string|\Closure
+     *
+     * @return Closure|string
      */
     public function getNormalizer()
     {

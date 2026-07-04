@@ -11,6 +11,7 @@ use think\Request;
 use think\response\Redirect;
 use think\response\View;
 use think\Route;
+use stdClass;
 
 class RouteTest extends TestCase
 {
@@ -45,6 +46,7 @@ class RouteTest extends TestCase
         $request->shouldReceive('pathinfo')->andReturn($path);
         $request->shouldReceive('url')->andReturn('/' . $path);
         $request->shouldReceive('method')->andReturn(strtoupper($method));
+
         return $request;
     }
 
@@ -112,7 +114,7 @@ class RouteTest extends TestCase
     {
         $this->route->get('foo', 'Foo/bar');
 
-        $controller = m::Mock(\stdClass::class);
+        $controller = m::Mock(stdClass::class);
 
         $this->app->shouldReceive('parseClass')->with('controller', 'Foo', '')->andReturn($controller->mockery_getName());
         $this->app->shouldReceive('make')->with($controller->mockery_getName(), [], true)->andReturn($controller);
@@ -128,7 +130,7 @@ class RouteTest extends TestCase
     {
         $this->route->get('foo', 'Foo/bar');
 
-        $controller = m::Mock(\stdClass::class);
+        $controller = m::Mock(stdClass::class);
 
         $this->app->shouldReceive('parseClass')->with('controller', 'Error', '')->andReturn($controller->mockery_getName());
         $this->app->shouldReceive('make')->with($controller->mockery_getName(), [], true)->andReturn($controller);
@@ -162,7 +164,7 @@ class RouteTest extends TestCase
             $this->createMiddleware(0)->mockery_getName() => ['except' => 'bar'],
             $this->createMiddleware()->mockery_getName()  => ['only' => 'bar'],
             [
-                'middleware' => [$this->createMiddleware()->mockery_getName(), [new \stdClass()]],
+                'middleware' => [$this->createMiddleware()->mockery_getName(), [new stdClass()]],
                 'options'    => ['only' => 'bar'],
             ],
         ];
@@ -222,7 +224,7 @@ class RouteTest extends TestCase
         // Test basic resource registration (returns ResourceRegister when not lazy)
         $resource = $this->route->resource('users', 'Users');
         $this->assertTrue($resource instanceof \think\route\Resource || $resource instanceof \think\route\ResourceRegister);
-        
+
         // Test REST methods configuration
         $restMethods = $this->route->getRest();
         $this->assertIsArray($restMethods);
@@ -233,7 +235,7 @@ class RouteTest extends TestCase
         $this->assertArrayHasKey('edit', $restMethods);
         $this->assertArrayHasKey('update', $restMethods);
         $this->assertArrayHasKey('delete', $restMethods);
-        
+
         // Test custom REST method modification
         $this->route->rest('custom', ['get', '/custom', 'customAction']);
         $customMethod = $this->route->getRest('custom');
@@ -258,7 +260,7 @@ class RouteTest extends TestCase
             return "User ID: $id";
         });
 
-        $request = $this->makeRequest('user/123', 'get');
+        $request  = $this->makeRequest('user/123', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('User ID: 123', $response->getContent());
 
@@ -267,7 +269,7 @@ class RouteTest extends TestCase
             return "Year: $year, Month: $month";
         });
 
-        $request = $this->makeRequest('post/2024/12', 'get');
+        $request  = $this->makeRequest('post/2024/12', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('Year: 2024, Month: 12', $response->getContent());
     }
@@ -279,7 +281,7 @@ class RouteTest extends TestCase
         })->pattern(['id' => '\d+']);
 
         // Valid numeric ID
-        $request = $this->makeRequest('user/123', 'get');
+        $request  = $this->makeRequest('user/123', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('User ID: 123', $response->getContent());
 
@@ -288,7 +290,7 @@ class RouteTest extends TestCase
             return "Profile: $name";
         })->pattern(['name' => '[a-zA-Z]+']);
 
-        $request = $this->makeRequest('profile/john', 'get');
+        $request  = $this->makeRequest('profile/john', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('Profile: john', $response->getContent());
     }
@@ -304,12 +306,12 @@ class RouteTest extends TestCase
         });
 
         // Test existing route
-        $request = $this->makeRequest('home', 'get');
+        $request  = $this->makeRequest('home', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('home page', $response->getContent());
 
         // Test miss route
-        $request = $this->makeRequest('nonexistent', 'get');
+        $request  = $this->makeRequest('nonexistent', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('Page not found', $response->getContent());
     }
@@ -317,12 +319,12 @@ class RouteTest extends TestCase
     public function testRouteMiddleware()
     {
         $middleware = $this->createMiddleware();
-        
+
         $this->route->get('protected', function () {
             return 'protected content';
         })->middleware($middleware->mockery_getName());
 
-        $request = $this->makeRequest('protected', 'get');
+        $request  = $this->makeRequest('protected', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('protected content', $response->getContent());
     }
@@ -333,7 +335,7 @@ class RouteTest extends TestCase
             return "API Version: $version";
         })->option(['version' => '1.0']);
 
-        $request = $this->makeRequest('api/v2/users', 'get');
+        $request  = $this->makeRequest('api/v2/users', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('API Version: v2', $response->getContent());
     }
@@ -343,15 +345,15 @@ class RouteTest extends TestCase
         // Test route configuration
         $config = $this->route->config();
         $this->assertIsArray($config);
-        
+
         $caseConfig = $this->route->config('url_case_sensitive');
         $this->assertIsBool($caseConfig);
-        
+
         // Test route name management
         $this->route->get('test', function () {
             return 'test';
         })->name('test.route');
-        
+
         $names = $this->route->getName('test.route');
         $this->assertIsArray($names);
     }
@@ -375,19 +377,19 @@ class RouteTest extends TestCase
         });
 
         // 测试GET请求到 api/v1/users
-        $request = $this->makeRequest('api/v1/users', 'get');
+        $request  = $this->makeRequest('api/v1/users', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('API Version: v1 - Users List', $response->getContent());
         $this->assertEquals(200, $response->getCode());
 
-        // 测试GET请求到 api/v2/users/123 
-        $request = $this->makeRequest('api/v2/users/123', 'get');
+        // 测试GET请求到 api/v2/users/123
+        $request  = $this->makeRequest('api/v2/users/123', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('API Version: v2 - User ID: 123', $response->getContent());
         $this->assertEquals(200, $response->getCode());
 
         // 测试POST请求到 api/v1/users
-        $request = $this->makeRequest('api/v1/users', 'post');
+        $request  = $this->makeRequest('api/v1/users', 'post');
         $response = $this->route->dispatch($request);
         $this->assertEquals('API Version: v1 - Create User', $response->getContent());
         $this->assertEquals(200, $response->getCode());
@@ -397,14 +399,14 @@ class RouteTest extends TestCase
     {
         // 测试分组内包含变量的路由与中间件
         $middleware = $this->createMiddleware();
-        
+
         $this->route->group('api/<version>', function () use ($middleware) {
             $this->route->get('data', function ($version) {
                 return "API $version Data";
             })->middleware($middleware->mockery_getName());
         });
 
-        $request = $this->makeRequest('api/v3/data', 'get');
+        $request  = $this->makeRequest('api/v3/data', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('API v3 Data', $response->getContent());
         $this->assertEquals(200, $response->getCode());
@@ -420,12 +422,13 @@ class RouteTest extends TestCase
         });
 
         // 测试有效版本号
-        $request = $this->makeRequest('api/v1/users', 'get');
+        $request  = $this->makeRequest('api/v1/users', 'get');
         $response = $this->route->dispatch($request);
         $this->assertEquals('API Version: v1', $response->getContent());
 
         // 测试无效版本号应该不匹配
         $request = $this->makeRequest('api/v10/users', 'get');
+
         try {
             $response = $this->route->dispatch($request);
             // 如果没有异常，检查是否返回错误页面

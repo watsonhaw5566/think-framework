@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -21,12 +22,12 @@ class VendorPublish extends Command
     {
         $this->setName('vendor:publish')
             ->addOption('force', 'f', Option::VALUE_NONE, 'Overwrite any existing files')
-            ->setDescription('Publish any publishable assets from vendor packages');
+            ->setDescription('Publish any publishable assets from vendor packages')
+        ;
     }
 
     public function handle()
     {
-
         $force = $this->input->getOption('force');
 
         if (is_file($path = $this->app->getRootPath() . 'vendor/composer/installed.json')) {
@@ -36,25 +37,25 @@ class VendorPublish extends Command
                 $packages = $packages['packages'];
             }
             foreach ($packages as $package) {
-                //配置
+                // 配置
                 $configDir = $this->app->getConfigPath();
 
                 if (!empty($package['extra']['think']['config'])) {
-
                     $installPath = $this->app->getRootPath() . 'vendor/' . $package['name'] . DIRECTORY_SEPARATOR;
 
                     foreach ((array) $package['extra']['think']['config'] as $name => $file) {
-
                         $target = $configDir . $name . '.php';
                         $source = $installPath . $file;
 
                         if (is_file($target) && !$force) {
                             $this->output->info("File {$target} exist!");
+
                             continue;
                         }
 
                         if (!is_file($source)) {
                             $this->output->info("File {$source} not exist!");
+
                             continue;
                         }
 

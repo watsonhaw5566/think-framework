@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\console;
 
@@ -24,44 +25,44 @@ use think\console\output\question\Confirmation;
 use Throwable;
 
 /**
- * Class Output
- * @package think\console
+ * Class Output.
  *
- * @see     \think\console\output\driver\Console::setDecorated
+ * @see     Console::setDecorated
+ *
  * @method void setDecorated($decorated)
  *
- * @see     \think\console\output\driver\Buffer::fetch
- * @method string fetch()
+ * @see     Buffer::fetch
  *
- * @method void info($message)
- * @method void error($message)
- * @method void comment($message)
- * @method void warning($message)
- * @method void highlight($message)
- * @method void question($message)
+ * @method string fetch()
+ * @method void   info($message)
+ * @method void   error($message)
+ * @method void   comment($message)
+ * @method void   warning($message)
+ * @method void   highlight($message)
+ * @method void   question($message)
  */
 class Output
 {
     // 不显示信息(静默)
-    const VERBOSITY_QUIET        = 0;
+    public const VERBOSITY_QUIET = 0;
     // 正常信息
-    const VERBOSITY_NORMAL       = 1;
+    public const VERBOSITY_NORMAL = 1;
     // 详细信息
-    const VERBOSITY_VERBOSE      = 2;
+    public const VERBOSITY_VERBOSE = 2;
     // 非常详细的信息
-    const VERBOSITY_VERY_VERBOSE = 3;
+    public const VERBOSITY_VERY_VERBOSE = 3;
     // 调试信息
-    const VERBOSITY_DEBUG        = 4;
+    public const VERBOSITY_DEBUG = 4;
 
-    const OUTPUT_NORMAL = 0;
-    const OUTPUT_RAW    = 1;
-    const OUTPUT_PLAIN  = 2;
+    public const OUTPUT_NORMAL = 0;
+    public const OUTPUT_RAW    = 1;
+    public const OUTPUT_PLAIN  = 2;
 
     // 输出信息级别
     private $verbosity = self::VERBOSITY_NORMAL;
 
     /** @var Buffer|Console|Nothing */
-    private $handle = null;
+    private $handle;
 
     protected $styles = [
         'info',
@@ -74,7 +75,7 @@ class Output
 
     public function __construct($driver = 'console')
     {
-        $class = '\\think\\console\\output\\driver\\' . ucwords($driver);
+        $class = '\think\console\output\driver\\' . ucwords($driver);
 
         $this->handle = new $class($this);
     }
@@ -102,9 +103,6 @@ class Output
         return $this->askQuestion($input, new Confirmation($question, $default));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function choice(Input $input, $question, array $choices, $default = null)
     {
         if (null !== $default) {
@@ -129,34 +127,22 @@ class Output
 
     protected function block(string $style, string $message): void
     {
-        $this->writeln("<{$style}>{$message}</$style>");
+        $this->writeln("<{$style}>{$message}</{$style}>");
     }
 
-    /**
-     * 输出空行
-     * @param int $count
-     */
+    /** 输出空行. */
     public function newLine(int $count = 1): void
     {
         $this->write(str_repeat(PHP_EOL, $count));
     }
 
-    /**
-     * 输出信息并换行
-     * @param string $messages
-     * @param int    $type
-     */
+    /** 输出信息并换行. */
     public function writeln(string $messages, int $type = 0): void
     {
         $this->write($messages, true, $type);
     }
 
-    /**
-     * 输出信息
-     * @param string $messages
-     * @param bool   $newline
-     * @param int    $type
-     */
+    /** 输出信息. */
     public function write(string $messages, bool $newline = false, int $type = 0): void
     {
         $this->handle->write($messages, $newline, $type);
@@ -168,7 +154,8 @@ class Output
     }
 
     /**
-     * 设置输出信息级别
+     * 设置输出信息级别.
+     *
      * @param int $level 输出信息级别
      */
     public function setVerbosity(int $level)
@@ -176,10 +163,7 @@ class Output
         $this->verbosity = $level;
     }
 
-    /**
-     * 获取输出信息级别
-     * @return int
-     */
+    /** 获取输出信息级别. */
     public function getVerbosity(): int
     {
         return $this->verbosity;
@@ -219,13 +203,14 @@ class Output
     {
         if (in_array($method, $this->styles)) {
             array_unshift($args, $method);
+
             return call_user_func_array([$this, 'block'], $args);
         }
 
         if ($this->handle && method_exists($this->handle, $method)) {
             return call_user_func_array([$this->handle, $method], $args);
-        } else {
-            throw new Exception('method not exists:' . __CLASS__ . '->' . $method);
         }
+
+        throw new Exception('method not exists:' . __CLASS__ . '->' . $method);
     }
 }

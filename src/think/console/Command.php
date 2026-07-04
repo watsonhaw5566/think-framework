@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\console;
 
@@ -23,8 +24,7 @@ use think\console\input\Option;
 
 abstract class Command
 {
-
-    /** @var  Console */
+    /** @var Console */
     private $console;
     private $name;
     private $processTitle;
@@ -38,18 +38,20 @@ abstract class Command
     private $synopsis                        = [];
     private $usages                          = [];
 
-    /** @var  Input */
+    /** @var Input */
     protected $input;
 
-    /** @var  Output */
+    /** @var Output */
     protected $output;
 
     /** @var App */
     protected $app;
 
     /**
-     * 构造方法
+     * 构造方法.
+     *
      * @throws LogicException
+     *
      * @api
      */
     public function __construct()
@@ -63,26 +65,21 @@ abstract class Command
         }
     }
 
-    /**
-     * 忽略验证错误
-     */
+    /** 忽略验证错误. */
     public function ignoreValidationErrors(): void
     {
         $this->ignoreValidationErrors = true;
     }
 
-    /**
-     * 设置控制台
-     * @param Console $console
-     */
+    /** 设置控制台. */
     public function setConsole(?Console $console = null): void
     {
         $this->console = $console;
     }
 
     /**
-     * 获取控制台
-     * @return Console
+     * 获取控制台.
+     *
      * @api
      */
     public function getConsole(): Console
@@ -90,17 +87,15 @@ abstract class Command
         return $this->console;
     }
 
-    /**
-     * 设置app
-     * @param App $app
-     */
+    /** 设置app. */
     public function setApp(App $app)
     {
         $this->app = $app;
     }
 
     /**
-     * 获取app
+     * 获取app.
+     *
      * @return App
      */
     public function getApp()
@@ -108,28 +103,24 @@ abstract class Command
         return $this->app;
     }
 
-    /**
-     * 是否有效
-     * @return bool
-     */
+    /** 是否有效. */
     public function isEnabled(): bool
     {
         return true;
     }
 
-    /**
-     * 配置指令
-     */
+    /** 配置指令. */
     protected function configure()
     {
     }
 
     /**
-     * 执行指令
-     * @param Input  $input
-     * @param Output $output
+     * 执行指令.
+     *
      * @return null|int
+     *
      * @throws LogicException
+     *
      * @see setCode()
      */
     protected function execute(Input $input, Output $output)
@@ -137,17 +128,14 @@ abstract class Command
         return $this->app->invoke([$this, 'handle']);
     }
 
-    /**
-     * 用户验证
-     * @param Input  $input
-     * @param Output $output
-     */
+    /** 用户验证 */
     protected function interact(Input $input, Output $output)
     {
     }
 
     /**
-     * 初始化
+     * 初始化.
+     *
      * @param Input  $input  An InputInterface instance
      * @param Output $output An OutputInterface instance
      */
@@ -156,11 +144,10 @@ abstract class Command
     }
 
     /**
-     * 执行
-     * @param Input  $input
-     * @param Output $output
-     * @return int
+     * 执行.
+     *
      * @throws Exception
+     *
      * @see setCode()
      * @see execute()
      */
@@ -212,10 +199,7 @@ abstract class Command
         return is_numeric($statusCode) ? (int) $statusCode : 0;
     }
 
-    /**
-     * 合并参数定义
-     * @param bool $mergeArgs
-     */
+    /** 合并参数定义. */
     public function mergeConsoleDefinition(bool $mergeArgs = true)
     {
         if (null === $this->console
@@ -240,9 +224,12 @@ abstract class Command
     }
 
     /**
-     * 设置参数定义
+     * 设置参数定义.
+     *
      * @param array|Definition $definition
+     *
      * @return Command
+     *
      * @api
      */
     public function setDefinition($definition)
@@ -259,8 +246,8 @@ abstract class Command
     }
 
     /**
-     * 获取参数定义
-     * @return Definition
+     * 获取参数定义.
+     *
      * @api
      */
     public function getDefinition(): Definition
@@ -268,21 +255,20 @@ abstract class Command
         return $this->definition;
     }
 
-    /**
-     * 获取当前指令的参数定义
-     * @return Definition
-     */
+    /** 获取当前指令的参数定义. */
     public function getNativeDefinition(): Definition
     {
         return $this->getDefinition();
     }
 
     /**
-     * 添加参数
+     * 添加参数.
+     *
      * @param string $name        名称
      * @param int    $mode        类型
      * @param string $description 描述
      * @param mixed  $default     默认值
+     *
      * @return Command
      */
     public function addArgument(string $name, ?int $mode = null, string $description = '', $default = null)
@@ -293,12 +279,14 @@ abstract class Command
     }
 
     /**
-     * 添加选项
+     * 添加选项.
+     *
      * @param string $name        选项名称
      * @param string $shortcut    别名
      * @param int    $mode        类型
      * @param string $description 描述
      * @param mixed  $default     默认值
+     *
      * @return Command
      */
     public function addOption(string $name, ?string $shortcut = null, ?int $mode = null, string $description = '', $default = null)
@@ -309,9 +297,10 @@ abstract class Command
     }
 
     /**
-     * 设置指令名称
-     * @param string $name
+     * 设置指令名称.
+     *
      * @return Command
+     *
      * @throws InvalidArgumentException
      */
     public function setName(string $name)
@@ -324,7 +313,7 @@ abstract class Command
     }
 
     /**
-     * 设置进程名称
+     * 设置进程名称.
      *
      * PHP 5.5+ or the proctitle PECL library is required
      *
@@ -339,18 +328,15 @@ abstract class Command
         return $this;
     }
 
-    /**
-     * 获取指令名称
-     * @return string
-     */
+    /** 获取指令名称. */
     public function getName(): string
     {
         return $this->name ?: '';
     }
 
     /**
-     * 设置描述
-     * @param string $description
+     * 设置描述.
+     *
      * @return Command
      */
     public function setDescription(string $description)
@@ -360,18 +346,15 @@ abstract class Command
         return $this;
     }
 
-    /**
-     *  获取描述
-     * @return string
-     */
+    /** 获取描述. */
     public function getDescription(): string
     {
         return $this->description ?: '';
     }
 
     /**
-     * 设置帮助信息
-     * @param string $help
+     * 设置帮助信息.
+     *
      * @return Command
      */
     public function setHelp(string $help)
@@ -381,19 +364,13 @@ abstract class Command
         return $this;
     }
 
-    /**
-     * 获取帮助信息
-     * @return string
-     */
+    /** 获取帮助信息. */
     public function getHelp(): string
     {
         return $this->help ?: '';
     }
 
-    /**
-     * 描述信息
-     * @return string
-     */
+    /** 描述信息. */
     public function getProcessedHelp(): string
     {
         $name = $this->name;
@@ -411,9 +388,12 @@ abstract class Command
     }
 
     /**
-     * 设置别名
+     * 设置别名.
+     *
      * @param string[] $aliases
+     *
      * @return Command
+     *
      * @throws InvalidArgumentException
      */
     public function setAliases(iterable $aliases)
@@ -427,19 +407,16 @@ abstract class Command
         return $this;
     }
 
-    /**
-     * 获取别名
-     * @return array
-     */
+    /** 获取别名. */
     public function getAliases(): array
     {
         return $this->aliases;
     }
 
     /**
-     * 获取简介
+     * 获取简介.
+     *
      * @param bool $short 是否简单的
-     * @return string
      */
     public function getSynopsis(bool $short = false): string
     {
@@ -453,8 +430,8 @@ abstract class Command
     }
 
     /**
-     * 添加用法介绍
-     * @param string $usage
+     * 添加用法介绍.
+     *
      * @return $this
      */
     public function addUsage(string $usage)
@@ -468,18 +445,15 @@ abstract class Command
         return $this;
     }
 
-    /**
-     * 获取用法介绍
-     * @return array
-     */
+    /** 获取用法介绍. */
     public function getUsages(): array
     {
         return $this->usages;
     }
 
     /**
-     * 验证指令名称
-     * @param string $name
+     * 验证指令名称.
+     *
      * @throws InvalidArgumentException
      */
     private function validateName(string $name)
@@ -489,16 +463,12 @@ abstract class Command
         }
     }
 
-    /**
-     * 输出表格
-     * @param Table $table
-     * @return string
-     */
+    /** 输出表格 */
     protected function table(Table $table): string
     {
         $content = $table->render();
         $this->output->writeln($content);
+
         return $content;
     }
-
 }

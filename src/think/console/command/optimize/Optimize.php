@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command\optimize;
 
 use think\console\Command;
@@ -22,7 +24,8 @@ class Optimize extends Command
     protected function configure()
     {
         $this->setName('optimize')
-            ->setDescription('Build cache.');
+            ->setDescription('Build cache.')
+        ;
     }
 
     protected function execute(Input $input, Output $output)

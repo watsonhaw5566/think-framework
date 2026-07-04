@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+
 namespace think;
 
 use Closure;
@@ -23,30 +25,32 @@ class Pipeline
     protected $exceptionHandler;
 
     /**
-     * 初始数据
-     * @param $passable
+     * 初始数据.
+     *
      * @return $this
      */
     public function send($passable)
     {
         $this->passable = $passable;
+
         return $this;
     }
 
     /**
-     * 调用栈
-     * @param $pipes
+     * 调用栈.
+     *
      * @return $this
      */
     public function through($pipes)
     {
         $this->pipes = is_array($pipes) ? $pipes : func_get_args();
+
         return $this;
     }
 
     /**
-     * 执行
-     * @param Closure $destination
+     * 执行.
+     *
      * @return mixed
      */
     public function then(Closure $destination)
@@ -57,7 +61,7 @@ class Pipeline
             function ($passable) use ($destination) {
                 try {
                     return $destination($passable);
-                } catch (Throwable | Exception $e) {
+                } catch (Exception|Throwable $e) {
                     return $this->handleException($passable, $e);
                 }
             }
@@ -67,13 +71,16 @@ class Pipeline
     }
 
     /**
-     * 设置异常处理器
+     * 设置异常处理器.
+     *
      * @param callable $handler
+     *
      * @return $this
      */
     public function whenException($handler)
     {
         $this->exceptionHandler = $handler;
+
         return $this;
     }
 
@@ -83,7 +90,7 @@ class Pipeline
             return function ($passable) use ($stack, $pipe) {
                 try {
                     return $pipe($passable, $stack);
-                } catch (Throwable | Exception $e) {
+                } catch (Exception|Throwable $e) {
                     return $this->handleException($passable, $e);
                 }
             };
@@ -91,9 +98,8 @@ class Pipeline
     }
 
     /**
-     * 异常处理
-     * @param $passable
-     * @param $e
+     * 异常处理.
+     *
      * @return mixed
      */
     protected function handleException($passable, Throwable $e)
@@ -101,6 +107,7 @@ class Pipeline
         if ($this->exceptionHandler) {
             return call_user_func($this->exceptionHandler, $passable, $e);
         }
+
         throw $e;
     }
 }

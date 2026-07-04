@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command;
 
 use think\console\Command;
@@ -26,7 +28,8 @@ class Clear extends Command
             ->addOption('log', 'l', Option::VALUE_NONE, 'clear log file')
             ->addOption('dir', 'r', Option::VALUE_NONE, 'clear empty dir')
             ->addOption('expire', 'e', Option::VALUE_NONE, 'clear cache file if cache has expired')
-            ->setDescription('Clear runtime file');
+            ->setDescription('Clear runtime file')
+        ;
     }
 
     protected function execute(Input $input, Output $output)
@@ -46,7 +49,7 @@ class Clear extends Command
         $cache_expire = $input->getOption('expire') && $input->getOption('cache') ? true : false;
         $this->clear(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR, $rmdir, $cache_expire);
 
-        $output->writeln("<info>Clear Successed</info>");
+        $output->writeln('<info>Clear Successed</info>');
     }
 
     protected function clear(string $path, bool $rmdir, bool $cache_expire): void
@@ -73,13 +76,16 @@ class Clear extends Command
 
     /**
      * 缓存文件是否已过期
+     *
      * @param $filename string 文件路径
+     *
      * @return bool
      */
-    protected function cacheHasExpired($filename) {
+    protected function cacheHasExpired($filename)
+    {
         $content = file_get_contents($filename);
-        $expire = (int) substr($content, 8, 12);
+        $expire  = (int) substr($content, 8, 12);
+
         return 0 != $expire && time() - $expire > filemtime($filename);
     }
-
 }

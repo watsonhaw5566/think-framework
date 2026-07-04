@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -12,118 +13,130 @@ declare(strict_types=1);
 
 namespace think\route;
 
+use InvalidArgumentException;
 use think\App;
 use think\Route;
 
 /**
- * 路由地址生成
+ * 路由地址生成.
  */
 class Url
 {
     /**
      * URL 根地址
+     *
      * @var string
      */
     protected $root = '';
 
     /**
-     * HTTPS
+     * HTTPS.
+     *
      * @var bool
      */
     protected $https;
 
     /**
      * URL后缀
-     * @var string|bool
+     *
+     * @var bool|string
      */
     protected $suffix = true;
 
     /**
-     * URL域名
-     * @var string|bool
+     * URL域名.
+     *
+     * @var bool|string
      */
     protected $domain = false;
 
     /**
-     * 架构函数
-     * @access public
-     * @param  Route  $route 路由对象
-     * @param  App    $app App对象
-     * @param  string $url URL地址
-     * @param  array  $vars 参数
+     * 架构函数.
+     *
+     * @param Route  $route 路由对象
+     * @param App    $app   App对象
+     * @param string $url   URL地址
+     * @param array  $vars  参数
      */
     public function __construct(protected Route $route, protected App $app, protected string $url = '', protected array $vars = [])
     {
     }
 
     /**
-     * 设置URL参数
-     * @access public
-     * @param  array $vars URL参数
+     * 设置URL参数.
+     *
+     * @param array $vars URL参数
+     *
      * @return $this
      */
     public function vars(array $vars = [])
     {
         $this->vars = $vars;
+
         return $this;
     }
 
     /**
      * 设置URL后缀
-     * @access public
-     * @param  string|bool $suffix URL后缀
+     *
+     * @param bool|string $suffix URL后缀
+     *
      * @return $this
      */
-    public function suffix(string|bool $suffix)
+    public function suffix(bool|string $suffix)
     {
         $this->suffix = $suffix;
+
         return $this;
     }
 
     /**
-     * 设置URL域名（或者子域名）
-     * @access public
-     * @param  string|bool $domain URL域名
+     * 设置URL域名（或者子域名）.
+     *
+     * @param bool|string $domain URL域名
+     *
      * @return $this
      */
-    public function domain(string|bool $domain)
+    public function domain(bool|string $domain)
     {
         $this->domain = $domain;
+
         return $this;
     }
 
     /**
      * 设置URL 根地址
-     * @access public
-     * @param  string $root URL root
+     *
+     * @param string $root URL root
+     *
      * @return $this
      */
     public function root(string $root)
     {
         $this->root = $root;
+
         return $this;
     }
 
     /**
-     * 设置是否使用HTTPS
-     * @access public
-     * @param  bool $https
+     * 设置是否使用HTTPS.
+     *
      * @return $this
      */
     public function https(bool $https = true)
     {
         $this->https = $https;
+
         return $this;
     }
 
     /**
-     * 检测域名
-     * @access protected
-     * @param  string      $url URL
-     * @param  string|true $domain 域名
-     * @return string
+     * 检测域名.
+     *
+     * @param string      $url    URL
+     * @param string|true $domain 域名
      */
-    protected function parseDomain(string &$url, string|bool $domain): string
+    protected function parseDomain(string &$url, bool|string $domain): string
     {
         if (!$domain) {
             return '';
@@ -140,7 +153,7 @@ class Url
             if (!empty($domains)) {
                 $routeDomain = array_keys($domains);
                 foreach ($routeDomain as $domainPrefix) {
-                    if (str_starts_with($domainPrefix, '*.') && str_contains($domain, ltrim($domainPrefix, '*.')) !== false) {
+                    if (str_starts_with($domainPrefix, '*.') && false !== str_contains($domain, ltrim($domainPrefix, '*.'))) {
                         foreach ($domains as $key => $rule) {
                             $rule = is_array($rule) ? $rule[0] : $rule;
                             if (is_string($rule) && !str_contains($key, '*') && str_starts_with($url, $rule)) {
@@ -152,7 +165,8 @@ class Url
                                     $domain .= $rootDomain;
                                 }
                                 break;
-                            } elseif (str_contains($key, '*')) {
+                            }
+                            if (str_contains($key, '*')) {
                                 if (!empty($rootDomain)) {
                                     $domain .= $rootDomain;
                                 }
@@ -178,11 +192,10 @@ class Url
 
     /**
      * 解析URL后缀
-     * @access protected
-     * @param  string|bool $suffix 后缀
-     * @return string
+     *
+     * @param bool|string $suffix 后缀
      */
-    protected function parseSuffix(string|bool $suffix): string
+    protected function parseSuffix(bool|string $suffix): string
     {
         if ($suffix) {
             $suffix = true === $suffix ? $this->route->config('url_html_suffix') : $suffix;
@@ -197,12 +210,11 @@ class Url
 
     /**
      * 直接解析URL地址
-     * @access protected
-     * @param  string      $url URL
-     * @param  string|bool $domain Domain
-     * @return string
+     *
+     * @param string      $url    URL
+     * @param bool|string $domain Domain
      */
-    protected function parseUrl(string $url, string | bool &$domain): string
+    protected function parseUrl(string $url, bool|string &$domain): string
     {
         $request = $this->app->request;
 
@@ -210,7 +222,7 @@ class Url
             // 直接作为路由地址解析
             $url = substr($url, 1);
         } elseif ('' === $url) {
-            $url  = $request->pathinfo();
+            $url = $request->pathinfo();
         } else {
             $controller = $request->controller();
             $path       = explode('/', $url);
@@ -228,10 +240,9 @@ class Url
     }
 
     /**
-     * 分析路由规则中的变量
-     * @access protected
-     * @param  string $rule 路由规则
-     * @return array
+     * 分析路由规则中的变量.
+     *
+     * @param string $rule 路由规则
      */
     protected function parseVar(string $rule): array
     {
@@ -258,13 +269,12 @@ class Url
 
     /**
      * 匹配路由地址
-     * @access protected
-     * @param  array $rule 路由规则
-     * @param  array $vars 路由变量
-     * @param  string|bool $allowDomain 允许域名
-     * @return array
+     *
+     * @param array       $rule        路由规则
+     * @param array       $vars        路由变量
+     * @param bool|string $allowDomain 允许域名
      */
-    protected function getRuleUrl(array $rule, array &$vars = [], string|bool $allowDomain = ''): array
+    protected function getRuleUrl(array $rule, array &$vars = [], bool|string $allowDomain = ''): array
     {
         $request = $this->app->request;
         if (is_string($allowDomain) && !str_contains($allowDomain, '.')) {
@@ -324,11 +334,7 @@ class Url
         return [];
     }
 
-    /**
-     * 生成URL地址
-     * @access public
-     * @return string
-     */
+    /** 生成URL地址 */
     public function build(): string
     {
         // 解析URL
@@ -394,7 +400,7 @@ class Url
                 $suffix = $match[2];
             }
         } elseif (!empty($rule) && isset($name)) {
-            throw new \InvalidArgumentException('route name not exists:' . $name);
+            throw new InvalidArgumentException('route name not exists:' . $name);
         } else {
             // 检测URL绑定
             $bind = $this->route->getDomainBind($domain && is_string($domain) ? $domain : null);

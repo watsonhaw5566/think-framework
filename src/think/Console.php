@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | TopThink [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -6,11 +7,12 @@
 // +----------------------------------------------------------------------
 // | Author: zhangyajun <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think;
 
 use Closure;
+use Exception;
 use InvalidArgumentException;
 use LogicException;
 use think\console\Command;
@@ -42,9 +44,10 @@ use think\console\input\Definition as InputDefinition;
 use think\console\input\Option as InputOption;
 use think\console\Output;
 use think\console\output\driver\Buffer;
+use Traversable;
 
 /**
- * 控制台应用管理类
+ * 控制台应用管理类.
  */
 class Console
 {
@@ -56,7 +59,7 @@ class Console
     protected $catchExceptions = true;
     protected $autoExit        = true;
     protected $definition;
-    protected $defaultCommand  = 'list';
+    protected $defaultCommand = 'list';
 
     protected $defaultCommands = [
         'help'             => Help::class,
@@ -83,7 +86,8 @@ class Console
     ];
 
     /**
-     * 启动器
+     * 启动器.
+     *
      * @var array
      */
     protected static $startCallbacks = [];
@@ -94,7 +98,7 @@ class Console
 
         $this->definition = $this->getDefaultInputDefinition();
 
-        //加载指令
+        // 加载指令
         $this->loadCommands();
 
         // 设置执行用户
@@ -106,10 +110,8 @@ class Console
         $this->start();
     }
 
-    /**
-     * 初始化
-     */
-    protected function initialize():void
+    /** 初始化. */
+    protected function initialize(): void
     {
         if (!$this->app->initialized()) {
             $this->app->initialize();
@@ -117,10 +119,8 @@ class Console
         $this->makeRequest();
     }
 
-    /**
-     * 构造request
-     */
-    protected function makeRequest():void
+    /** 构造request. */
+    protected function makeRequest(): void
     {
         $url = $this->app->config->get('app.url', 'http://localhost');
 
@@ -162,27 +162,19 @@ class Console
         $request->withServer($server);
     }
 
-    /**
-     * 添加初始化器
-     * @param Closure $callback
-     */
+    /** 添加初始化器. */
     public static function starting(Closure $callback): void
     {
         static::$startCallbacks[] = $callback;
     }
 
-    /**
-     * 清空启动器
-     */
+    /** 清空启动器. */
     public static function flushStartCallbacks(): void
     {
         static::$startCallbacks = [];
     }
 
-    /**
-     * 设置执行用户
-     * @param $user
-     */
+    /** 设置执行用户. */
     public static function setUser(string $user): void
     {
         if (extension_loaded('posix')) {
@@ -195,9 +187,7 @@ class Console
         }
     }
 
-    /**
-     * 启动
-     */
+    /** 启动. */
     protected function start(): void
     {
         foreach (static::$startCallbacks as $callback) {
@@ -205,10 +195,7 @@ class Console
         }
     }
 
-    /**
-     * 加载指令
-     * @access protected
-     */
+    /** 加载指令. */
     protected function loadCommands(): void
     {
         $commands = $this->app->config->get('console.commands', []);
@@ -217,13 +204,7 @@ class Console
         $this->addCommands($commands);
     }
 
-    /**
-     * @access public
-     * @param string $command
-     * @param array $parameters
-     * @param string $driver
-     * @return Output|Buffer
-     */
+    /** @return Buffer|Output */
     public function call(string $command, array $parameters = [], string $driver = 'buffer')
     {
         array_unshift($parameters, $command);
@@ -238,10 +219,12 @@ class Console
     }
 
     /**
-     * 执行当前的指令
-     * @access public
+     * 执行当前的指令.
+     *
      * @return int
-     * @throws \Exception
+     *
+     * @throws Exception
+     *
      * @api
      */
     public function run()
@@ -253,7 +236,7 @@ class Console
 
         try {
             $exitCode = $this->doRun($input, $output);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if (!$this->catchExceptions) {
                 throw $e;
             }
@@ -283,10 +266,8 @@ class Console
     }
 
     /**
-     * 执行指令
-     * @access public
-     * @param Input $input
-     * @param Output $output
+     * 执行指令.
+     *
      * @return int
      */
     public function doRun(Input $input, Output $output)
@@ -318,19 +299,15 @@ class Console
         return $this->doRunCommand($command, $input, $output);
     }
 
-    /**
-     * 设置输入参数定义
-     * @access public
-     * @param InputDefinition $definition
-     */
+    /** 设置输入参数定义. */
     public function setDefinition(InputDefinition $definition): void
     {
         $this->definition = $definition;
     }
 
     /**
-     * 获取输入参数定义
-     * @access public
+     * 获取输入参数定义.
+     *
      * @return InputDefinition The InputDefinition instance
      */
     public function getDefinition(): InputDefinition
@@ -340,8 +317,8 @@ class Console
 
     /**
      * Gets the help message.
-     * @access public
-     * @return string A help message.
+     *
+     * @return string a help message
      */
     public function getHelp(): string
     {
@@ -349,9 +326,8 @@ class Console
     }
 
     /**
-     * 是否捕获异常
-     * @access public
-     * @param bool $boolean
+     * 是否捕获异常.
+     *
      * @api
      */
     public function setCatchExceptions(bool $boolean): void
@@ -360,9 +336,8 @@ class Console
     }
 
     /**
-     * 是否自动退出
-     * @access public
-     * @param bool $boolean
+     * 是否自动退出.
+     *
      * @api
      */
     public function setAutoExit(bool $boolean): void
@@ -370,11 +345,7 @@ class Console
         $this->autoExit = $boolean;
     }
 
-    /**
-     * 获取完整的版本号
-     * @access public
-     * @return string
-     */
+    /** 获取完整的版本号. */
     public function getLongVersion(): string
     {
         if ($this->app->version()) {
@@ -384,11 +355,7 @@ class Console
         return '<info>Console Tool</info>';
     }
 
-    /**
-     * 添加指令集
-     * @access public
-     * @param array $commands
-     */
+    /** 添加指令集. */
     public function addCommands(array $commands): void
     {
         foreach ($commands as $key => $command) {
@@ -400,16 +367,18 @@ class Console
     }
 
     /**
-     * 添加一个指令
-     * @access public
-     * @param string|Command $command 指令对象或者指令类名
-     * @param string $name 指令名 留空则自动获取
+     * 添加一个指令.
+     *
+     * @param Command|string $command 指令对象或者指令类名
+     * @param string         $name    指令名 留空则自动获取
+     *
      * @return Command|void
      */
-    public function addCommand(string|Command $command, string $name = '')
+    public function addCommand(Command|string $command, string $name = '')
     {
         if ($name) {
             $this->commands[$name] = $command;
+
             return;
         }
 
@@ -421,6 +390,7 @@ class Console
 
         if (!$command->isEnabled()) {
             $command->setConsole(null);
+
             return;
         }
 
@@ -440,10 +410,10 @@ class Console
     }
 
     /**
-     * 获取指令
-     * @access public
+     * 获取指令.
+     *
      * @param string $name 指令名称
-     * @return Command
+     *
      * @throws InvalidArgumentException
      */
     public function getCommand(string $name): Command
@@ -456,7 +426,7 @@ class Console
 
         if (is_string($command)) {
             $command = $this->app->invokeClass($command);
-            /** @var Command $command */
+            // @var Command $command
             $command->setConsole($this);
             $command->setApp($this->app);
         }
@@ -475,21 +445,16 @@ class Console
     }
 
     /**
-     * 某个指令是否存在
-     * @access public
+     * 某个指令是否存在.
+     *
      * @param string $name 指令名称
-     * @return bool
      */
     public function hasCommand(string $name): bool
     {
         return isset($this->commands[$name]);
     }
 
-    /**
-     * 获取所有的命名空间
-     * @access public
-     * @return array
-     */
+    /** 获取所有的命名空间. */
     public function getNamespaces(): array
     {
         $namespaces = [];
@@ -510,9 +475,7 @@ class Console
 
     /**
      * 查找注册命名空间中的名称或缩写。
-     * @access public
-     * @param string $namespace
-     * @return string
+     *
      * @throws InvalidArgumentException
      */
     public function findNamespace(string $namespace): string
@@ -521,7 +484,7 @@ class Console
         $expr          = preg_replace_callback('{([^:]+|)}', function ($matches) {
             return preg_quote($matches[1]) . '[^:]*';
         }, $namespace);
-        $namespaces    = preg_grep('{^' . $expr . '}', $allNamespaces);
+        $namespaces = preg_grep('{^' . $expr . '}', $allNamespaces);
 
         if (empty($namespaces)) {
             $message = sprintf('There are no commands defined in the "%s" namespace.', $namespace);
@@ -548,10 +511,10 @@ class Console
     }
 
     /**
-     * 查找指令
-     * @access public
+     * 查找指令.
+     *
      * @param string $name 名称或者别名
-     * @return Command
+     *
      * @throws InvalidArgumentException
      */
     public function find(string $name): Command
@@ -594,10 +557,12 @@ class Console
     }
 
     /**
-     * 获取所有的指令
-     * @access public
+     * 获取所有的指令.
+     *
      * @param string $namespace 命名空间
+     *
      * @return Command[]
+     *
      * @api
      */
     public function all(?string $namespace = null): array
@@ -618,8 +583,8 @@ class Console
 
     /**
      * 配置基于用户的参数和选项的输入和输出实例。
-     * @access protected
-     * @param Input $input 输入实例
+     *
+     * @param Input  $input  输入实例
      * @param Output $output 输出实例
      */
     protected function configureIO(Input $input, Output $output): void
@@ -636,9 +601,9 @@ class Console
 
         if (true === $input->hasParameterOption(['--quiet', '-q'])) {
             $output->setVerbosity(Output::VERBOSITY_QUIET);
-        } elseif ($input->hasParameterOption('-vvv') || $input->hasParameterOption('--verbose=3') || $input->getParameterOption('--verbose') === 3) {
+        } elseif ($input->hasParameterOption('-vvv') || $input->hasParameterOption('--verbose=3') || 3 === $input->getParameterOption('--verbose')) {
             $output->setVerbosity(Output::VERBOSITY_DEBUG);
-        } elseif ($input->hasParameterOption('-vv') || $input->hasParameterOption('--verbose=2') || $input->getParameterOption('--verbose') === 2) {
+        } elseif ($input->hasParameterOption('-vv') || $input->hasParameterOption('--verbose=2') || 2 === $input->getParameterOption('--verbose')) {
             $output->setVerbosity(Output::VERBOSITY_VERY_VERBOSE);
         } elseif ($input->hasParameterOption('-v') || $input->hasParameterOption('--verbose=1') || $input->hasParameterOption('--verbose') || $input->getParameterOption('--verbose')) {
             $output->setVerbosity(Output::VERBOSITY_VERBOSE);
@@ -646,35 +611,28 @@ class Console
     }
 
     /**
-     * 执行指令
-     * @access protected
+     * 执行指令.
+     *
      * @param Command $command 指令实例
-     * @param Input $input 输入实例
-     * @param Output $output 输出实例
+     * @param Input   $input   输入实例
+     * @param Output  $output  输出实例
+     *
      * @return int
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     protected function doRunCommand(Command $command, Input $input, Output $output)
     {
         return $command->run($input, $output);
     }
 
-    /**
-     * 获取指令的基础名称
-     * @access protected
-     * @param Input $input
-     * @return string
-     */
+    /** 获取指令的基础名称. */
     protected function getCommandName(Input $input): string
     {
         return $input->getFirstArgument() ?: '';
     }
 
-    /**
-     * 获取默认输入定义
-     * @access protected
-     * @return InputDefinition
-     */
+    /** 获取默认输入定义. */
     protected function getDefaultInputDefinition(): InputDefinition
     {
         return new InputDefinition([
@@ -689,23 +647,17 @@ class Console
         ]);
     }
 
-    /**
-     * 获取可能的建议
-     * @access private
-     * @param array $abbrevs
-     * @return string
-     */
+    /** 获取可能的建议. */
     private function getAbbreviationSuggestions(array $abbrevs): string
     {
         return sprintf('%s, %s%s', $abbrevs[0], $abbrevs[1], count($abbrevs) > 2 ? sprintf(' and %d more', count($abbrevs) - 2) : '');
     }
 
     /**
-     * 返回命名空间部分
-     * @access public
-     * @param string $name 指令
-     * @param int $limit 部分的命名空间的最大数量
-     * @return string
+     * 返回命名空间部分.
+     *
+     * @param string $name  指令
+     * @param int    $limit 部分的命名空间的最大数量
      */
     public function extractNamespace(string $name, int $limit = 0): string
     {
@@ -715,14 +667,8 @@ class Console
         return implode(':', 0 === $limit ? $parts : array_slice($parts, 0, $limit));
     }
 
-    /**
-     * 查找可替代的建议
-     * @access private
-     * @param string $name
-     * @param array|\Traversable $collection
-     * @return array
-     */
-    private function findAlternatives(string $name, array|\Traversable $collection): array
+    /** 查找可替代的建议. */
+    private function findAlternatives(string $name, array|Traversable $collection): array
     {
         $threshold    = 1e3;
         $alternatives = [];
@@ -737,8 +683,10 @@ class Console
                 $exists = isset($alternatives[$collectionName]);
                 if (!isset($parts[$i]) && $exists) {
                     $alternatives[$collectionName] += $threshold;
+
                     continue;
-                } elseif (!isset($parts[$i])) {
+                }
+                if (!isset($parts[$i])) {
                     continue;
                 }
 
@@ -766,12 +714,7 @@ class Console
         return array_keys($alternatives);
     }
 
-    /**
-     * 返回所有的命名空间
-     * @access private
-     * @param string $name
-     * @return array
-     */
+    /** 返回所有的命名空间. */
     private function extractAllNamespaces(string $name): array
     {
         $parts      = explode(':', $name, -1);

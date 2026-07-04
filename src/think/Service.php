@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -16,7 +17,8 @@ use Closure;
 use think\event\RouteLoaded;
 
 /**
- * 系统服务基础类
+ * 系统服务基础类.
+ *
  * @method void register()
  * @method void boot()
  */
@@ -27,8 +29,8 @@ abstract class Service
     }
 
     /**
-     * 加载路由
-     * @access protected
+     * 加载路由.
+     *
      * @param string $path 路由路径
      */
     protected function loadRoutesFrom(string $path)
@@ -38,18 +40,15 @@ abstract class Service
         });
     }
 
-    /**
-     * 注册路由
-     * @param Closure $closure
-     */
+    /** 注册路由. */
     protected function registerRoutes(Closure $closure)
     {
         $this->app->event->listen(RouteLoaded::class, $closure);
     }
 
     /**
-     * 添加指令
-     * @access protected
+     * 添加指令.
+     *
      * @param array|string $commands 指令
      */
     protected function commands($commands)

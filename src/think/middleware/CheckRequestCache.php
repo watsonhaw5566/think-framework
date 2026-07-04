@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -19,18 +20,20 @@ use think\Request;
 use think\Response;
 
 /**
- * 请求缓存处理
+ * 请求缓存处理.
  */
 class CheckRequestCache
 {
     /**
      * 缓存对象
+     *
      * @var Cache
      */
     protected $cache;
 
     /**
-     * 配置参数
+     * 配置参数.
+     *
      * @var array
      */
     protected $config = [
@@ -51,12 +54,9 @@ class CheckRequestCache
     }
 
     /**
-     * 设置当前地址的请求缓存
-     * @access public
-     * @param Request $request
-     * @param Closure $next
-     * @param mixed   $cache
-     * @return Response
+     * 设置当前地址的请求缓存.
+     *
+     * @param mixed $cache
      */
     public function handle(Request $request, Closure $next, $cache = null): Response
     {
@@ -66,7 +66,7 @@ class CheckRequestCache
                 $cache = false;
             }
 
-            $cache = $cache ?? $this->getRequestCache($request);
+            $cache ??= $this->getRequestCache($request);
 
             if ($cache) {
                 if (is_array($cache)) {
@@ -82,7 +82,8 @@ class CheckRequestCache
                 if (strtotime($request->server('HTTP_IF_MODIFIED_SINCE', '')) + $expire > $request->server('REQUEST_TIME')) {
                     // 读取缓存
                     return Response::create()->code(304);
-                } elseif (($hit = $this->cache->get($key)) !== null) {
+                }
+                if (($hit = $this->cache->get($key)) !== null) {
                     [$content, $header, $when] = $hit;
                     if (null === $expire || $when + $expire > $request->server('REQUEST_TIME')) {
                         return Response::create($content)->header($header);
@@ -106,9 +107,10 @@ class CheckRequestCache
     }
 
     /**
-     * 读取当前地址的请求缓存信息
-     * @access protected
+     * 读取当前地址的请求缓存信息.
+     *
      * @param Request $request
+     *
      * @return mixed
      */
     protected function getRequestCache($request)
@@ -128,10 +130,11 @@ class CheckRequestCache
     }
 
     /**
-     * 读取当前地址的请求缓存信息
-     * @access protected
+     * 读取当前地址的请求缓存信息.
+     *
      * @param Request $request
      * @param mixed   $key
+     *
      * @return null|string
      */
     protected function parseCacheKey($request, $key)

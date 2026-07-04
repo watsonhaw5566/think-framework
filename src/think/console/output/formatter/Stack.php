@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -11,51 +12,39 @@
 
 namespace think\console\output\formatter;
 
+use InvalidArgumentException;
+
 class Stack
 {
-
-    /**
-     * @var Style[]
-     */
+    /** @var Style[] */
     private $styles;
 
-    /**
-     * @var Style
-     */
+    /** @var Style */
     private $emptyStyle;
 
-    /**
-     * 构造方法
-     * @param Style|null $emptyStyle
-     */
+    /** 构造方法. */
     public function __construct(?Style $emptyStyle = null)
     {
         $this->emptyStyle = $emptyStyle ?: new Style();
         $this->reset();
     }
 
-    /**
-     * 重置堆栈
-     */
+    /** 重置堆栈. */
     public function reset(): void
     {
         $this->styles = [];
     }
 
-    /**
-     * 推一个样式进入堆栈
-     * @param Style $style
-     */
+    /** 推一个样式进入堆栈. */
     public function push(Style $style): void
     {
         $this->styles[] = $style;
     }
 
     /**
-     * 从堆栈中弹出一个样式
-     * @param Style|null $style
-     * @return Style
-     * @throws \InvalidArgumentException
+     * 从堆栈中弹出一个样式.
+     *
+     * @throws InvalidArgumentException
      */
     public function pop(?Style $style = null): Style
     {
@@ -79,13 +68,10 @@ class Stack
             }
         }
 
-        throw new \InvalidArgumentException('Incorrectly nested style tag found.');
+        throw new InvalidArgumentException('Incorrectly nested style tag found.');
     }
 
-    /**
-     * 计算堆栈的当前样式。
-     * @return Style
-     */
+    /** 计算堆栈的当前样式。 */
     public function getCurrent(): Style
     {
         if (empty($this->styles)) {
@@ -95,10 +81,7 @@ class Stack
         return $this->styles[count($this->styles) - 1];
     }
 
-    /**
-     * @param Style $emptyStyle
-     * @return Stack
-     */
+    /** @return Stack */
     public function setEmptyStyle(Style $emptyStyle)
     {
         $this->emptyStyle = $emptyStyle;
@@ -106,9 +89,6 @@ class Stack
         return $this;
     }
 
-    /**
-     * @return Style
-     */
     public function getEmptyStyle(): Style
     {
         return $this->emptyStyle;

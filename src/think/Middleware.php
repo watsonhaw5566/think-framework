@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -18,13 +19,13 @@ use think\exception\Handle;
 use Throwable;
 
 /**
- * 中间件管理类
- * @package think
+ * 中间件管理类.
  */
 class Middleware
 {
     /**
-     * 中间件执行队列
+     * 中间件执行队列.
+     *
      * @var array
      */
     protected $queue = [];
@@ -34,11 +35,9 @@ class Middleware
     }
 
     /**
-     * 导入中间件
-     * @access public
-     * @param array  $middlewares
+     * 导入中间件.
+     *
      * @param string $type 中间件类型
-     * @return void
      */
     public function import(array $middlewares = [], string $type = 'global'): void
     {
@@ -48,13 +47,12 @@ class Middleware
     }
 
     /**
-     * 注册中间件
-     * @access public
+     * 注册中间件.
+     *
      * @param mixed  $middleware
-     * @param string $type 中间件类型
-     * @return void
+     * @param string $type       中间件类型
      */
-    public function add(array|string|Closure $middleware, string $type = 'global'): void
+    public function add(array|Closure|string $middleware, string $type = 'global'): void
     {
         $middleware = $this->buildMiddleware($middleware, $type);
 
@@ -65,34 +63,32 @@ class Middleware
     }
 
     /**
-     * 注册路由中间件
-     * @access public
+     * 注册路由中间件.
+     *
      * @param mixed $middleware
-     * @return void
      */
-    public function route(array|string|Closure $middleware): void
+    public function route(array|Closure|string $middleware): void
     {
         $this->add($middleware, 'route');
     }
 
     /**
-     * 注册控制器中间件
-     * @access public
+     * 注册控制器中间件.
+     *
      * @param mixed $middleware
-     * @return void
      */
-    public function controller(array|string|Closure $middleware): void
+    public function controller(array|Closure|string $middleware): void
     {
         $this->add($middleware, 'controller');
     }
 
     /**
-     * 注册中间件到开始位置
-     * @access public
+     * 注册中间件到开始位置.
+     *
      * @param mixed  $middleware
-     * @param string $type 中间件类型
+     * @param string $type       中间件类型
      */
-    public function unshift(array|string|Closure $middleware, string $type = 'global')
+    public function unshift(array|Closure|string $middleware, string $type = 'global')
     {
         $middleware = $this->buildMiddleware($middleware, $type);
 
@@ -106,10 +102,9 @@ class Middleware
     }
 
     /**
-     * 获取注册的中间件
-     * @access public
+     * 获取注册的中间件.
+     *
      * @param string $type 中间件类型
-     * @return array
      */
     public function all(string $type = 'global'): array
     {
@@ -117,9 +112,10 @@ class Middleware
     }
 
     /**
-     * 调度管道
-     * @access public
+     * 调度管道.
+     *
      * @param string $type 中间件类型
+     *
      * @return Pipeline
      */
     public function pipeline(string $type = 'global')
@@ -136,16 +132,15 @@ class Middleware
                     if (!$response instanceof Response) {
                         throw new LogicException('The middleware must return Response instance');
                     }
+
                     return $response;
                 };
             }, $this->sortMiddleware($this->queue[$type] ?? [])))
-            ->whenException([$this, 'handleException']);
+            ->whenException([$this, 'handleException'])
+        ;
     }
 
-    /**
-     * 结束调度
-     * @param Response $response
-     */
+    /** 结束调度. */
     public function end(Response $response)
     {
         foreach ($this->queue as $queue) {
@@ -162,9 +157,10 @@ class Middleware
     }
 
     /**
-     * 异常处理
-     * @param Request   $passable
-     * @param Throwable $e
+     * 异常处理.
+     *
+     * @param Request $passable
+     *
      * @return Response
      */
     public function handleException($passable, Throwable $e)
@@ -178,18 +174,16 @@ class Middleware
     }
 
     /**
-     * 解析中间件
-     * @access protected
-     * @param array|string|Closure  $middleware
+     * 解析中间件.
+     *
      * @param string $type 中间件类型
-     * @return array
      */
-    protected function buildMiddleware(array|string|Closure $middleware, string $type): array
+    protected function buildMiddleware(array|Closure|string $middleware, string $type): array
     {
         if (empty($middleware)) {
             return [];
         }
-        
+
         if (is_array($middleware)) {
             [$middleware, $params] = $middleware;
         }
@@ -198,7 +192,7 @@ class Middleware
             return [$middleware, $params ?? []];
         }
 
-        //中间件别名检查
+        // 中间件别名检查
         $alias = $this->app->config->get('middleware.alias', []);
 
         if (isset($alias[$middleware])) {
@@ -207,6 +201,7 @@ class Middleware
 
         if (is_array($middleware)) {
             $this->import($middleware, $type);
+
             return [];
         }
 
@@ -214,8 +209,8 @@ class Middleware
     }
 
     /**
-     * 中间件排序
-     * @param array $middlewares
+     * 中间件排序.
+     *
      * @return array
      */
     protected function sortMiddleware(array $middlewares)
@@ -224,6 +219,7 @@ class Middleware
         uasort($middlewares, function ($a, $b) use ($priority) {
             $aPriority = $this->getMiddlewarePriority($priority, $a);
             $bPriority = $this->getMiddlewarePriority($priority, $b);
+
             return $bPriority - $aPriority;
         });
 
@@ -231,9 +227,8 @@ class Middleware
     }
 
     /**
-     * 获取中间件优先级
-     * @param $priority
-     * @param $middleware
+     * 获取中间件优先级.
+     *
      * @return int
      */
     protected function getMiddlewarePriority($priority, $middleware)
@@ -241,8 +236,10 @@ class Middleware
         [$call] = $middleware;
         if (is_array($call) && is_string($call[0])) {
             $index = array_search($call[0], array_reverse($priority));
+
             return false === $index ? -1 : $index;
         }
+
         return -1;
     }
 }

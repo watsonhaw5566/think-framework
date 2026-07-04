@@ -59,6 +59,7 @@ class EventTest extends TestCase
     {
         $this->event->listen('AppInit', function ($bar) {
             $this->assertEquals('bar', $bar);
+
             return 'foo';
         });
 

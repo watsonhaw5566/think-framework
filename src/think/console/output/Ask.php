@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -11,6 +12,8 @@
 
 namespace think\console\output;
 
+use Exception;
+use RuntimeException;
 use think\console\Input;
 use think\console\Output;
 use think\console\output\question\Choice;
@@ -22,13 +25,13 @@ class Ask
 
     private static $shell;
 
-    /** @var  Input */
+    /** @var Input */
     protected $input;
 
-    /** @var  Output */
+    /** @var Output */
     protected $output;
 
-    /** @var  Question */
+    /** @var Question */
     protected $question;
 
     public function __construct(Input $input, Output $output, Question $question)
@@ -69,7 +72,7 @@ class Ask
             if ($this->question->isHidden()) {
                 try {
                     $ret = trim($this->getHiddenResponse($inputStream));
-                } catch (\RuntimeException $e) {
+                } catch (RuntimeException $e) {
                     if (!$this->question->isHiddenFallback()) {
                         throw $e;
                     }
@@ -79,7 +82,7 @@ class Ask
             if (false === $ret) {
                 $ret = fgets($inputStream, 4096);
                 if (false === $ret) {
-                    throw new \RuntimeException('Aborted');
+                    throw new RuntimeException('Aborted');
                 }
                 $ret = trim($ret);
             }
@@ -119,7 +122,7 @@ class Ask
                     $this->output->write("\033[1D");
                 }
 
-                if ($i === 0) {
+                if (0 === $i) {
                     $ofs        = -1;
                     $matches    = $autocomplete;
                     $numMatches = count($matches);
@@ -208,7 +211,7 @@ class Ask
             shell_exec(sprintf('stty %s', $sttyMode));
 
             if (false === $value) {
-                throw new \RuntimeException('Aborted');
+                throw new RuntimeException('Aborted');
             }
 
             $value = trim($value);
@@ -218,7 +221,7 @@ class Ask
         }
 
         if (false !== $shell = $this->getShell()) {
-            $readCmd = $shell === 'csh' ? 'set mypassword = $<' : 'read -r mypassword';
+            $readCmd = 'csh' === $shell ? 'set mypassword = $<' : 'read -r mypassword';
             $command = sprintf("/usr/bin/env %s -c 'stty -echo; %s; stty echo; echo \$mypassword'", $shell, $readCmd);
             $value   = rtrim(shell_exec($command));
             $this->output->writeln('');
@@ -226,12 +229,12 @@ class Ask
             return $value;
         }
 
-        throw new \RuntimeException('Unable to hide the response.');
+        throw new RuntimeException('Unable to hide the response.');
     }
 
     protected function validateAttempts($interviewer)
     {
-        /** @var \Exception $error */
+        /** @var Exception $error */
         $error    = null;
         $attempts = $this->question->getMaxAttempts();
         while (null === $attempts || $attempts--) {
@@ -241,16 +244,14 @@ class Ask
 
             try {
                 return call_user_func($this->question->getValidator(), $interviewer());
-            } catch (\Exception $error) {
+            } catch (Exception $error) {
             }
         }
 
         throw $error;
     }
 
-    /**
-     * 显示问题的提示信息
-     */
+    /** 显示问题的提示信息. */
     protected function writePrompt()
     {
         $text    = $this->question->getQuestion();
@@ -261,12 +262,10 @@ class Ask
                 $text = sprintf(' <info>%s</info>:', $text);
 
                 break;
-
             case $this->question instanceof Confirmation:
                 $text = sprintf(' <info>%s (yes/no)</info> [<comment>%s</comment>]:', $text, $default ? 'yes' : 'no');
 
                 break;
-
             case $this->question instanceof Choice && $this->question->isMultiselect():
                 $choices = $this->question->getChoices();
                 $default = explode(',', $default);
@@ -278,13 +277,11 @@ class Ask
                 $text = sprintf(' <info>%s</info> [<comment>%s</comment>]:', $text, implode(', ', $default));
 
                 break;
-
             case $this->question instanceof Choice:
                 $choices = $this->question->getChoices();
                 $text    = sprintf(' <info>%s</info> [<comment>%s</comment>]:', $text, $choices[$default]);
 
                 break;
-
             default:
                 $text = sprintf(' <info>%s</info> [<comment>%s</comment>]:', $text, $default);
         }
@@ -331,6 +328,6 @@ class Ask
 
         exec('stty 2>&1', $output, $exitcode);
 
-        return self::$stty = $exitcode === 0;
+        return self::$stty = 0 === $exitcode;
     }
 }

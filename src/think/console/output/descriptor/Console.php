@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -11,43 +12,33 @@
 
 namespace think\console\output\descriptor;
 
+use InvalidArgumentException;
 use think\Console as ThinkConsole;
 use think\console\Command;
 
 class Console
 {
+    public const GLOBAL_NAMESPACE = '_global';
 
-    const GLOBAL_NAMESPACE = '_global';
-
-    /**
-     * @var ThinkConsole
-     */
+    /** @var ThinkConsole */
     private $console;
 
-    /**
-     * @var null|string
-     */
+    /** @var null|string */
     private $namespace;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $namespaces;
 
-    /**
-     * @var Command[]
-     */
+    /** @var Command[] */
     private $commands;
 
-    /**
-     * @var Command[]
-     */
+    /** @var Command[] */
     private $aliases;
 
     /**
-     * 构造方法
-     * @param ThinkConsole $console
-     * @param string|null  $namespace
+     * 构造方法.
+     *
+     * @param null|string $namespace
      */
     public function __construct(ThinkConsole $console, $namespace = null)
     {
@@ -55,9 +46,6 @@ class Console
         $this->namespace = $namespace;
     }
 
-    /**
-     * @return array
-     */
     public function getNamespaces(): array
     {
         if (null === $this->namespaces) {
@@ -67,9 +55,7 @@ class Console
         return $this->namespaces;
     }
 
-    /**
-     * @return Command[]
-     */
+    /** @return Command[] */
     public function getCommands(): array
     {
         if (null === $this->commands) {
@@ -79,15 +65,11 @@ class Console
         return $this->commands;
     }
 
-    /**
-     * @param string $name
-     * @return Command
-     * @throws \InvalidArgumentException
-     */
+    /** @throws InvalidArgumentException */
     public function getCommand(string $name): Command
     {
         if (!isset($this->commands[$name]) && !isset($this->aliases[$name])) {
-            throw new \InvalidArgumentException(sprintf('Command %s does not exist.', $name));
+            throw new InvalidArgumentException(sprintf('Command %s does not exist.', $name));
         }
 
         return $this->commands[$name] ?? $this->aliases[$name];
@@ -125,10 +107,6 @@ class Console
         }
     }
 
-    /**
-     * @param array $commands
-     * @return array
-     */
     private function sortCommands(array $commands): array
     {
         $namespacedCommands = [];

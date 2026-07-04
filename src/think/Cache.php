@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace think;
 
@@ -21,29 +22,27 @@ use think\exception\InvalidArgumentException;
 use think\helper\Arr;
 
 /**
- * 缓存管理类
+ * 缓存管理类.
+ *
  * @mixin Driver
  * @mixin \think\cache\driver\File
  */
 class Cache extends Manager implements CacheInterface
 {
+    protected $namespace = '\think\cache\driver\\';
 
-    protected $namespace = '\\think\\cache\\driver\\';
-
-    /**
-     * 默认驱动
-     * @return string|null
-     */
+    /** 默认驱动. */
     public function getDefaultDriver(): ?string
     {
         return $this->getConfig('default');
     }
 
     /**
-     * 获取缓存配置
-     * @access public
+     * 获取缓存配置.
+     *
      * @param null|string $name    名称
      * @param mixed       $default 默认值
+     *
      * @return mixed
      */
     public function getConfig(?string $name = null, $default = null)
@@ -56,10 +55,10 @@ class Cache extends Manager implements CacheInterface
     }
 
     /**
-     * 获取驱动配置
-     * @param string $store
-     * @param string $name
-     * @param mixed  $default
+     * 获取驱动配置.
+     *
+     * @param mixed $default
+     *
      * @return array
      */
     public function getStoreConfig(string $store, ?string $name = null, $default = null)
@@ -68,7 +67,7 @@ class Cache extends Manager implements CacheInterface
             return Arr::get($config, $name, $default);
         }
 
-        throw new \InvalidArgumentException("Store [$store] not found.");
+        throw new \InvalidArgumentException("Store [{$store}] not found.");
     }
 
     protected function resolveType(string $name)
@@ -82,9 +81,10 @@ class Cache extends Manager implements CacheInterface
     }
 
     /**
-     * 连接或者切换缓存
-     * @access public
-     * @param string|null $name 连接配置名
+     * 连接或者切换缓存.
+     *
+     * @param null|string $name 连接配置名
+     *
      * @return Driver
      */
     public function store(?string $name = null)
@@ -92,22 +92,17 @@ class Cache extends Manager implements CacheInterface
         return $this->driver($name);
     }
 
-    /**
-     * 清空缓冲池
-     * @access public
-     * @return bool
-     */
+    /** 清空缓冲池. */
     public function clear(): bool
     {
         return $this->store()->clear();
     }
 
     /**
-     * 读取缓存
-     * @access public
+     * 读取缓存.
+     *
      * @param string $key     缓存变量名
      * @param mixed  $default 默认值
-     * @return mixed
      */
     public function get($key, mixed $default = null): mixed
     {
@@ -115,12 +110,11 @@ class Cache extends Manager implements CacheInterface
     }
 
     /**
-     * 写入缓存
-     * @access public
+     * 写入缓存.
+     *
      * @param string                             $key   缓存变量名
      * @param mixed                              $value 存储数据
-     * @param int|DateTimeInterface|DateInterval $ttl   有效时间 0为永久
-     * @return bool
+     * @param DateInterval|DateTimeInterface|int $ttl   有效时间 0为永久
      */
     public function set($key, $value, $ttl = null): bool
     {
@@ -128,10 +122,9 @@ class Cache extends Manager implements CacheInterface
     }
 
     /**
-     * 删除缓存
-     * @access public
+     * 删除缓存.
+     *
      * @param string $key 缓存变量名
-     * @return bool
      */
     public function delete($key): bool
     {
@@ -139,11 +132,11 @@ class Cache extends Manager implements CacheInterface
     }
 
     /**
-     * 读取缓存
-     * @access public
+     * 读取缓存.
+     *
      * @param iterable $keys    缓存变量名
      * @param mixed    $default 默认值
-     * @return iterable
+     *
      * @throws InvalidArgumentException
      */
     public function getMultiple($keys, $default = null): iterable
@@ -152,11 +145,10 @@ class Cache extends Manager implements CacheInterface
     }
 
     /**
-     * 写入缓存
-     * @access public
-     * @param iterable               $values 缓存数据
-     * @param null|int|\DateInterval $ttl    有效时间 0为永久
-     * @return bool
+     * 写入缓存.
+     *
+     * @param iterable              $values 缓存数据
+     * @param null|DateInterval|int $ttl    有效时间 0为永久
      */
     public function setMultiple($values, $ttl = null): bool
     {
@@ -164,10 +156,10 @@ class Cache extends Manager implements CacheInterface
     }
 
     /**
-     * 删除缓存
-     * @access public
+     * 删除缓存.
+     *
      * @param iterable $keys 缓存变量名
-     * @return bool
+     *
      * @throws InvalidArgumentException
      */
     public function deleteMultiple($keys): bool
@@ -176,10 +168,9 @@ class Cache extends Manager implements CacheInterface
     }
 
     /**
-     * 判断缓存是否存在
-     * @access public
+     * 判断缓存是否存在.
+     *
      * @param string $key 缓存变量名
-     * @return bool
      */
     public function has($key): bool
     {
@@ -187,14 +178,14 @@ class Cache extends Manager implements CacheInterface
     }
 
     /**
-     * 缓存标签
-     * @access public
-     * @param string|array $name 标签名
+     * 缓存标签.
+     *
+     * @param array|string $name 标签名
+     *
      * @return TagSet
      */
     public function tag($name)
     {
         return $this->store()->tag($name);
     }
-
 }

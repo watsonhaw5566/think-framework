@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -15,19 +16,20 @@ namespace think;
 use ArrayAccess;
 
 /**
- * Env管理类
- * @package think
+ * Env管理类.
  */
 class Env implements ArrayAccess
 {
     /**
-     * 环境变量数据
+     * 环境变量数据.
+     *
      * @var array
      */
     protected $data = [];
 
     /**
-     * 数据转换映射
+     * 数据转换映射.
+     *
      * @var array
      */
     protected $convert = [
@@ -43,10 +45,9 @@ class Env implements ArrayAccess
     }
 
     /**
-     * 读取环境变量定义文件
-     * @access public
+     * 读取环境变量定义文件.
+     *
      * @param string $file 环境变量定义文件
-     * @return void
      */
     public function load(string $file): void
     {
@@ -56,9 +57,10 @@ class Env implements ArrayAccess
 
     /**
      * 获取环境变量值
-     * @access public
+     *
      * @param string $name    环境变量名
      * @param mixed  $default 默认值
+     *
      * @return mixed
      */
     public function get(?string $name = null, $default = null)
@@ -102,10 +104,9 @@ class Env implements ArrayAccess
 
     /**
      * 设置环境变量值
-     * @access public
-     * @param string|array $env   环境变量
+     *
+     * @param array|string $env   环境变量
      * @param mixed        $value 值
-     * @return void
      */
     public function set($env, $value = null): void
     {
@@ -133,10 +134,9 @@ class Env implements ArrayAccess
     }
 
     /**
-     * 检测是否存在环境变量
-     * @access public
+     * 检测是否存在环境变量.
+     *
      * @param string $name 参数名
-     * @return bool
      */
     public function has(string $name): bool
     {
@@ -144,8 +144,8 @@ class Env implements ArrayAccess
     }
 
     /**
-     * 设置环境变量
-     * @access public
+     * 设置环境变量.
+     *
      * @param string $name  参数名
      * @param mixed  $value 值
      */
@@ -155,9 +155,10 @@ class Env implements ArrayAccess
     }
 
     /**
-     * 获取环境变量
-     * @access public
+     * 获取环境变量.
+     *
      * @param string $name 参数名
+     *
      * @return mixed
      */
     public function __get(string $name)
@@ -166,10 +167,9 @@ class Env implements ArrayAccess
     }
 
     /**
-     * 检测是否存在环境变量
-     * @access public
+     * 检测是否存在环境变量.
+     *
      * @param string $name 参数名
-     * @return bool
      */
     public function __isset(string $name): bool
     {

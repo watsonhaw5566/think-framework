@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -19,7 +20,7 @@ use think\Response;
 use think\Session;
 
 /**
- * Session初始化
+ * Session初始化.
  */
 class SessionInit
 {
@@ -27,13 +28,7 @@ class SessionInit
     {
     }
 
-    /**
-     * Session初始化
-     * @access public
-     * @param Request $request
-     * @param Closure $next
-     * @return Response
-     */
+    /** Session初始化. */
     public function handle(Request $request, Closure $next): Response
     {
         // Session初始化

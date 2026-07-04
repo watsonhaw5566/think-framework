@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\route\dispatch;
 
@@ -16,28 +17,30 @@ use Closure;
 use think\App;
 use think\exception\ClassNotFoundException;
 use think\exception\HttpException;
-use think\helper\Str;
 use think\route\Dispatch;
 
 /**
- * Controller Dispatcher
+ * Controller Dispatcher.
  */
 class Controller extends Dispatch
 {
     /**
-     * 模块名
+     * 模块名.
+     *
      * @var string
      */
     protected $layer;
 
     /**
-     * 控制器名
+     * 控制器名.
+     *
      * @var string
      */
     protected $controller;
 
     /**
-     * 操作名
+     * 操作名.
+     *
      * @var string
      */
     protected $actionName;
@@ -76,7 +79,8 @@ class Controller extends Dispatch
         $this->request
             ->setLayer($this->layer)
             ->setController($this->controller)
-            ->setAction($this->actionName);
+            ->setAction($this->actionName)
+        ;
     }
 
     public function exec()
@@ -92,6 +96,7 @@ class Controller extends Dispatch
                 $route = $this->miss->getRoute();
                 if ($route instanceof Closure) {
                     $vars = $this->getActionBindVars();
+
                     return $this->app->invoke($route, $vars);
                 }
                 // 检查分组绑定
@@ -110,9 +115,10 @@ class Controller extends Dispatch
     }
 
     /**
-     * 实例化访问控制器
-     * @access public
+     * 实例化访问控制器.
+     *
      * @return object
+     *
      * @throws ClassNotFoundException
      */
     public function controller()
@@ -124,7 +130,8 @@ class Controller extends Dispatch
         $class = $this->app->parseClass($controllerLayer, $this->controller . $suffix, $this->layer);
         if (class_exists($class)) {
             return $this->app->make($class, [], true);
-        } elseif ($emptyController && class_exists($emptyClass = $this->app->parseClass($controllerLayer, $emptyController . $suffix, $this->layer))) {
+        }
+        if ($emptyController && class_exists($emptyClass = $this->app->parseClass($controllerLayer, $emptyController . $suffix, $this->layer))) {
             return $this->app->make($emptyClass, [], true);
         }
 

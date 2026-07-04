@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -12,79 +13,89 @@ declare(strict_types=1);
 
 namespace think;
 
+use InvalidArgumentException;
 use Throwable;
 
 /**
- * 响应输出基础类
- * @package think
+ * 响应输出基础类.
  */
 abstract class Response
 {
     /**
-     * 原始数据
+     * 原始数据.
+     *
      * @var mixed
      */
     protected $data;
 
     /**
-     * 当前contentType
+     * 当前contentType.
+     *
      * @var string
      */
     protected $contentType = 'text/html';
 
     /**
-     * 字符集
+     * 字符集.
+     *
      * @var string
      */
     protected $charset = 'utf-8';
 
     /**
      * 状态码
+     *
      * @var int
      */
     protected $code = 200;
 
     /**
-     * 是否允许请求缓存
+     * 是否允许请求缓存.
+     *
      * @var bool
      */
     protected $allowCache = true;
 
     /**
-     * 输出参数
+     * 输出参数.
+     *
      * @var array
      */
     protected $options = [];
 
     /**
-     * header参数
+     * header参数.
+     *
      * @var array
      */
     protected $header = [];
 
     /**
-     * 输出内容
+     * 输出内容.
+     *
      * @var string
      */
-    protected $content = null;
+    protected $content;
 
     /**
      * Cookie对象
+     *
      * @var Cookie
      */
     protected $cookie;
 
     /**
      * Session对象
+     *
      * @var Session
      */
     protected $session;
 
     /**
-     * 初始化
-     * @access protected
-     * @param  mixed  $data 输出数据
-     * @param  int    $code 状态码
+     * 初始化.
+     *
+     * @param mixed $data 输出数据
+     * @param int   $code 状态码
      */
     protected function init($data = '', int $code = 200)
     {
@@ -96,36 +107,36 @@ abstract class Response
 
     /**
      * 创建Response对象
-     * @access public
-     * @param  mixed  $data 输出数据
-     * @param  string $type 输出类型
-     * @param  int    $code 状态码
-     * @return Response
+     *
+     * @param mixed  $data 输出数据
+     * @param string $type 输出类型
+     * @param int    $code 状态码
      */
     public static function create($data = '', string $type = 'html', int $code = 200): Response
     {
-        $class = str_contains($type, '\\') ? $type : '\\think\\response\\' . ucfirst(strtolower($type));
+        $class = str_contains($type, '\\') ? $type : '\think\response\\' . ucfirst(strtolower($type));
 
         return Container::getInstance()->invokeClass($class, [$data, $code]);
     }
 
     /**
      * 设置Session对象
-     * @access public
-     * @param  Session $session Session对象
+     *
+     * @param Session $session Session对象
+     *
      * @return $this
      */
     public function setSession(Session $session)
     {
         $this->session = $session;
+
         return $this;
     }
 
     /**
-     * 发送数据到客户端
-     * @access public
-     * @return void
-     * @throws \InvalidArgumentException
+     * 发送数据到客户端.
+     *
+     * @throws InvalidArgumentException
      */
     public function send(): void
     {
@@ -152,7 +163,7 @@ abstract class Response
             if (function_exists('fastcgi_finish_request')) {
                 // 提高页面响应
                 fastcgi_finish_request();
-            }            
+            }
         } catch (Throwable $e) {
             // 继续执行，不中断响应发送
             Container::getInstance()->log->error($e->getMessage());
@@ -160,9 +171,10 @@ abstract class Response
     }
 
     /**
-     * 处理数据
-     * @access protected
-     * @param  mixed $data 要处理的数据
+     * 处理数据.
+     *
+     * @param mixed $data 要处理的数据
+     *
      * @return mixed
      */
     protected function output($data)
@@ -171,10 +183,9 @@ abstract class Response
     }
 
     /**
-     * 输出数据
-     * @access protected
+     * 输出数据.
+     *
      * @param string $data 要处理的数据
-     * @return void
      */
     protected function sendData(string $data): void
     {
@@ -182,9 +193,10 @@ abstract class Response
     }
 
     /**
-     * 输出的参数
-     * @access public
-     * @param  mixed $options 输出参数
+     * 输出的参数.
+     *
+     * @param mixed $options 输出参数
+     *
      * @return $this
      */
     public function options(array $options = [])
@@ -195,9 +207,10 @@ abstract class Response
     }
 
     /**
-     * 输出数据设置
-     * @access public
-     * @param  mixed $data 输出数据
+     * 输出数据设置.
+     *
+     * @param mixed $data 输出数据
+     *
      * @return $this
      */
     public function data($data)
@@ -208,9 +221,10 @@ abstract class Response
     }
 
     /**
-     * 是否允许请求缓存
-     * @access public
-     * @param  bool $cache 允许请求缓存
+     * 是否允许请求缓存.
+     *
+     * @param bool $cache 允许请求缓存
+     *
      * @return $this
      */
     public function allowCache(bool $cache)
@@ -221,8 +235,8 @@ abstract class Response
     }
 
     /**
-     * 是否允许请求缓存
-     * @access public
+     * 是否允许请求缓存.
+     *
      * @return bool
      */
     public function isAllowCache()
@@ -231,11 +245,12 @@ abstract class Response
     }
 
     /**
-     * 设置Cookie
-     * @access public
-     * @param  string $name  cookie名称
-     * @param  string $value cookie值
-     * @param  mixed  $option 可选参数
+     * 设置Cookie.
+     *
+     * @param string $name   cookie名称
+     * @param string $value  cookie值
+     * @param mixed  $option 可选参数
+     *
      * @return $this
      */
     public function cookie(string $name, string $value, $option = null)
@@ -246,9 +261,10 @@ abstract class Response
     }
 
     /**
-     * 设置响应头
-     * @access public
-     * @param  array $header  参数
+     * 设置响应头.
+     *
+     * @param array $header 参数
+     *
      * @return $this
      */
     public function header(array $header = [])
@@ -259,9 +275,10 @@ abstract class Response
     }
 
     /**
-     * 设置页面输出内容
-     * @access public
-     * @param  mixed $content
+     * 设置页面输出内容.
+     *
+     * @param mixed $content
+     *
      * @return $this
      */
     public function content($content)
@@ -272,7 +289,7 @@ abstract class Response
                 '__toString',
             ])
         ) {
-            throw new \InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
+            throw new InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
         }
 
         $this->content = (string) $content;
@@ -282,8 +299,9 @@ abstract class Response
 
     /**
      * 发送HTTP状态
-     * @access public
-     * @param  int $code 状态码
+     *
+     * @param int $code 状态码
+     *
      * @return $this
      */
     public function code(int $code)
@@ -294,9 +312,8 @@ abstract class Response
     }
 
     /**
-     * LastModified
-     * @access public
-     * @param  string $time
+     * LastModified.
+     *
      * @return $this
      */
     public function lastModified(string $time)
@@ -307,9 +324,8 @@ abstract class Response
     }
 
     /**
-     * Expires
-     * @access public
-     * @param  string $time
+     * Expires.
+     *
      * @return $this
      */
     public function expires(string $time)
@@ -320,9 +336,8 @@ abstract class Response
     }
 
     /**
-     * ETag
-     * @access public
-     * @param  string $eTag
+     * ETag.
+     *
      * @return $this
      */
     public function eTag(string $eTag)
@@ -333,9 +348,10 @@ abstract class Response
     }
 
     /**
-     * 页面缓存控制
-     * @access public
-     * @param  string $cache 状态码
+     * 页面缓存控制.
+     *
+     * @param string $cache 状态码
+     *
      * @return $this
      */
     public function cacheControl(string $cache)
@@ -346,10 +362,11 @@ abstract class Response
     }
 
     /**
-     * 页面输出类型
-     * @access public
-     * @param  string $contentType 输出类型
-     * @param  string $charset     输出编码
+     * 页面输出类型.
+     *
+     * @param string $contentType 输出类型
+     * @param string $charset     输出编码
+     *
      * @return $this
      */
     public function contentType(string $contentType, string $charset = 'utf-8')
@@ -360,9 +377,10 @@ abstract class Response
     }
 
     /**
-     * 获取头部信息
-     * @access public
-     * @param  string $name 头部名称
+     * 获取头部信息.
+     *
+     * @param string $name 头部名称
+     *
      * @return mixed
      */
     public function getHeader(string $name = '')
@@ -375,8 +393,8 @@ abstract class Response
     }
 
     /**
-     * 获取原始数据
-     * @access public
+     * 获取原始数据.
+     *
      * @return mixed
      */
     public function getData()
@@ -384,11 +402,7 @@ abstract class Response
         return $this->data;
     }
 
-    /**
-     * 获取输出数据
-     * @access public
-     * @return string
-     */
+    /** 获取输出数据. */
     public function getContent(): string
     {
         if (null == $this->content) {
@@ -400,7 +414,7 @@ abstract class Response
                     '__toString',
                 ])
             ) {
-                throw new \InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
+                throw new InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
             }
 
             $this->content = (string) $content;
@@ -409,11 +423,7 @@ abstract class Response
         return $this->content;
     }
 
-    /**
-     * 获取状态码
-     * @access public
-     * @return int
-     */
+    /** 获取状态码 */
     public function getCode(): int
     {
         return $this->code;
@@ -421,7 +431,7 @@ abstract class Response
 
     /**
      * 获取Cookie对象
-     * @access public
+     *
      * @return Cookie
      */
     public function getCookie()

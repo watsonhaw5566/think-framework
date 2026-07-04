@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,16 +9,17 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\exception;
 
+use RuntimeException;
 use think\Response;
 
 /**
- * HTTP响应异常
+ * HTTP响应异常.
  */
-class HttpResponseException extends \RuntimeException
+class HttpResponseException extends RuntimeException
 {
     public function __construct(protected Response $response)
     {
@@ -27,5 +29,4 @@ class HttpResponseException extends \RuntimeException
     {
         return $this->response;
     }
-
 }

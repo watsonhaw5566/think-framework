@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,30 +9,25 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\console;
 
+use InvalidArgumentException;
+use RuntimeException;
 use think\console\input\Argument;
 use think\console\input\Definition;
 use think\console\input\Option;
 
 class Input
 {
-
-    /**
-     * @var Definition
-     */
+    /** @var Definition */
     protected $definition;
 
-    /**
-     * @var Option[]
-     */
+    /** @var Option[] */
     protected $options = [];
 
-    /**
-     * @var Argument[]
-     */
+    /** @var Argument[] */
     protected $arguments = [];
 
     protected $interactive = true;
@@ -58,7 +54,8 @@ class Input
     }
 
     /**
-     * 绑定实例
+     * 绑定实例.
+     *
      * @param Definition $definition A InputDefinition instance
      */
     public function bind(Definition $definition): void
@@ -70,9 +67,7 @@ class Input
         $this->parse();
     }
 
-    /**
-     * 解析参数
-     */
+    /** 解析参数. */
     protected function parse(): void
     {
         $parseOptions = true;
@@ -93,8 +88,9 @@ class Input
     }
 
     /**
-     * 解析短选项
-     * @param string $token 当前的指令.
+     * 解析短选项.
+     *
+     * @param string $token 当前的指令
      */
     private function parseShortOption(string $token): void
     {
@@ -114,16 +110,18 @@ class Input
     }
 
     /**
-     * 解析短选项
+     * 解析短选项.
+     *
      * @param string $name 当前指令
-     * @throws \RuntimeException
+     *
+     * @throws RuntimeException
      */
     private function parseShortOptionSet(string $name): void
     {
         $len = strlen($name);
         for ($i = 0; $i < $len; ++$i) {
             if (!$this->definition->hasShortcut($name[$i])) {
-                throw new \RuntimeException(sprintf('The "-%s" option does not exist.', $name[$i]));
+                throw new RuntimeException(sprintf('The "-%s" option does not exist.', $name[$i]));
             }
 
             $option = $this->definition->getOptionForShortcut($name[$i]);
@@ -131,14 +129,14 @@ class Input
                 $this->addLongOption($option->getName(), $i === $len - 1 ? null : substr($name, $i + 1));
 
                 break;
-            } else {
-                $this->addLongOption($option->getName(), null);
             }
+            $this->addLongOption($option->getName(), null);
         }
     }
 
     /**
-     * 解析完整选项
+     * 解析完整选项.
+     *
      * @param string $token 当前指令
      */
     private function parseLongOption(string $token): void
@@ -153,9 +151,11 @@ class Input
     }
 
     /**
-     * 解析参数
+     * 解析参数.
+     *
      * @param string $token 当前指令
-     * @throws \RuntimeException
+     *
+     * @throws RuntimeException
      */
     private function parseArgument(string $token): void
     {
@@ -165,26 +165,27 @@ class Input
             $arg = $this->definition->getArgument($c);
 
             $this->arguments[$arg->getName()] = $arg->isArray() ? [$token] : $token;
-
         } elseif ($this->definition->hasArgument($c - 1) && $this->definition->getArgument($c - 1)->isArray()) {
             $arg = $this->definition->getArgument($c - 1);
 
             $this->arguments[$arg->getName()][] = $token;
         } else {
-            throw new \RuntimeException('Too many arguments.');
+            throw new RuntimeException('Too many arguments.');
         }
     }
 
     /**
      * 添加一个短选项的值
+     *
      * @param string $shortcut 短名称
      * @param mixed  $value    值
-     * @throws \RuntimeException
+     *
+     * @throws RuntimeException
      */
     private function addShortOption(string $shortcut, $value): void
     {
         if (!$this->definition->hasShortcut($shortcut)) {
-            throw new \RuntimeException(sprintf('The "-%s" option does not exist.', $shortcut));
+            throw new RuntimeException(sprintf('The "-%s" option does not exist.', $shortcut));
         }
 
         $this->addLongOption($this->definition->getOptionForShortcut($shortcut)->getName(), $value);
@@ -192,14 +193,16 @@ class Input
 
     /**
      * 添加一个完整选项的值
+     *
      * @param string $name  选项名
      * @param mixed  $value 值
-     * @throws \RuntimeException
+     *
+     * @throws RuntimeException
      */
     private function addLongOption(string $name, $value): void
     {
         if (!$this->definition->hasOption($name)) {
-            throw new \RuntimeException(sprintf('The "--%s" option does not exist.', $name));
+            throw new RuntimeException(sprintf('The "--%s" option does not exist.', $name));
         }
 
         $option = $this->definition->getOption($name);
@@ -209,7 +212,7 @@ class Input
         }
 
         if (null !== $value && !$option->acceptValue()) {
-            throw new \RuntimeException(sprintf('The "--%s" option does not accept a value.', $name, $value));
+            throw new RuntimeException(sprintf('The "--%s" option does not accept a value.', $name, $value));
         }
 
         if (null === $value && $option->acceptValue() && count($this->parsed)) {
@@ -225,7 +228,7 @@ class Input
 
         if (null === $value) {
             if ($option->isValueRequired()) {
-                throw new \RuntimeException(sprintf('The "--%s" option requires a value.', $name));
+                throw new RuntimeException(sprintf('The "--%s" option requires a value.', $name));
             }
 
             if (!$option->isArray()) {
@@ -241,8 +244,9 @@ class Input
     }
 
     /**
-     * 获取第一个参数
-     * @return string|null
+     * 获取第一个参数.
+     *
+     * @return null|string
      */
     public function getFirstArgument()
     {
@@ -253,13 +257,12 @@ class Input
 
             return $token;
         }
-        return;
     }
 
     /**
      * 检查原始参数是否包含某个值
-     * @param string|array $values 需要检查的值
-     * @return bool
+     *
+     * @param array|string $values 需要检查的值
      */
     public function hasParameterOption($values): bool
     {
@@ -278,8 +281,10 @@ class Input
 
     /**
      * 获取原始选项的值
-     * @param string|array $values  需要检查的值
+     *
+     * @param array|string $values  需要检查的值
      * @param mixed        $default 默认值
+     *
      * @return mixed The option value
      */
     public function getParameterOption($values, $default = false)
@@ -305,27 +310,26 @@ class Input
     }
 
     /**
-     * 验证输入
-     * @throws \RuntimeException
+     * 验证输入.
+     *
+     * @throws RuntimeException
      */
     public function validate()
     {
         if (count($this->arguments) < $this->definition->getArgumentRequiredCount()) {
-            throw new \RuntimeException('Not enough arguments.');
+            throw new RuntimeException('Not enough arguments.');
         }
     }
 
-    /**
-     * 检查输入是否是交互的
-     * @return bool
-     */
+    /** 检查输入是否是交互的. */
     public function isInteractive(): bool
     {
         return $this->interactive;
     }
 
     /**
-     * 设置输入的交互
+     * 设置输入的交互.
+     *
      * @param bool
      */
     public function setInteractive(bool $interactive): void
@@ -334,7 +338,8 @@ class Input
     }
 
     /**
-     * 获取所有的参数
+     * 获取所有的参数.
+     *
      * @return Argument[]
      */
     public function getArguments(): array
@@ -343,48 +348,55 @@ class Input
     }
 
     /**
-     * 根据名称获取参数
+     * 根据名称获取参数.
+     *
      * @param string $name 参数名
+     *
      * @return mixed
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     public function getArgument(string $name)
     {
         if (!$this->definition->hasArgument($name)) {
-            throw new \InvalidArgumentException(sprintf('The "%s" argument does not exist.', $name));
+            throw new InvalidArgumentException(sprintf('The "%s" argument does not exist.', $name));
         }
 
         return $this->arguments[$name] ?? $this->definition->getArgument($name)
-            ->getDefault();
+            ->getDefault()
+        ;
     }
 
     /**
      * 设置参数的值
+     *
      * @param string $name  参数名
      * @param string $value 值
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     public function setArgument(string $name, $value)
     {
         if (!$this->definition->hasArgument($name)) {
-            throw new \InvalidArgumentException(sprintf('The "%s" argument does not exist.', $name));
+            throw new InvalidArgumentException(sprintf('The "%s" argument does not exist.', $name));
         }
 
         $this->arguments[$name] = $value;
     }
 
     /**
-     * 检查是否存在某个参数
-     * @param string|int $name 参数名或位置
-     * @return bool
+     * 检查是否存在某个参数.
+     *
+     * @param int|string $name 参数名或位置
      */
-    public function hasArgument(string|int $name): bool
+    public function hasArgument(int|string $name): bool
     {
         return $this->definition->hasArgument($name);
     }
 
     /**
-     * 获取所有的选项
+     * 获取所有的选项.
+     *
      * @return Option[]
      */
     public function getOptions(): array
@@ -394,14 +406,17 @@ class Input
 
     /**
      * 获取选项值
+     *
      * @param string $name 选项名称
+     *
      * @return mixed
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     public function getOption(string $name)
     {
         if (!$this->definition->hasOption($name)) {
-            throw new \InvalidArgumentException(sprintf('The "%s" option does not exist.', $name));
+            throw new InvalidArgumentException(sprintf('The "%s" option does not exist.', $name));
         }
 
         return $this->options[$name] ?? $this->definition->getOption($name)->getDefault();
@@ -409,41 +424,40 @@ class Input
 
     /**
      * 设置选项值
+     *
      * @param string      $name  选项名
-     * @param string|bool $value 值
-     * @throws \InvalidArgumentException
+     * @param bool|string $value 值
+     *
+     * @throws InvalidArgumentException
      */
     public function setOption(string $name, $value): void
     {
         if (!$this->definition->hasOption($name)) {
-            throw new \InvalidArgumentException(sprintf('The "%s" option does not exist.', $name));
+            throw new InvalidArgumentException(sprintf('The "%s" option does not exist.', $name));
         }
 
         $this->options[$name] = $value;
     }
 
     /**
-     * 是否有某个选项
+     * 是否有某个选项.
+     *
      * @param string $name 选项名
-     * @return bool
      */
     public function hasOption(string $name): bool
     {
         return $this->definition->hasOption($name) && isset($this->options[$name]);
     }
 
-    /**
-     * 转义指令
-     * @param string $token
-     * @return string
-     */
+    /** 转义指令. */
     public function escapeToken(string $token): string
     {
         return preg_match('{^[\w-]+$}', $token) ? $token : escapeshellarg($token);
     }
 
     /**
-     * 返回传递给命令的参数的字符串
+     * 返回传递给命令的参数的字符串.
+     *
      * @return string
      */
     public function __toString()

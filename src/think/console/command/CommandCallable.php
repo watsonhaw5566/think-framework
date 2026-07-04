@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -19,9 +20,7 @@ use think\console\Input;
  */
 trait CommandCallable
 {
-    /**
-     * @param class-string<Command> $class
-     */
+    /** @param class-string<Command> $class */
     private function callCommand(string $class): Command
     {
         return tap(app($class, newInstance: true), function ($command) {
