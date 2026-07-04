@@ -4,6 +4,7 @@ namespace think\tests;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use think\exception\RouteNotFoundException;
 use think\Request;
 use think\Route;
 
@@ -62,7 +63,7 @@ class ApiVersionTest extends TestCase
         try {
             $response = $this->route->dispatch($request);
             $this->assertEquals('v1 products', $response->getContent());
-        } catch (\think\exception\RouteNotFoundException $e) {
+        } catch (RouteNotFoundException $e) {
             var_dump($request->header('Api-Version')); // 检查版本号是否正确传入
 
             throw $e;
