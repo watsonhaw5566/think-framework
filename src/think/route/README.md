@@ -7,12 +7,16 @@
 ```
 route/
 ├── traits/           # Trait 实现
-│   ├── RouteRegister.php   # 路由注册
-│   ├── RouteGroup.php      # 路由分组
-│   ├── RouteResource.php   # 资源路由
-│   ├── RouteDomain.php     # 域名路由
-│   ├── RouteDispatch.php   # 路由分发
-│   └── RouteUrl.php        # URL 生成
+│   ├── RouteRegister.php   # 路由注册 (Route 类)
+│   ├── RouteGroup.php      # 路由分组 (Route 类)
+│   ├── RouteResource.php   # 资源路由 (Route 类)
+│   ├── RouteDomain.php     # 域名路由 (Route 类)
+│   ├── RouteDispatch.php   # 路由分发 (Route 类)
+│   ├── RouteUrl.php        # URL 生成 (Route 类)
+│   ├── RuleManager.php     # 规则管理 (RuleGroup 类)
+│   ├── RuleMatcher.php     # 规则匹配 (RuleGroup 类)
+│   ├── RuleBinder.php      # 路由绑定 (RuleGroup 类)
+│   └── RuleConfig.php      # 路由配置 (RuleGroup 类)
 ├── dispatch/         # 调度器
 │   ├── Callback.php
 │   ├── Controller.php
@@ -183,6 +187,8 @@ $route->get('user/:id', 'User/read')->method('GET');
 
 ## Trait 职责说明
 
+### Route 类 Trait
+
 | Trait | 职责 | 主要方法 |
 |-------|------|----------|
 | RouteRegister | 路由注册 | get, post, put, delete, patch, head, options, any, rule |
@@ -191,6 +197,15 @@ $route->get('user/:id', 'User/read')->method('GET');
 | RouteDomain | 域名路由 | domain, getDomains, checkDomain |
 | RouteDispatch | 路由分发 | dispatch, check, checkUrlDispatch |
 | RouteUrl | URL 生成 | buildUrl |
+
+### RuleGroup 类 Trait
+
+| Trait | 职责 | 主要方法 |
+|-------|------|----------|
+| RuleManager | 规则管理 | addRule, addRuleItem, miss, getMissRule, getRules, clear |
+| RuleMatcher | 规则匹配 | check, checkUrl, checkMergeRuleRegex |
+| RuleBinder | 路由绑定 | auto, class, controller, namespace, module, layer, checkBind |
+| RuleConfig | 路由配置 | prefix, alias, mergeRuleRegex, dispatcher, getFullName |
 
 ## 核心类说明
 
@@ -212,7 +227,17 @@ class Route
 
 ### RuleGroup 类
 
-路由分组管理器，支持嵌套分组和参数继承。
+路由分组管理器，支持嵌套分组和参数继承。通过 Trait 实现职责分离。
+
+```php
+class RuleGroup extends Rule
+{
+    use RuleManager,
+        RuleMatcher,
+        RuleBinder,
+        RuleConfig;
+}
+```
 
 ### RuleItem 类
 
