@@ -27,28 +27,28 @@ class Url
      *
      * @var string
      */
-    protected $root = '';
+    protected string $root = '';
 
     /**
      * HTTPS.
      *
-     * @var bool
+     * @var bool|null
      */
-    protected $https;
+    protected ?bool $https = null;
 
     /**
      * URL后缀
      *
      * @var bool|string
      */
-    protected $suffix = true;
+    protected bool|string $suffix = true;
 
     /**
      * URL域名.
      *
      * @var bool|string
      */
-    protected $domain = false;
+    protected bool|string $domain = false;
 
     /**
      * 架构函数.
@@ -69,7 +69,7 @@ class Url
      *
      * @return $this
      */
-    public function vars(array $vars = [])
+    public function vars(array $vars = []): static
     {
         $this->vars = $vars;
 
@@ -83,7 +83,7 @@ class Url
      *
      * @return $this
      */
-    public function suffix(bool|string $suffix)
+    public function suffix(bool|string $suffix): static
     {
         $this->suffix = $suffix;
 
@@ -97,7 +97,7 @@ class Url
      *
      * @return $this
      */
-    public function domain(bool|string $domain)
+    public function domain(bool|string $domain): static
     {
         $this->domain = $domain;
 
@@ -111,7 +111,7 @@ class Url
      *
      * @return $this
      */
-    public function root(string $root)
+    public function root(string $root): static
     {
         $this->root = $root;
 
@@ -123,7 +123,7 @@ class Url
      *
      * @return $this
      */
-    public function https(bool $https = true)
+    public function https(bool $https = true): static
     {
         $this->https = $https;
 

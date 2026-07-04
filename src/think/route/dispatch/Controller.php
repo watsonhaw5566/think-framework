@@ -29,21 +29,21 @@ class Controller extends Dispatch
      *
      * @var string
      */
-    protected $layer;
+    protected string $layer = '';
 
     /**
      * 控制器名.
      *
-     * @var string
+     * @var string|null
      */
-    protected $controller;
+    protected ?string $controller = null;
 
     /**
      * 操作名.
      *
-     * @var string
+     * @var string|null
      */
-    protected $actionName;
+    protected ?string $actionName = null;
 
     public function init(App $app)
     {

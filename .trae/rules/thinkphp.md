@@ -8,7 +8,7 @@ alwaysApply: true
 
 # 项目规范
 
-- 使用 php8.0+ 类型注释语法，尽可能补充类型注释和 docblock
+- 使用 php8.0+ 类型声明语法和 docblock
 - 每次修改完后，都需要跑一次 composer test
 - 每次修改完后，都需要跑一次 composer analyze
 - 每次修改完后，都需要跑一次 composer fix-style
