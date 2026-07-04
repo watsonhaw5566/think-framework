@@ -954,6 +954,8 @@ abstract class Rule
      */
     protected function buildRuleRegex(string $rule, array $match, array $pattern = [], array $option = [], bool $completeMatch = false, string $suffix = ''): string
     {
+        $origin  = [];
+        $replace = [];
         foreach ($match as $name) {
             $value = $this->buildNameRegex($name, $pattern, $suffix);
             if ($value) {
@@ -972,7 +974,7 @@ abstract class Rule
             }
         }
 
-        $regex = isset($replace) ? str_replace($origin, $replace, $rule) : $rule;
+        $regex = !empty($replace) ? str_replace($origin, $replace, $rule) : $rule;
         $regex = str_replace([')?/', ')?-'], [')/', ')-'], $regex);
 
         if (isset($hasSlash)) {

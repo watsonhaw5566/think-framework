@@ -194,22 +194,24 @@ class Console
      *
      * @return string
      */
-    private function getSttyColumns()
+    private function getSttyColumns(): string
     {
         if (!function_exists('proc_open')) {
-            return;
+            return '';
         }
 
         $descriptorspec = [1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
         $process        = proc_open('stty -a | grep columns', $descriptorspec, $pipes, null, null, ['suppress_errors' => true]);
-        if (is_resource($process)) {
+        if (is_resource($process) || is_object($process)) {
             $info = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
             fclose($pipes[2]);
             proc_close($process);
 
-            return $info;
+            return (string) $info;
         }
+
+        return '';
     }
 
     /**

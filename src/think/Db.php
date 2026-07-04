@@ -27,7 +27,7 @@ class Db extends DbManager
      */
     public static function __make(Event $event, Config $config, Log $log, Cache $cache)
     {
-        $db = new static();
+        $db = new self();
         $db->setConfig($config);
         $db->setEvent($event);
         $db->setLog($log);

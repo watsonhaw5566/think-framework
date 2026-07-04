@@ -120,8 +120,8 @@ class Formatter
         $offset   = 0;
         $output   = '';
         $tagRegex = '[a-z][a-z0-9_=;-]*';
-        preg_match_all("#<(({$tagRegex}) | /({$tagRegex})?)>#isx", $message, $matches, PREG_OFFSET_CAPTURE);
-        foreach ($matches[0] as $i => $match) {
+        preg_match_all("#<(?:$tagRegex | /(?:{$tagRegex})?)>#isx", $message, $matches, PREG_OFFSET_CAPTURE);
+        foreach ($matches[0] as $match) {
             $pos  = $match[1];
             $text = $match[0];
 
@@ -133,9 +133,9 @@ class Formatter
             $offset = $pos + strlen($text);
 
             if ($open = '/' != $text[1]) {
-                $tag = $matches[1][$i][0];
+                $tag = substr($text, 1, -1);
             } else {
-                $tag = $matches[3][$i][0] ?? '';
+                $tag = substr($text, 2, -1);
             }
 
             if (!$open && !$tag) {

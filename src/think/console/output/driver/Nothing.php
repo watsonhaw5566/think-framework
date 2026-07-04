@@ -17,9 +17,8 @@ use Throwable;
 
 class Nothing
 {
-    public function __construct(Output $output)
+    public function __construct(private ?Output $output = null)
     {
-        // do nothing
     }
 
     public function write($messages, bool $newline = false, int $options = 0)

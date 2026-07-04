@@ -55,7 +55,7 @@ class Cookie
 
     public static function __make(Request $request, Config $config)
     {
-        return new static($request, $config->get('cookie'));
+        return new self($request, $config->get('cookie'));
     }
 
     /**

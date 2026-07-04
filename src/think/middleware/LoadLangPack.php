@@ -15,7 +15,6 @@ namespace think\middleware;
 
 use Closure;
 use think\App;
-use think\Config;
 use think\Cookie;
 use think\Lang;
 use think\Request;
@@ -28,7 +27,7 @@ class LoadLangPack
 {
     protected $config;
 
-    public function __construct(protected App $app, protected Lang $lang, Config $config)
+    public function __construct(protected App $app, protected Lang $lang)
     {
         $this->config = $lang->getConfig();
     }
