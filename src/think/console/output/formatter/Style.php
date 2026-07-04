@@ -159,9 +159,7 @@ class Style
         }
     }
 
-    /**
-     * 批量设置字体格式.
-     */
+    /** 批量设置字体格式. */
     public function setOptions(array $options)
     {
         $this->options = [];

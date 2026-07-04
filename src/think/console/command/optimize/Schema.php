@@ -87,9 +87,7 @@ class Schema extends Command
         }
     }
 
-    /**
-     * 缓存表.
-     */
+    /** 缓存表. */
     private function cacheTable(string $table, ?string $connectionName = null): void
     {
         $connection = $this->app->db->connect($connectionName);
@@ -110,9 +108,7 @@ class Schema extends Command
         $this->buildDataBaseSchema($connection, (array) $table, $dbName);
     }
 
-    /**
-     * 缓存模型.
-     */
+    /** 缓存模型. */
     private function cacheModel(?string $dir = null): void
     {
         if ($dir) {

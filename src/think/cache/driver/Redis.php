@@ -200,9 +200,7 @@ class Redis extends Driver
         return $result > 0;
     }
 
-    /**
-     * 清除缓存.
-     */
+    /** 清除缓存. */
     public function clear(): bool
     {
         $this->handler()->flushDB();

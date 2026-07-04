@@ -27,7 +27,9 @@ class TagSet
      * @param array  $tag     缓存标签
      * @param Driver $handler 缓存对象
      */
-    public function __construct(protected array $tag, protected Driver $handler) {}
+    public function __construct(protected array $tag, protected Driver $handler)
+    {
+    }
 
     /**
      * 写入缓存.
@@ -97,9 +99,7 @@ class TagSet
         return $result;
     }
 
-    /**
-     * 清除缓存.
-     */
+    /** 清除缓存. */
     public function clear(): bool
     {
         // 指定标签清除

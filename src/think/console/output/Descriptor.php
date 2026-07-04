@@ -23,9 +23,7 @@ use think\console\output\descriptor\Console as ConsoleDescription;
 
 class Descriptor
 {
-    /**
-     * @var Output
-     */
+    /** @var Output */
     protected $output;
 
     public function describe(Output $output, $object, array $options = [])

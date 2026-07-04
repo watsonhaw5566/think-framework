@@ -47,9 +47,7 @@ class File extends SplFileInfo
         parent::__construct($path);
     }
 
-    /**
-     * 获取文件的哈希散列值
-     */
+    /** 获取文件的哈希散列值 */
     public function hash(string $type = 'sha1'): string
     {
         if (!isset($this->hash[$type])) {
@@ -59,25 +57,19 @@ class File extends SplFileInfo
         return $this->hash[$type];
     }
 
-    /**
-     * 获取文件的MD5值
-     */
+    /** 获取文件的MD5值 */
     public function md5(): string
     {
         return $this->hash('md5');
     }
 
-    /**
-     * 获取文件的SHA1值
-     */
+    /** 获取文件的SHA1值 */
     public function sha1(): string
     {
         return $this->hash('sha1');
     }
 
-    /**
-     * 获取文件类型信息.
-     */
+    /** 获取文件类型信息. */
     public function getMime(): string
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -109,9 +101,7 @@ class File extends SplFileInfo
         return $target;
     }
 
-    /**
-     * 实例化一个新文件.
-     */
+    /** 实例化一个新文件. */
     protected function getTargetFile(string $directory, ?string $name = null): File
     {
         if (!is_dir($directory)) {
@@ -127,9 +117,7 @@ class File extends SplFileInfo
         return new self($target, false);
     }
 
-    /**
-     * 获取文件名.
-     */
+    /** 获取文件名. */
     protected function getName(string $name): string
     {
         $originalName = str_replace('\\', '/', $name);
@@ -138,25 +126,19 @@ class File extends SplFileInfo
         return false === $pos ? $originalName : substr($originalName, $pos + 1);
     }
 
-    /**
-     * 文件扩展名.
-     */
+    /** 文件扩展名. */
     public function extension(): string
     {
         return $this->getExtension();
     }
 
-    /**
-     * 指定保存文件的扩展名.
-     */
+    /** 指定保存文件的扩展名. */
     public function setExtension(string $extension): void
     {
         $this->extension = $extension;
     }
 
-    /**
-     * 自动生成文件名.
-     */
+    /** 自动生成文件名. */
     public function hashName(Closure|string|null $rule = null): string
     {
         if (!$this->hashName) {

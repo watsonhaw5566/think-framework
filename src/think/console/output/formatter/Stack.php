@@ -16,36 +16,26 @@ use InvalidArgumentException;
 
 class Stack
 {
-    /**
-     * @var Style[]
-     */
+    /** @var Style[] */
     private $styles;
 
-    /**
-     * @var Style
-     */
+    /** @var Style */
     private $emptyStyle;
 
-    /**
-     * 构造方法.
-     */
+    /** 构造方法. */
     public function __construct(?Style $emptyStyle = null)
     {
         $this->emptyStyle = $emptyStyle ?: new Style();
         $this->reset();
     }
 
-    /**
-     * 重置堆栈.
-     */
+    /** 重置堆栈. */
     public function reset(): void
     {
         $this->styles = [];
     }
 
-    /**
-     * 推一个样式进入堆栈.
-     */
+    /** 推一个样式进入堆栈. */
     public function push(Style $style): void
     {
         $this->styles[] = $style;
@@ -81,9 +71,7 @@ class Stack
         throw new InvalidArgumentException('Incorrectly nested style tag found.');
     }
 
-    /**
-     * 计算堆栈的当前样式。
-     */
+    /** 计算堆栈的当前样式。 */
     public function getCurrent(): Style
     {
         if (empty($this->styles)) {
@@ -93,9 +81,7 @@ class Stack
         return $this->styles[count($this->styles) - 1];
     }
 
-    /**
-     * @return Stack
-     */
+    /** @return Stack */
     public function setEmptyStyle(Style $emptyStyle)
     {
         $this->emptyStyle = $emptyStyle;

@@ -17,18 +17,14 @@ use LogicException;
 
 class Definition
 {
-    /**
-     * @var Argument[]
-     */
+    /** @var Argument[] */
     private $arguments;
 
     private $requiredCount;
     private $hasAnArrayArgument = false;
     private $hasOptional;
 
-    /**
-     * @var Option[]
-     */
+    /** @var Option[] */
     private $options;
     private $shortcuts;
 
@@ -171,25 +167,19 @@ class Definition
         return $this->arguments;
     }
 
-    /**
-     * 获取参数数量.
-     */
+    /** 获取参数数量. */
     public function getArgumentCount(): int
     {
         return $this->hasAnArrayArgument ? PHP_INT_MAX : count($this->arguments);
     }
 
-    /**
-     * 获取必填的参数的数量.
-     */
+    /** 获取必填的参数的数量. */
     public function getArgumentRequiredCount(): int
     {
         return $this->requiredCount;
     }
 
-    /**
-     * 获取参数默认值
-     */
+    /** 获取参数默认值 */
     public function getArgumentDefaults(): array
     {
         $values = [];
@@ -321,9 +311,7 @@ class Definition
         return $this->getOption($this->shortcutToName($shortcut));
     }
 
-    /**
-     * 获取所有选项的默认值
-     */
+    /** 获取所有选项的默认值 */
     public function getOptionDefaults(): array
     {
         $values = [];

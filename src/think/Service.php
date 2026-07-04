@@ -24,7 +24,9 @@ use think\event\RouteLoaded;
  */
 abstract class Service
 {
-    public function __construct(protected App $app) {}
+    public function __construct(protected App $app)
+    {
+    }
 
     /**
      * 加载路由.
@@ -38,9 +40,7 @@ abstract class Service
         });
     }
 
-    /**
-     * 注册路由.
-     */
+    /** 注册路由. */
     protected function registerRoutes(Closure $closure)
     {
         $this->app->event->listen(RouteLoaded::class, $closure);

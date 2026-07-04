@@ -67,9 +67,7 @@ class File implements SessionHandlerInterface
         }
     }
 
-    /**
-     * Session 垃圾回收.
-     */
+    /** Session 垃圾回收. */
     public function gc(): void
     {
         $lifetime = $this->config['expire'];
@@ -134,9 +132,7 @@ class File implements SessionHandlerInterface
         return $filename;
     }
 
-    /**
-     * 读取Session.
-     */
+    /** 读取Session. */
     public function read(string $sessID): string
     {
         $filename = $this->getFileName($sessID);
@@ -155,17 +151,13 @@ class File implements SessionHandlerInterface
         return '';
     }
 
-    /**
-     * 写文件（加锁）.
-     */
+    /** 写文件（加锁）. */
     protected function writeFile($path, $content): bool
     {
         return (bool) file_put_contents($path, $content, LOCK_EX);
     }
 
-    /**
-     * 读取文件内容(加锁).
-     */
+    /** 读取文件内容(加锁). */
     protected function readFile($path): string
     {
         $contents = '';
@@ -189,9 +181,7 @@ class File implements SessionHandlerInterface
         return $contents;
     }
 
-    /**
-     * 写入Session.
-     */
+    /** 写入Session. */
     public function write(string $sessID, string $sessData): bool
     {
         $filename = $this->getFileName($sessID, true);
@@ -205,9 +195,7 @@ class File implements SessionHandlerInterface
         return $this->writeFile($filename, $data);
     }
 
-    /**
-     * 删除Session.
-     */
+    /** 删除Session. */
     public function delete(string $sessID): bool
     {
         try {
@@ -217,9 +205,7 @@ class File implements SessionHandlerInterface
         }
     }
 
-    /**
-     * 判断文件是否存在后，删除.
-     */
+    /** 判断文件是否存在后，删除. */
     private function unlink(string $file): bool
     {
         return is_file($file) && unlink($file);

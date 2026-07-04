@@ -64,9 +64,7 @@ class Lang
      */
     private $range = 'zh-cn';
 
-    /**
-     * 构造方法.
-     */
+    /** 构造方法. */
     public function __construct(App $app, array $config = [])
     {
         $this->config = array_merge($this->config, array_change_key_case($config));
@@ -79,9 +77,7 @@ class Lang
         return new static($app, $config->get('lang'));
     }
 
-    /**
-     * 获取当前语言配置.
-     */
+    /** 获取当前语言配置. */
     public function getConfig(): array
     {
         return $this->config;
@@ -97,9 +93,7 @@ class Lang
         $this->range = $lang;
     }
 
-    /**
-     * 获取当前语言
-     */
+    /** 获取当前语言 */
     public function getLangSet(): string
     {
         return $this->range;

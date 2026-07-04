@@ -42,9 +42,7 @@ class ResourceRegister
         $this->resource = $resource;
     }
 
-    /**
-     * 注册资源路由.
-     */
+    /** 注册资源路由. */
     protected function register()
     {
         $this->registered = true;

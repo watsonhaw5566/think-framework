@@ -120,17 +120,13 @@ class Option
         $this->setDefault($default);
     }
 
-    /**
-     * 获取短名称.
-     */
+    /** 获取短名称. */
     public function getShortcut(): string
     {
         return $this->shortcut;
     }
 
-    /**
-     * 获取选项名.
-     */
+    /** 获取选项名. */
     public function getName(): string
     {
         return $this->name;
@@ -210,17 +206,13 @@ class Option
         return $this->default;
     }
 
-    /**
-     * 获取描述文字.
-     */
+    /** 获取描述文字. */
     public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * 检查所给选项是否是当前这个.
-     */
+    /** 检查所给选项是否是当前这个. */
     public function equals(Option $option): bool
     {
         return $option->getName()     === $this->getName()

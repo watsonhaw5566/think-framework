@@ -37,9 +37,7 @@ class AllowCrossDomain
         $this->cookieDomain = $config->get('cookie.domain', '');
     }
 
-    /**
-     * 允许跨域请求
-     */
+    /** 允许跨域请求 */
     public function handle(Request $request, Closure $next, array $header = []): Response
     {
         $header = !empty($header) ? array_merge($this->header, $header) : $this->header;

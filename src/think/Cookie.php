@@ -47,9 +47,7 @@ class Cookie
      */
     protected $cookie = [];
 
-    /**
-     * 构造方法.
-     */
+    /** 构造方法. */
     public function __construct(protected Request $request, array $config = [])
     {
         $this->config = array_merge($this->config, array_change_key_case($config));
@@ -157,17 +155,13 @@ class Cookie
         $this->request->setCookie($name, null);
     }
 
-    /**
-     * 获取cookie保存数据.
-     */
+    /** 获取cookie保存数据. */
     public function getCookie(): array
     {
         return $this->cookie;
     }
 
-    /**
-     * 保存Cookie.
-     */
+    /** 保存Cookie. */
     public function save(): void
     {
         foreach ($this->cookie as $name => $val) {

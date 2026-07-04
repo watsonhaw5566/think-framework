@@ -256,9 +256,7 @@ class App extends Container
         }
     }
 
-    /**
-     * 获取服务
-     */
+    /** 获取服务 */
     public function getService(Service|string $service): ?Service
     {
         $name = is_string($service) ? $service : $service::class;
@@ -282,9 +280,7 @@ class App extends Container
         return $this;
     }
 
-    /**
-     * 是否为调试模式.
-     */
+    /** 是否为调试模式. */
     public function isDebug(): bool
     {
         return $this->appDebug;
@@ -304,9 +300,7 @@ class App extends Container
         return $this;
     }
 
-    /**
-     * 获取应用类库命名空间.
-     */
+    /** 获取应用类库命名空间. */
     public function getNamespace(): string
     {
         return $this->namespace;
@@ -340,33 +334,25 @@ class App extends Container
         return $this;
     }
 
-    /**
-     * 获取框架版本.
-     */
+    /** 获取框架版本. */
     public function version(): string
     {
         return ltrim(InstalledVersions::getPrettyVersion('topthink/framework'), 'v');
     }
 
-    /**
-     * 获取应用根目录.
-     */
+    /** 获取应用根目录. */
     public function getRootPath(): string
     {
         return $this->rootPath;
     }
 
-    /**
-     * 获取应用基础目录.
-     */
+    /** 获取应用基础目录. */
     public function getBasePath(): string
     {
         return $this->rootPath . 'app' . DIRECTORY_SEPARATOR;
     }
 
-    /**
-     * 获取当前应用目录.
-     */
+    /** 获取当前应用目录. */
     public function getAppPath(): string
     {
         return $this->appPath;
@@ -382,9 +368,7 @@ class App extends Container
         $this->appPath = $path;
     }
 
-    /**
-     * 获取应用运行时目录.
-     */
+    /** 获取应用运行时目录. */
     public function getRuntimePath(): string
     {
         return $this->runtimePath;
@@ -400,41 +384,31 @@ class App extends Container
         $this->runtimePath = $path;
     }
 
-    /**
-     * 获取核心框架目录.
-     */
+    /** 获取核心框架目录. */
     public function getThinkPath(): string
     {
         return $this->thinkPath;
     }
 
-    /**
-     * 获取应用配置目录.
-     */
+    /** 获取应用配置目录. */
     public function getConfigPath(): string
     {
         return $this->rootPath . 'config' . DIRECTORY_SEPARATOR;
     }
 
-    /**
-     * 获取配置后缀
-     */
+    /** 获取配置后缀 */
     public function getConfigExt(): string
     {
         return $this->configExt;
     }
 
-    /**
-     * 获取应用开启时间.
-     */
+    /** 获取应用开启时间. */
     public function getBeginTime(): float
     {
         return $this->beginTime;
     }
 
-    /**
-     * 获取应用初始内存占用.
-     */
+    /** 获取应用初始内存占用. */
     public function getBeginMem(): int
     {
         return $this->beginMem;
@@ -507,9 +481,7 @@ class App extends Container
         return $this->initialized;
     }
 
-    /**
-     * 加载语言包.
-     */
+    /** 加载语言包. */
     public function loadLangPack(): void
     {
         // 加载默认语言包
@@ -517,9 +489,7 @@ class App extends Container
         $this->lang->switchLangSet($langSet);
     }
 
-    /**
-     * 引导应用.
-     */
+    /** 引导应用. */
     public function boot(): void
     {
         array_walk($this->services, function ($service) {
@@ -527,9 +497,7 @@ class App extends Container
         });
     }
 
-    /**
-     * 加载应用文件和配置.
-     */
+    /** 加载应用文件和配置. */
     protected function load(): void
     {
         $appPath = $this->getAppPath();
@@ -558,9 +526,7 @@ class App extends Container
         }
     }
 
-    /**
-     * 加载配置文件.
-     */
+    /** 加载配置文件. */
     public function loadConfig()
     {
         $configPath = $this->getConfigPath();
@@ -575,9 +541,7 @@ class App extends Container
         }
     }
 
-    /**
-     * 调试模式设置.
-     */
+    /** 调试模式设置. */
     protected function debugModeInit(): void
     {
         // 应用调试模式
@@ -645,17 +609,13 @@ class App extends Container
         return $this->namespace . '\\' . $layer . '\\' . $path . $class;
     }
 
-    /**
-     * 是否运行在命令行下.
-     */
+    /** 是否运行在命令行下. */
     public function runningInConsole(): bool
     {
         return 'cli' === php_sapi_name() || 'phpdbg' === php_sapi_name();
     }
 
-    /**
-     * 获取应用根目录.
-     */
+    /** 获取应用根目录. */
     protected function getDefaultRootPath(): string
     {
         return dirname($this->thinkPath, 4) . DIRECTORY_SEPARATOR;

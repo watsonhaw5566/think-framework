@@ -15,4 +15,6 @@ namespace think\exception;
 
 use RuntimeException;
 
-class FileException extends RuntimeException {}
+class FileException extends RuntimeException
+{
+}

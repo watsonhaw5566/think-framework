@@ -50,17 +50,13 @@ class Store
         $this->setId();
     }
 
-    /**
-     * 设置数据.
-     */
+    /** 设置数据. */
     public function setData(array $data): void
     {
         $this->data = $data;
     }
 
-    /**
-     * session初始化.
-     */
+    /** session初始化. */
     public function init(): void
     {
         // 读取缓存数据
@@ -83,9 +79,7 @@ class Store
         $this->name = $name;
     }
 
-    /**
-     * 获取sessionName.
-     */
+    /** 获取sessionName. */
     public function getName(): string
     {
         return $this->name;
@@ -101,17 +95,13 @@ class Store
         $this->id = is_string($id) && 32 === strlen($id) && ctype_alnum($id) ? $id : md5(microtime(true) . session_create_id());
     }
 
-    /**
-     * 获取session_id.
-     */
+    /** 获取session_id. */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * 获取所有数据.
-     */
+    /** 获取所有数据. */
     public function all(): array
     {
         return $this->data;
@@ -188,17 +178,13 @@ class Store
         Arr::forget($this->data, $name);
     }
 
-    /**
-     * 清空session数据.
-     */
+    /** 清空session数据. */
     public function clear(): void
     {
         $this->data = [];
     }
 
-    /**
-     * 销毁session.
-     */
+    /** 销毁session. */
     public function destroy(): void
     {
         $this->clear();
@@ -206,9 +192,7 @@ class Store
         $this->regenerate(true);
     }
 
-    /**
-     * 重新生成session id.
-     */
+    /** 重新生成session id. */
     public function regenerate(bool $destroy = false): void
     {
         if ($destroy) {
@@ -218,9 +202,7 @@ class Store
         $this->setId();
     }
 
-    /**
-     * 保存session数据.
-     */
+    /** 保存session数据. */
     public function save(): void
     {
         $this->clearFlashData();
@@ -251,9 +233,7 @@ class Store
         $this->set('__flash__.__current__', Arr::except($this->get('__flash__.__current__', []), $name));
     }
 
-    /**
-     * 将本次闪存数据推迟到下次请求
-     */
+    /** 将本次闪存数据推迟到下次请求 */
     public function reflash(): void
     {
         $keys   = $this->get('__flash__.__current__', []);
@@ -262,9 +242,7 @@ class Store
         $this->set('__flash__.__current__', []);
     }
 
-    /**
-     * 清空当前请求的session数据.
-     */
+    /** 清空当前请求的session数据. */
     public function clearFlashData(): void
     {
         Arr::forget($this->data, $this->get('__flash__.__current__', []));
@@ -288,9 +266,7 @@ class Store
         return $serialize($data);
     }
 
-    /**
-     * 反序列化数据.
-     */
+    /** 反序列化数据. */
     protected function unserialize(string $data): array
     {
         $unserialize = $this->serialize[1] ?? 'unserialize';

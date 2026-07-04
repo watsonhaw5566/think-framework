@@ -194,9 +194,7 @@ class Memcached extends Driver
         : $this->handler->delete($key, $ttl);
     }
 
-    /**
-     * 清除缓存.
-     */
+    /** 清除缓存. */
     public function clear(): bool
     {
         return $this->handler->flush();

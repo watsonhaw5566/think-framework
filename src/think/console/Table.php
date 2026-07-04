@@ -215,9 +215,7 @@ class Table
         return $style[0] . implode($style[2], $array) . $style[3] . PHP_EOL;
     }
 
-    /**
-     * 输出表格头部.
-     */
+    /** 输出表格头部. */
     protected function renderHeader(): string
     {
         $style   = $this->getStyle('cell');

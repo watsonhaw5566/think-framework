@@ -16,4 +16,6 @@ namespace think\event;
 /**
  * AppInit事件类.
  */
-class AppInit {}
+class AppInit
+{
+}

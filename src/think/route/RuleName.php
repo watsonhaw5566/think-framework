@@ -117,9 +117,7 @@ class RuleName
         return isset($this->group[strtolower($name)]);
     }
 
-    /**
-     * 清空路由规则.
-     */
+    /** 清空路由规则. */
     public function clear(): void
     {
         $this->item  = [];
@@ -127,9 +125,7 @@ class RuleName
         $this->group = [];
     }
 
-    /**
-     * 获取全部路由列表.
-     */
+    /** 获取全部路由列表. */
     public function getRuleList(): array
     {
         $list = [];

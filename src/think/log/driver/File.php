@@ -119,9 +119,7 @@ class File implements LogHandlerInterface
         return error_log(implode(PHP_EOL, $message) . PHP_EOL, 3, $destination);
     }
 
-    /**
-     * 获取主日志文件名.
-     */
+    /** 获取主日志文件名. */
     protected function getMasterLogFile(): string
     {
         if ($this->config['max_files']) {

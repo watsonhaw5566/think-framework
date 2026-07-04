@@ -210,17 +210,13 @@ abstract class Rule
         return $this;
     }
 
-    /**
-     * 获取路由对象
-     */
+    /** 获取路由对象 */
     public function getRouter(): Route
     {
         return $this->router;
     }
 
-    /**
-     * 获取Name.
-     */
+    /** 获取Name. */
     public function getName(): string
     {
         return $this->name ?: '';
@@ -246,9 +242,7 @@ abstract class Rule
         return $this->route;
     }
 
-    /**
-     * 获取当前路由的变量.
-     */
+    /** 获取当前路由的变量. */
     public function getVars(): array
     {
         return $this->vars;
@@ -264,9 +258,7 @@ abstract class Rule
         return $this->parent;
     }
 
-    /**
-     * 获取路由所在域名.
-     */
+    /** 获取路由所在域名. */
     public function getDomain(): string
     {
         return $this->domain ?: $this->parent->getDomain();
@@ -336,9 +328,7 @@ abstract class Rule
         return $option[$name] ?? $default;
     }
 
-    /**
-     * 获取当前路由的请求类型.
-     */
+    /** 获取当前路由的请求类型. */
     public function getMethod(): string
     {
         return strtolower($this->method);

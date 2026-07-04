@@ -353,9 +353,7 @@ class Request implements ArrayAccess
      */
     protected $mergeParam = false;
 
-    /**
-     * 架构函数.
-     */
+    /** 架构函数. */
     public function __construct()
     {
         // 保存 php://input
@@ -437,9 +435,7 @@ class Request implements ArrayAccess
         return $this;
     }
 
-    /**
-     * 获取当前根域名.
-     */
+    /** 获取当前根域名. */
     public function rootDomain(): string
     {
         $root = $this->rootDomain;
@@ -474,9 +470,7 @@ class Request implements ArrayAccess
         return $this;
     }
 
-    /**
-     * 获取当前子域名.
-     */
+    /** 获取当前子域名. */
     public function subDomain(): string
     {
         if (is_null($this->subDomain)) {
@@ -508,9 +502,7 @@ class Request implements ArrayAccess
         return $this;
     }
 
-    /**
-     * 获取当前泛域名的值
-     */
+    /** 获取当前泛域名的值 */
     public function panDomain(): string
     {
         return $this->panDomain ?: '';
@@ -644,9 +636,7 @@ class Request implements ArrayAccess
         return $complete ? $this->domain() . $this->root : $this->root;
     }
 
-    /**
-     * 获取URL访问根目录.
-     */
+    /** 获取URL访问根目录. */
     public function rootUrl(): string
     {
         $base = $this->root();
@@ -671,9 +661,7 @@ class Request implements ArrayAccess
         return $this;
     }
 
-    /**
-     * 获取当前请求URL的pathinfo信息（含URL后缀）.
-     */
+    /** 获取当前请求URL的pathinfo信息（含URL后缀）. */
     public function pathinfo(): string
     {
         if (is_null($this->pathinfo)) {
@@ -708,9 +696,7 @@ class Request implements ArrayAccess
         return $this->pathinfo;
     }
 
-    /**
-     * 当前URL的访问后缀
-     */
+    /** 当前URL的访问后缀 */
     public function ext(): string
     {
         return pathinfo($this->pathinfo(), PATHINFO_EXTENSION);
@@ -728,9 +714,7 @@ class Request implements ArrayAccess
         return $float ? $this->server('REQUEST_TIME_FLOAT') : $this->server('REQUEST_TIME');
     }
 
-    /**
-     * 当前请求的资源类型.
-     */
+    /** 当前请求的资源类型. */
     public function type(): string
     {
         $accept = $this->server('HTTP_ACCEPT');
@@ -812,73 +796,55 @@ class Request implements ArrayAccess
         return $this->method;
     }
 
-    /**
-     * 是否为GET请求
-     */
+    /** 是否为GET请求 */
     public function isGet(): bool
     {
         return 'GET' == $this->method();
     }
 
-    /**
-     * 是否为POST请求
-     */
+    /** 是否为POST请求 */
     public function isPost(): bool
     {
         return 'POST' == $this->method();
     }
 
-    /**
-     * 是否为PUT请求
-     */
+    /** 是否为PUT请求 */
     public function isPut(): bool
     {
         return 'PUT' == $this->method();
     }
 
-    /**
-     * 是否为DELTE请求
-     */
+    /** 是否为DELTE请求 */
     public function isDelete(): bool
     {
         return 'DELETE' == $this->method();
     }
 
-    /**
-     * 是否为HEAD请求
-     */
+    /** 是否为HEAD请求 */
     public function isHead(): bool
     {
         return 'HEAD' == $this->method();
     }
 
-    /**
-     * 是否为PATCH请求
-     */
+    /** 是否为PATCH请求 */
     public function isPatch(): bool
     {
         return 'PATCH' == $this->method();
     }
 
-    /**
-     * 是否为OPTIONS请求
-     */
+    /** 是否为OPTIONS请求 */
     public function isOptions(): bool
     {
         return 'OPTIONS' == $this->method();
     }
 
-    /**
-     * 是否为cli.
-     */
+    /** 是否为cli. */
     public function isCli(): bool
     {
         return PHP_SAPI == 'cli';
     }
 
-    /**
-     * 是否为cgi.
-     */
+    /** 是否为cgi. */
     public function isCgi(): bool
     {
         return str_starts_with(PHP_SAPI, 'cgi');
@@ -1589,9 +1555,7 @@ class Request implements ArrayAccess
         return $param;
     }
 
-    /**
-     * 当前是否ssl.
-     */
+    /** 当前是否ssl. */
     public function isSsl(): bool
     {
         if ($this->server('HTTPS') && ('1' == $this->server('HTTPS') || 'on' == strtolower($this->server('HTTPS')))) {
@@ -1613,9 +1577,7 @@ class Request implements ArrayAccess
         return false;
     }
 
-    /**
-     * 当前是否JSON请求
-     */
+    /** 当前是否JSON请求 */
     public function isJson(): bool
     {
         $acceptType = $this->type();
@@ -1656,9 +1618,7 @@ class Request implements ArrayAccess
         return $this->param($this->varPjax) ? true : $result;
     }
 
-    /**
-     * 获取客户端IP地址
-     */
+    /** 获取客户端IP地址 */
     public function ip(): string
     {
         if (!empty($this->realIP)) {
@@ -1741,9 +1701,7 @@ class Request implements ArrayAccess
         return boolval(filter_var($ip, FILTER_VALIDATE_IP, $flag));
     }
 
-    /**
-     * 将IP地址转换为二进制字符串.
-     */
+    /** 将IP地址转换为二进制字符串. */
     public function ip2bin(string $ip): string
     {
         if ($this->isValidIP($ip, 'ipv6')) {
@@ -1763,9 +1721,7 @@ class Request implements ArrayAccess
         return $IPBin;
     }
 
-    /**
-     * 检测是否使用手机访问.
-     */
+    /** 检测是否使用手机访问. */
     public function isMobile(): bool
     {
         if ($this->server('HTTP_VIA') && stristr($this->server('HTTP_VIA'), 'wap')) {
@@ -1784,17 +1740,13 @@ class Request implements ArrayAccess
         return false;
     }
 
-    /**
-     * 当前URL地址中的scheme参数.
-     */
+    /** 当前URL地址中的scheme参数. */
     public function scheme(): string
     {
         return $this->isSsl() ? 'https' : 'http';
     }
 
-    /**
-     * 当前请求URL地址中的query参数.
-     */
+    /** 当前请求URL地址中的query参数. */
     public function query(): string
     {
         return $this->server('QUERY_STRING', '');
@@ -1830,33 +1782,25 @@ class Request implements ArrayAccess
         return true === $strict && str_contains($host, ':') ? strstr($host, ':', true) : $host;
     }
 
-    /**
-     * 当前请求URL地址中的port参数.
-     */
+    /** 当前请求URL地址中的port参数. */
     public function port(): int
     {
         return (int) ($this->server('HTTP_X_FORWARDED_PORT') ?: $this->server('SERVER_PORT', ''));
     }
 
-    /**
-     * 当前请求 SERVER_PROTOCOL.
-     */
+    /** 当前请求 SERVER_PROTOCOL. */
     public function protocol(): string
     {
         return $this->server('SERVER_PROTOCOL', '');
     }
 
-    /**
-     * 当前请求 REMOTE_PORT.
-     */
+    /** 当前请求 REMOTE_PORT. */
     public function remotePort(): int
     {
         return (int) $this->server('REMOTE_PORT', '');
     }
 
-    /**
-     * 当前请求 HTTP_CONTENT_TYPE.
-     */
+    /** 当前请求 HTTP_CONTENT_TYPE. */
     public function contentType(): string
     {
         $contentType = $this->header('Content-Type');
@@ -1874,9 +1818,7 @@ class Request implements ArrayAccess
         return '';
     }
 
-    /**
-     * 获取当前请求的安全Key.
-     */
+    /** 获取当前请求的安全Key. */
     public function secureKey(): string
     {
         if (is_null($this->secureKey)) {
@@ -1968,9 +1910,7 @@ class Request implements ArrayAccess
         return $convert ? strtolower($name) : $name;
     }
 
-    /**
-     * 设置或者获取当前请求的content.
-     */
+    /** 设置或者获取当前请求的content. */
     public function getContent(): string
     {
         if (is_null($this->content)) {
@@ -1980,9 +1920,7 @@ class Request implements ArrayAccess
         return $this->content;
     }
 
-    /**
-     * 获取当前请求的php://input.
-     */
+    /** 获取当前请求的php://input. */
     public function getInput(): string
     {
         return $this->input;
@@ -2263,7 +2201,11 @@ class Request implements ArrayAccess
         return $this->param($name);
     }
 
-    public function offsetSet(mixed $name, mixed $value): void {}
+    public function offsetSet(mixed $name, mixed $value): void
+    {
+    }
 
-    public function offsetUnset(mixed $name): void {}
+    public function offsetUnset(mixed $name): void
+    {
+    }
 }

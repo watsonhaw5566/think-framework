@@ -18,4 +18,6 @@ use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentInterf
 /**
  * 非法数据异常.
  */
-class InvalidArgumentException extends \InvalidArgumentException implements SimpleCacheInvalidArgumentInterface {}
+class InvalidArgumentException extends \InvalidArgumentException implements SimpleCacheInvalidArgumentInterface
+{
+}

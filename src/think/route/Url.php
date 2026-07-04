@@ -58,7 +58,9 @@ class Url
      * @param string $url   URL地址
      * @param array  $vars  参数
      */
-    public function __construct(protected Route $route, protected App $app, protected string $url = '', protected array $vars = []) {}
+    public function __construct(protected Route $route, protected App $app, protected string $url = '', protected array $vars = [])
+    {
+    }
 
     /**
      * 设置URL参数.
@@ -332,9 +334,7 @@ class Url
         return [];
     }
 
-    /**
-     * 生成URL地址
-     */
+    /** 生成URL地址 */
     public function build(): string
     {
         // 解析URL

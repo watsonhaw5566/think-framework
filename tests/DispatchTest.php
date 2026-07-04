@@ -5,9 +5,7 @@ namespace think\tests;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use think\App;
 use think\Config;
-use think\Container;
 use think\Request;
 use think\route\Dispatch;
 use think\route\Rule;
@@ -19,13 +17,13 @@ class DispatchTest extends TestCase
     protected function setUp(): void
     {
         $this->prepareApp();
-        
+
         // Mock config for Cookie dependency
         $this->config->shouldReceive('get')->with('cookie')->andReturn([
-            'expire' => 0,
-            'path' => '/',
-            'domain' => '',
-            'secure' => false,
+            'expire'   => 0,
+            'path'     => '/',
+            'domain'   => '',
+            'secure'   => false,
             'httponly' => false,
             'samesite' => ''
         ]);
@@ -38,9 +36,9 @@ class DispatchTest extends TestCase
 
     public function testPsr7Response()
     {
-        $request = Mockery::mock(Request::class);
-        $rule = Mockery::mock(Rule::class);
-        $dispatch = new class($request, $rule, '') extends Dispatch {
+        $request  = Mockery::mock(Request::class);
+        $rule     = Mockery::mock(Rule::class);
+        $dispatch = new class ($request, $rule, '') extends Dispatch {
             public function exec()
             {
                 return new Response(200, ['framework' => ['tp', 'thinkphp'], 'psr' => 'psr-7'], '123');

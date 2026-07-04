@@ -33,9 +33,7 @@ class LoadLangPack
         $this->config = $lang->getConfig();
     }
 
-    /**
-     * 路由初始化（路由规则注册）.
-     */
+    /** 路由初始化（路由规则注册）. */
     public function handle(Request $request, Closure $next): Response
     {
         // 自动侦测当前语言
@@ -50,9 +48,7 @@ class LoadLangPack
         return $next($request);
     }
 
-    /**
-     * 自动侦测设置获取语言选择.
-     */
+    /** 自动侦测设置获取语言选择. */
     protected function detect(Request $request): string
     {
         // 自动侦测设置获取语言选择

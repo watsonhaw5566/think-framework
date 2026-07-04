@@ -161,9 +161,7 @@ class Console
         return $dimensions[1];
     }
 
-    /**
-     * 获取当前终端的尺寸.
-     */
+    /** 获取当前终端的尺寸. */
     public function getTerminalDimensions(): array
     {
         if ($this->terminalDimensions) {
@@ -296,25 +294,19 @@ class Console
         return false !== stripos(implode(';', $checks), 'OS400');
     }
 
-    /**
-     * 当前环境是否支持写入控制台输出到stdout.
-     */
+    /** 当前环境是否支持写入控制台输出到stdout. */
     protected function hasStdoutSupport(): bool
     {
         return false === $this->isRunningOS400();
     }
 
-    /**
-     * 当前环境是否支持写入控制台输出到stderr.
-     */
+    /** 当前环境是否支持写入控制台输出到stderr. */
     protected function hasStderrSupport(): bool
     {
         return false === $this->isRunningOS400();
     }
 
-    /**
-     * @return resource
-     */
+    /** @return resource */
     private function openOutputStream()
     {
         if (!$this->hasStdoutSupport()) {
@@ -324,9 +316,7 @@ class Console
         return @fopen('php://stdout', 'w') ?: fopen('php://output', 'w');
     }
 
-    /**
-     * @return resource
-     */
+    /** @return resource */
     private function openErrorStream()
     {
         return fopen($this->hasStderrSupport() ? 'php://stderr' : 'php://output', 'w');
@@ -351,9 +341,7 @@ class Console
         fflush($stream);
     }
 
-    /**
-     * 是否支持着色.
-     */
+    /** 是否支持着色. */
     protected function hasColorSupport($stream): bool
     {
         if (DIRECTORY_SEPARATOR === '\\') {

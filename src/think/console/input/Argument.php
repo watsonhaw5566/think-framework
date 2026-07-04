@@ -79,25 +79,19 @@ class Argument
         $this->setDefault($default);
     }
 
-    /**
-     * 获取参数名.
-     */
+    /** 获取参数名. */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * 是否必须.
-     */
+    /** 是否必须. */
     public function isRequired(): bool
     {
         return self::REQUIRED === (self::REQUIRED & $this->mode);
     }
 
-    /**
-     * 该参数是否接受数组.
-     */
+    /** 该参数是否接受数组. */
     public function isArray(): bool
     {
         return self::IS_ARRAY === (self::IS_ARRAY & $this->mode);
@@ -137,9 +131,7 @@ class Argument
         return $this->default;
     }
 
-    /**
-     * 获取描述.
-     */
+    /** 获取描述. */
     public function getDescription(): string
     {
         return $this->description;

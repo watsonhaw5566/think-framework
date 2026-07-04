@@ -27,9 +27,7 @@ class Error
     /** @var App */
     protected $app;
 
-    /**
-     * 注册异常处理.
-     */
+    /** 注册异常处理. */
     public function init(App $app)
     {
         $this->app = $app;
@@ -40,9 +38,7 @@ class Error
         register_shutdown_function([$this, 'appShutdown']);
     }
 
-    /**
-     * Exception Handler.
-     */
+    /** Exception Handler. */
     public function appException(Throwable $e): void
     {
         $handler = $this->getExceptionHandler();
@@ -78,9 +74,7 @@ class Error
         }
     }
 
-    /**
-     * Shutdown Handler.
-     */
+    /** Shutdown Handler. */
     public function appShutdown(): void
     {
         if (!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
@@ -91,9 +85,7 @@ class Error
         }
     }
 
-    /**
-     * 确定错误类型是否致命.
-     */
+    /** 确定错误类型是否致命. */
     protected function isFatal(int $type): bool
     {
         return in_array($type, [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE]);

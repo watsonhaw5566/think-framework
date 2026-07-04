@@ -34,10 +34,10 @@ class Config
      */
     protected $hook = [];
 
-    /**
-     * 构造方法.
-     */
-    public function __construct(protected string $path = '', protected string $ext = '.php') {}
+    /** 构造方法. */
+    public function __construct(protected string $path = '', protected string $ext = '.php')
+    {
+    }
 
     public static function __make(App $app)
     {
@@ -113,9 +113,7 @@ class Config
         return $this->config[$name] ?? [];
     }
 
-    /**
-     * 注册配置获取器.
-     */
+    /** 注册配置获取器. */
     public function hook(Closure $callback, ?string $key = null)
     {
         $this->hook[$key ?? 'global'] = $callback;

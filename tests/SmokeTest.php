@@ -34,9 +34,7 @@ class SmokeTest extends TestCase
         m::close();
     }
 
-    /**
-     * 容器绑定与解析.
-     */
+    /** 容器绑定与解析. */
     public function testContainerBindAndResolve()
     {
         $app = new App();
@@ -61,9 +59,7 @@ class SmokeTest extends TestCase
         $this->assertSame(42, $resolved->value);
     }
 
-    /**
-     * Request 基本用法.
-     */
+    /** Request 基本用法. */
     public function testRequestBasics()
     {
         $app = m::mock(App::class)->makePartial();
@@ -107,9 +103,7 @@ class SmokeTest extends TestCase
         $this->assertNotEmpty($request->domain());
     }
 
-    /**
-     * Route 注册和匹配.
-     */
+    /** Route 注册和匹配. */
     public function testRouteRegisterAndMatch()
     {
         $app = m::mock(App::class)->makePartial();
@@ -141,9 +135,7 @@ class SmokeTest extends TestCase
         $this->assertNotEmpty($dispatch);
     }
 
-    /**
-     * Cache 读写（遵循 CacheTest 的模式）.
-     */
+    /** Cache 读写（遵循 CacheTest 的模式）. */
     public function testCacheReadWrite()
     {
         $app = m::mock(App::class)->makePartial();
@@ -189,14 +181,12 @@ class SmokeTest extends TestCase
         $this->removeDir($cacheDir);
     }
 
-    /**
-     * Service 注册和启动.
-     */
+    /** Service 注册和启动. */
     public function testServiceRegisterAndBoot()
     {
         $app = new App();
 
-        $service = new class($app) extends Service {
+        $service = new class ($app) extends Service {
             public bool $registered = false;
             public bool $booted     = false;
 
@@ -278,9 +268,7 @@ class SmokeTest extends TestCase
         $this->assertIsInt($app->getBeginMem());
     }
 
-    /**
-     * App 仍然是 Container 实例（向后兼容验证）.
-     */
+    /** App 仍然是 Container 实例（向后兼容验证）. */
     public function testAppIsStillContainerInstance()
     {
         $app = new App();
@@ -289,9 +277,7 @@ class SmokeTest extends TestCase
         $this->assertTrue($app instanceof Container);
     }
 
-    /**
-     * 删除临时目录.
-     */
+    /** 删除临时目录. */
     private function removeDir(string $dir): void
     {
         if (!is_dir($dir)) {

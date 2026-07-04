@@ -17,9 +17,7 @@ use DirectoryIterator;
 
 trait Discoverable
 {
-    /**
-     * 判断是否安装 topthink/think-multi-app.
-     */
+    /** 判断是否安装 topthink/think-multi-app. */
     private function isInstalledMultiApp(): bool
     {
         return InstalledVersions::isInstalled('topthink/think-multi-app');

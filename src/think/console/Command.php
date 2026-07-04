@@ -65,17 +65,13 @@ abstract class Command
         }
     }
 
-    /**
-     * 忽略验证错误.
-     */
+    /** 忽略验证错误. */
     public function ignoreValidationErrors(): void
     {
         $this->ignoreValidationErrors = true;
     }
 
-    /**
-     * 设置控制台.
-     */
+    /** 设置控制台. */
     public function setConsole(?Console $console = null): void
     {
         $this->console = $console;
@@ -91,9 +87,7 @@ abstract class Command
         return $this->console;
     }
 
-    /**
-     * 设置app.
-     */
+    /** 设置app. */
     public function setApp(App $app)
     {
         $this->app = $app;
@@ -109,18 +103,16 @@ abstract class Command
         return $this->app;
     }
 
-    /**
-     * 是否有效.
-     */
+    /** 是否有效. */
     public function isEnabled(): bool
     {
         return true;
     }
 
-    /**
-     * 配置指令.
-     */
-    protected function configure() {}
+    /** 配置指令. */
+    protected function configure()
+    {
+    }
 
     /**
      * 执行指令.
@@ -136,10 +128,10 @@ abstract class Command
         return $this->app->invoke([$this, 'handle']);
     }
 
-    /**
-     * 用户验证
-     */
-    protected function interact(Input $input, Output $output) {}
+    /** 用户验证 */
+    protected function interact(Input $input, Output $output)
+    {
+    }
 
     /**
      * 初始化.
@@ -147,7 +139,9 @@ abstract class Command
      * @param Input  $input  An InputInterface instance
      * @param Output $output An OutputInterface instance
      */
-    protected function initialize(Input $input, Output $output) {}
+    protected function initialize(Input $input, Output $output)
+    {
+    }
 
     /**
      * 执行.
@@ -205,9 +199,7 @@ abstract class Command
         return is_numeric($statusCode) ? (int) $statusCode : 0;
     }
 
-    /**
-     * 合并参数定义.
-     */
+    /** 合并参数定义. */
     public function mergeConsoleDefinition(bool $mergeArgs = true)
     {
         if (null === $this->console
@@ -263,9 +255,7 @@ abstract class Command
         return $this->definition;
     }
 
-    /**
-     * 获取当前指令的参数定义.
-     */
+    /** 获取当前指令的参数定义. */
     public function getNativeDefinition(): Definition
     {
         return $this->getDefinition();
@@ -338,9 +328,7 @@ abstract class Command
         return $this;
     }
 
-    /**
-     * 获取指令名称.
-     */
+    /** 获取指令名称. */
     public function getName(): string
     {
         return $this->name ?: '';
@@ -358,9 +346,7 @@ abstract class Command
         return $this;
     }
 
-    /**
-     *  获取描述.
-     */
+    /** 获取描述. */
     public function getDescription(): string
     {
         return $this->description ?: '';
@@ -378,17 +364,13 @@ abstract class Command
         return $this;
     }
 
-    /**
-     * 获取帮助信息.
-     */
+    /** 获取帮助信息. */
     public function getHelp(): string
     {
         return $this->help ?: '';
     }
 
-    /**
-     * 描述信息.
-     */
+    /** 描述信息. */
     public function getProcessedHelp(): string
     {
         $name = $this->name;
@@ -425,9 +407,7 @@ abstract class Command
         return $this;
     }
 
-    /**
-     * 获取别名.
-     */
+    /** 获取别名. */
     public function getAliases(): array
     {
         return $this->aliases;
@@ -465,9 +445,7 @@ abstract class Command
         return $this;
     }
 
-    /**
-     * 获取用法介绍.
-     */
+    /** 获取用法介绍. */
     public function getUsages(): array
     {
         return $this->usages;
@@ -485,9 +463,7 @@ abstract class Command
         }
     }
 
-    /**
-     * 输出表格
-     */
+    /** 输出表格 */
     protected function table(Table $table): string
     {
         $content = $table->render();

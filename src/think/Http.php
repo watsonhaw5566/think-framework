@@ -71,9 +71,7 @@ class Http
         return $this;
     }
 
-    /**
-     * 获取应用名称.
-     */
+    /** 获取应用名称. */
     public function getName(): string
     {
         return $this->name ?: '';
@@ -97,17 +95,13 @@ class Http
         return $this;
     }
 
-    /**
-     * 获取应用路径.
-     */
+    /** 获取应用路径. */
     public function getPath(): string
     {
         return $this->path ?: '';
     }
 
-    /**
-     * 获取路由目录.
-     */
+    /** 获取路由目录. */
     public function getRoutePath(): string
     {
         return $this->routePath;
@@ -137,17 +131,13 @@ class Http
         return $this;
     }
 
-    /**
-     * 是否绑定应用.
-     */
+    /** 是否绑定应用. */
     public function isBind(): bool
     {
         return $this->isBind;
     }
 
-    /**
-     * 执行应用程序.
-     */
+    /** 执行应用程序. */
     public function run(?Request $request = null): Response
     {
         // 初始化
@@ -168,9 +158,7 @@ class Http
         return $response;
     }
 
-    /**
-     * 初始化.
-     */
+    /** 初始化. */
     protected function initialize()
     {
         if (!$this->app->initialized()) {
@@ -208,9 +196,7 @@ class Http
         return $this->app->route->dispatch($request, $withRoute);
     }
 
-    /**
-     * 加载全局中间件.
-     */
+    /** 加载全局中间件. */
     protected function loadMiddleware(): void
     {
         if (is_file($this->app->getBasePath() . 'middleware.php')) {
@@ -218,9 +204,7 @@ class Http
         }
     }
 
-    /**
-     * 加载路由.
-     */
+    /** 加载路由. */
     protected function loadRoutes(): void
     {
         // 加载路由定义
@@ -236,9 +220,7 @@ class Http
         $this->app->event->trigger(RouteLoaded::class);
     }
 
-    /**
-     * Report the exception to the exception handler.
-     */
+    /** Report the exception to the exception handler. */
     protected function reportException(Throwable $e)
     {
         $this->app->make(Handle::class)->report($e);
@@ -256,9 +238,7 @@ class Http
         return $this->app->make(Handle::class)->render($request, $e);
     }
 
-    /**
-     * HttpEnd.
-     */
+    /** HttpEnd. */
     public function end(Response $response): void
     {
         try {

@@ -16,4 +16,6 @@ namespace think\exception;
 /**
  * 非法缓存数据异常.
  */
-class InvalidCacheException extends InvalidArgumentException {}
+class InvalidCacheException extends InvalidArgumentException
+{
+}

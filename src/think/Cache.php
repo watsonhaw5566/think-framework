@@ -31,9 +31,7 @@ class Cache extends Manager implements CacheInterface
 {
     protected $namespace = '\think\cache\driver\\';
 
-    /**
-     * 默认驱动.
-     */
+    /** 默认驱动. */
     public function getDefaultDriver(): ?string
     {
         return $this->getConfig('default');
@@ -94,9 +92,7 @@ class Cache extends Manager implements CacheInterface
         return $this->driver($name);
     }
 
-    /**
-     * 清空缓冲池.
-     */
+    /** 清空缓冲池. */
     public function clear(): bool
     {
         return $this->store()->clear();

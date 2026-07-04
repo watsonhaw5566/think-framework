@@ -402,9 +402,7 @@ abstract class Response
         return $this->data;
     }
 
-    /**
-     * 获取输出数据.
-     */
+    /** 获取输出数据. */
     public function getContent(): string
     {
         if (null == $this->content) {
@@ -425,9 +423,7 @@ abstract class Response
         return $this->content;
     }
 
-    /**
-     * 获取状态码
-     */
+    /** 获取状态码 */
     public function getCode(): int
     {
         return $this->code;

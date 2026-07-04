@@ -22,7 +22,9 @@ use think\Log;
  */
 class ChannelSet
 {
-    public function __construct(protected Log $log, protected array $channels) {}
+    public function __construct(protected Log $log, protected array $channels)
+    {
+    }
 
     public function __call($method, $arguments)
     {

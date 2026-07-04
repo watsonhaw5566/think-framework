@@ -52,11 +52,11 @@ abstract class Dispatch
      */
     protected $app;
 
-    public function __construct(protected Request $request, protected Rule $rule, protected $dispatch, protected array $param = [], protected array $option = [], protected ?RuleItem $miss = null) {}
+    public function __construct(protected Request $request, protected Rule $rule, protected $dispatch, protected array $param = [], protected array $option = [], protected ?RuleItem $miss = null)
+    {
+    }
 
-    /**
-     * 执行路由调度.
-     */
+    /** 执行路由调度. */
     public function run(): Response
     {
         $data = $this->exec();
@@ -89,9 +89,7 @@ abstract class Dispatch
         return $response;
     }
 
-    /**
-     * 检查路由后置操作.
-     */
+    /** 检查路由后置操作. */
     protected function doRouteAfter(): void
     {
         $option = $this->option;
@@ -134,9 +132,7 @@ abstract class Dispatch
         }
     }
 
-    /**
-     * 获取操作的绑定参数.
-     */
+    /** 获取操作的绑定参数. */
     protected function getActionBindVars(): array
     {
         $bind = $this->rule->config('action_bind_param');

@@ -37,11 +37,11 @@ class Handle
 
     protected $showErrorMsg = [];
 
-    public function __construct(protected App $app) {}
+    public function __construct(protected App $app)
+    {
+    }
 
-    /**
-     * Report or log an exception.
-     */
+    /** Report or log an exception. */
     public function report(Throwable $exception): void
     {
         if (!$this->isIgnoreReport($exception)) {
@@ -84,9 +84,7 @@ class Handle
         return false;
     }
 
-    /**
-     * Render an exception into an HTTP response.
-     */
+    /** Render an exception into an HTTP response. */
     public function render(Request $request, Throwable $e): Response
     {
         if ($e instanceof HttpResponseException) {
@@ -120,9 +118,7 @@ class Handle
         return $this->convertExceptionToResponse($request, $e);
     }
 
-    /**
-     * 收集异常数据.
-     */
+    /** 收集异常数据. */
     protected function convertExceptionToArray(Throwable $exception): array
     {
         return $this->app->isDebug() ? $this->getDebugMsg($exception) : $this->getDeployMsg($exception);
@@ -144,9 +140,7 @@ class Handle
         return false;
     }
 
-    /**
-     * 获取部署模式异常数据.
-     */
+    /** 获取部署模式异常数据. */
     protected function getDeployMsg(Throwable $exception): array
     {
         $showErrorMsg = $this->isShowErrorMsg($exception);
@@ -163,9 +157,7 @@ class Handle
         ];
     }
 
-    /**
-     * 收集调试模式异常数据.
-     */
+    /** 收集调试模式异常数据. */
     protected function getDebugMsg(Throwable $exception): array
     {
         // 调试模式，获取详细的错误信息

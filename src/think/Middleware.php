@@ -30,7 +30,9 @@ class Middleware
      */
     protected $queue = [];
 
-    public function __construct(protected App $app) {}
+    public function __construct(protected App $app)
+    {
+    }
 
     /**
      * 导入中间件.
@@ -138,9 +140,7 @@ class Middleware
         ;
     }
 
-    /**
-     * 结束调度.
-     */
+    /** 结束调度. */
     public function end(Response $response)
     {
         foreach ($this->queue as $queue) {

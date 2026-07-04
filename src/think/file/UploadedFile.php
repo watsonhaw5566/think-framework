@@ -73,9 +73,7 @@ class UploadedFile extends File
         throw new FileException($this->getErrorMessage());
     }
 
-    /**
-     * 获取错误信息.
-     */
+    /** 获取错误信息. */
     protected function getErrorMessage(): string
     {
         return match ($this->error) {
@@ -88,33 +86,25 @@ class UploadedFile extends File
         };
     }
 
-    /**
-     * 获取上传文件类型信息.
-     */
+    /** 获取上传文件类型信息. */
     public function getOriginalMime(): string
     {
         return $this->mimeType;
     }
 
-    /**
-     * 上传文件名.
-     */
+    /** 上传文件名. */
     public function getOriginalName(): string
     {
         return $this->originalName;
     }
 
-    /**
-     * 获取上传文件扩展名.
-     */
+    /** 获取上传文件扩展名. */
     public function getOriginalExtension(): string
     {
         return pathinfo($this->originalName, PATHINFO_EXTENSION);
     }
 
-    /**
-     * 获取文件扩展名.
-     */
+    /** 获取文件扩展名. */
     public function extension(): string
     {
         return $this->getOriginalExtension();

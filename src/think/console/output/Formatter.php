@@ -22,9 +22,7 @@ class Formatter
     private $styles    = [];
     private $styleStack;
 
-    /**
-     * 初始化命令行输出格式.
-     */
+    /** 初始化命令行输出格式. */
     public function __construct()
     {
         $this->setStyle('error', new Style('white', 'red'));
@@ -157,9 +155,7 @@ class Formatter
         return str_replace('\<', '<', $output);
     }
 
-    /**
-     * @return StyleStack
-     */
+    /** @return StyleStack */
     public function getStyleStack()
     {
         return $this->styleStack;

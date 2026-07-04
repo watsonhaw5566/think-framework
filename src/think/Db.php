@@ -39,10 +39,10 @@ class Db extends DbManager
         return $db;
     }
 
-    /**
-     * 注入模型对象
-     */
-    protected function modelMaker(): void {}
+    /** 注入模型对象 */
+    protected function modelMaker(): void
+    {
+    }
 
     /**
      * 设置配置对象
@@ -71,9 +71,7 @@ class Db extends DbManager
         return $this->config->get('database', []);
     }
 
-    /**
-     * 设置Event对象
-     */
+    /** 设置Event对象 */
     public function setEvent(Event $event): void
     {
         $this->event = $event;

@@ -150,9 +150,7 @@ class Wincache extends Driver
         return wincache_ucache_delete($this->getCacheKey($name));
     }
 
-    /**
-     * 清除缓存.
-     */
+    /** 清除缓存. */
     public function clear(): bool
     {
         return wincache_ucache_clear();

@@ -32,7 +32,9 @@ abstract class Manager
      */
     protected $namespace;
 
-    public function __construct(protected App $app) {}
+    public function __construct(protected App $app)
+    {
+    }
 
     /**
      * 获取驱动实例.
@@ -83,9 +85,7 @@ abstract class Manager
         return $name;
     }
 
-    /**
-     * 获取驱动类.
-     */
+    /** 获取驱动类. */
     protected function resolveClass(string $type): string
     {
         if ($this->namespace || str_contains($type, '\\')) {

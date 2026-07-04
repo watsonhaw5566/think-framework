@@ -243,9 +243,7 @@ class File extends Driver
         return $this->unlink($this->getCacheKey($name));
     }
 
-    /**
-     * 清除缓存.
-     */
+    /** 清除缓存. */
     public function clear(): bool
     {
         $dirname = $this->options['path'] . $this->options['prefix'];
@@ -267,9 +265,7 @@ class File extends Driver
         }
     }
 
-    /**
-     * 判断文件是否存在后，删除.
-     */
+    /** 判断文件是否存在后，删除. */
     private function unlink(string $path): bool
     {
         try {

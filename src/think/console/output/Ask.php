@@ -251,9 +251,7 @@ class Ask
         throw $error;
     }
 
-    /**
-     * 显示问题的提示信息.
-     */
+    /** 显示问题的提示信息. */
     protected function writePrompt()
     {
         $text    = $this->question->getQuestion();

@@ -113,9 +113,7 @@ class RuleGroup extends Rule
         }
     }
 
-    /**
-     * 设置分组的路由规则.
-     */
+    /** 设置分组的路由规则. */
     protected function setFullName(): void
     {
         if (str_contains($this->name, ':')) {
@@ -136,17 +134,13 @@ class RuleGroup extends Rule
         }
     }
 
-    /**
-     * 获取所属域名.
-     */
+    /** 获取所属域名. */
     public function getDomain(): string
     {
         return $this->domain ?: '-';
     }
 
-    /**
-     * 获取分组别名.
-     */
+    /** 获取分组别名. */
     public function getAlias(): string
     {
         return $this->alias ?: '';
@@ -748,9 +742,7 @@ class RuleGroup extends Rule
         return $this->setOption('dispatcher', $dispatch);
     }
 
-    /**
-     * 获取完整分组Name.
-     */
+    /** 获取完整分组Name. */
     public function getFullName(): string
     {
         return $this->fullName ?: '';
@@ -774,9 +766,7 @@ class RuleGroup extends Rule
         });
     }
 
-    /**
-     * 清空分组下的路由规则.
-     */
+    /** 清空分组下的路由规则. */
     public function clear(): void
     {
         $this->rules = [];

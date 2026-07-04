@@ -56,7 +56,7 @@
   },
   "scripts": {
     "test": "phpunit ",
-    "fix-style": "php-cs-fixer fix src --diff",
-    "style": "php-cs-fixer fix src --dry-run --diff"
+    "fix-style": "php-cs-fixer fix --diff",
+    "style": "php-cs-fixer fix --dry-run --diff"
   }
 }

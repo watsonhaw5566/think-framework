@@ -20,29 +20,19 @@ class Console
 {
     public const GLOBAL_NAMESPACE = '_global';
 
-    /**
-     * @var ThinkConsole
-     */
+    /** @var ThinkConsole */
     private $console;
 
-    /**
-     * @var null|string
-     */
+    /** @var null|string */
     private $namespace;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $namespaces;
 
-    /**
-     * @var Command[]
-     */
+    /** @var Command[] */
     private $commands;
 
-    /**
-     * @var Command[]
-     */
+    /** @var Command[] */
     private $aliases;
 
     /**
@@ -65,9 +55,7 @@ class Console
         return $this->namespaces;
     }
 
-    /**
-     * @return Command[]
-     */
+    /** @return Command[] */
     public function getCommands(): array
     {
         if (null === $this->commands) {
@@ -77,9 +65,7 @@ class Console
         return $this->commands;
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
+    /** @throws InvalidArgumentException */
     public function getCommand(string $name): Command
     {
         if (!isset($this->commands[$name]) && !isset($this->aliases[$name])) {

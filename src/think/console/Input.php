@@ -21,19 +21,13 @@ use think\console\input\Option;
 
 class Input
 {
-    /**
-     * @var Definition
-     */
+    /** @var Definition */
     protected $definition;
 
-    /**
-     * @var Option[]
-     */
+    /** @var Option[] */
     protected $options = [];
 
-    /**
-     * @var Argument[]
-     */
+    /** @var Argument[] */
     protected $arguments = [];
 
     protected $interactive = true;
@@ -73,9 +67,7 @@ class Input
         $this->parse();
     }
 
-    /**
-     * 解析参数.
-     */
+    /** 解析参数. */
     protected function parse(): void
     {
         $parseOptions = true;
@@ -329,9 +321,7 @@ class Input
         }
     }
 
-    /**
-     * 检查输入是否是交互的.
-     */
+    /** 检查输入是否是交互的. */
     public function isInteractive(): bool
     {
         return $this->interactive;
@@ -459,9 +449,7 @@ class Input
         return $this->definition->hasOption($name) && isset($this->options[$name]);
     }
 
-    /**
-     * 转义指令.
-     */
+    /** 转义指令. */
     public function escapeToken(string $token): string
     {
         return preg_match('{^[\w-]+$}', $token) ? $token : escapeshellarg($token);

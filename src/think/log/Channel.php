@@ -32,25 +32,21 @@ class Channel implements LoggerInterface
      */
     protected array $log = [];
 
-    /**
-     * 关闭日志.
-     */
+    /** 关闭日志. */
     protected bool $close = false;
 
-    public function __construct(protected string $name, protected LogHandlerInterface $logger, protected array $allow, protected bool $lazy, protected Event $event) {}
+    public function __construct(protected string $name, protected LogHandlerInterface $logger, protected array $allow, protected bool $lazy, protected Event $event)
+    {
+    }
 
-    /**
-     * 关闭通道.
-     */
+    /** 关闭通道. */
     public function close(): void
     {
         $this->clear();
         $this->close = true;
     }
 
-    /**
-     * 清空日志.
-     */
+    /** 清空日志. */
     public function clear(): void
     {
         $this->log = [];
@@ -123,9 +119,7 @@ class Channel implements LoggerInterface
         return $this->log;
     }
 
-    /**
-     * 保存日志.
-     */
+    /** 保存日志. */
     public function save(): bool
     {
         $log = $this->log;

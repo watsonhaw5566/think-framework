@@ -101,9 +101,7 @@ class Route
      */
     protected $request;
 
-    /**
-     * @var RuleName
-     */
+    /** @var RuleName */
     protected $ruleName;
 
     /**
@@ -226,9 +224,7 @@ class Route
         return $this;
     }
 
-    /**
-     * 初始化默认域名.
-     */
+    /** 初始化默认域名. */
     protected function setDefaultDomain(): void
     {
         // 注册默认域名
@@ -323,9 +319,7 @@ class Route
         return $domain;
     }
 
-    /**
-     * 获取域名.
-     */
+    /** 获取域名. */
     public function getDomains(): array
     {
         return $this->domains;
@@ -350,9 +344,7 @@ class Route
         }
     }
 
-    /**
-     * 获取RuleName对象
-     */
+    /** 获取RuleName对象 */
     public function getRuleName(): RuleName
     {
         return $this->ruleName;
@@ -415,17 +407,13 @@ class Route
         return $this->ruleName->getRule($rule);
     }
 
-    /**
-     * 读取路由列表.
-     */
+    /** 读取路由列表. */
     public function getRuleList(): array
     {
         return $this->ruleName->getRuleList();
     }
 
-    /**
-     * 清空路由规则.
-     */
+    /** 清空路由规则. */
     public function clear(): void
     {
         $this->ruleName->clear();
@@ -758,9 +746,7 @@ class Route
         return $result;
     }
 
-    /**
-     * 获取当前请求URL的pathinfo信息(不含URL后缀).
-     */
+    /** 获取当前请求URL的pathinfo信息(不含URL后缀). */
     protected function path(): string
     {
         $suffix   = $this->config['url_html_suffix'];
@@ -820,9 +806,7 @@ class Route
         return $this->group->auto()->checkBind($this->request, $url);
     }
 
-    /**
-     * 检测域名的路由规则.
-     */
+    /** 检测域名的路由规则. */
     protected function checkDomain(): Domain
     {
         $item = false;

@@ -61,9 +61,7 @@ class Domain extends RuleGroup
         $this->hasParsed = true;
     }
 
-    /**
-     * 自动加载分组（子目录）路由.
-     */
+    /** 自动加载分组（子目录）路由. */
     protected function loadGroupRoutes(): void
     {
         $routePath = root_path('route');

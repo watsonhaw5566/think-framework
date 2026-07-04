@@ -42,9 +42,7 @@ class Log extends Manager implements LoggerInterface
 
     protected $namespace = '\think\log\driver\\';
 
-    /**
-     * 默认驱动.
-     */
+    /** 默认驱动. */
     public function getDefaultDriver(): ?string
     {
         return $this->getConfig('default');
@@ -165,9 +163,7 @@ class Log extends Manager implements LoggerInterface
         return $this->channel($channel)->getLog();
     }
 
-    /**
-     * 保存日志信息.
-     */
+    /** 保存日志信息. */
     public function save(): bool
     {
         /** @var Channel $channel */

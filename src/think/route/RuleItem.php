@@ -72,17 +72,13 @@ class RuleItem extends Rule
         return $this;
     }
 
-    /**
-     * 判断当前路由规则是否为MISS路由.
-     */
+    /** 判断当前路由规则是否为MISS路由. */
     public function isMiss(): bool
     {
         return $this->miss;
     }
 
-    /**
-     * 获取当前路由的URL后缀
-     */
+    /** 获取当前路由的URL后缀 */
     public function getSuffix(): ?string
     {
         if (isset($this->option['ext'])) {

@@ -110,9 +110,7 @@ class Console
         $this->start();
     }
 
-    /**
-     * 初始化.
-     */
+    /** 初始化. */
     protected function initialize(): void
     {
         if (!$this->app->initialized()) {
@@ -121,9 +119,7 @@ class Console
         $this->makeRequest();
     }
 
-    /**
-     * 构造request.
-     */
+    /** 构造request. */
     protected function makeRequest(): void
     {
         $url = $this->app->config->get('app.url', 'http://localhost');
@@ -166,25 +162,19 @@ class Console
         $request->withServer($server);
     }
 
-    /**
-     * 添加初始化器.
-     */
+    /** 添加初始化器. */
     public static function starting(Closure $callback): void
     {
         static::$startCallbacks[] = $callback;
     }
 
-    /**
-     * 清空启动器.
-     */
+    /** 清空启动器. */
     public static function flushStartCallbacks(): void
     {
         static::$startCallbacks = [];
     }
 
-    /**
-     * 设置执行用户.
-     */
+    /** 设置执行用户. */
     public static function setUser(string $user): void
     {
         if (extension_loaded('posix')) {
@@ -197,9 +187,7 @@ class Console
         }
     }
 
-    /**
-     * 启动.
-     */
+    /** 启动. */
     protected function start(): void
     {
         foreach (static::$startCallbacks as $callback) {
@@ -207,9 +195,7 @@ class Console
         }
     }
 
-    /**
-     * 加载指令.
-     */
+    /** 加载指令. */
     protected function loadCommands(): void
     {
         $commands = $this->app->config->get('console.commands', []);
@@ -218,9 +204,7 @@ class Console
         $this->addCommands($commands);
     }
 
-    /**
-     * @return Buffer|Output
-     */
+    /** @return Buffer|Output */
     public function call(string $command, array $parameters = [], string $driver = 'buffer')
     {
         array_unshift($parameters, $command);
@@ -315,9 +299,7 @@ class Console
         return $this->doRunCommand($command, $input, $output);
     }
 
-    /**
-     * 设置输入参数定义.
-     */
+    /** 设置输入参数定义. */
     public function setDefinition(InputDefinition $definition): void
     {
         $this->definition = $definition;
@@ -363,9 +345,7 @@ class Console
         $this->autoExit = $boolean;
     }
 
-    /**
-     * 获取完整的版本号.
-     */
+    /** 获取完整的版本号. */
     public function getLongVersion(): string
     {
         if ($this->app->version()) {
@@ -375,9 +355,7 @@ class Console
         return '<info>Console Tool</info>';
     }
 
-    /**
-     * 添加指令集.
-     */
+    /** 添加指令集. */
     public function addCommands(array $commands): void
     {
         foreach ($commands as $key => $command) {
@@ -476,9 +454,7 @@ class Console
         return isset($this->commands[$name]);
     }
 
-    /**
-     * 获取所有的命名空间.
-     */
+    /** 获取所有的命名空间. */
     public function getNamespaces(): array
     {
         $namespaces = [];
@@ -650,17 +626,13 @@ class Console
         return $command->run($input, $output);
     }
 
-    /**
-     * 获取指令的基础名称.
-     */
+    /** 获取指令的基础名称. */
     protected function getCommandName(Input $input): string
     {
         return $input->getFirstArgument() ?: '';
     }
 
-    /**
-     * 获取默认输入定义.
-     */
+    /** 获取默认输入定义. */
     protected function getDefaultInputDefinition(): InputDefinition
     {
         return new InputDefinition([
@@ -675,9 +647,7 @@ class Console
         ]);
     }
 
-    /**
-     * 获取可能的建议.
-     */
+    /** 获取可能的建议. */
     private function getAbbreviationSuggestions(array $abbrevs): string
     {
         return sprintf('%s, %s%s', $abbrevs[0], $abbrevs[1], count($abbrevs) > 2 ? sprintf(' and %d more', count($abbrevs) - 2) : '');
@@ -697,9 +667,7 @@ class Console
         return implode(':', 0 === $limit ? $parts : array_slice($parts, 0, $limit));
     }
 
-    /**
-     * 查找可替代的建议.
-     */
+    /** 查找可替代的建议. */
     private function findAlternatives(string $name, array|Traversable $collection): array
     {
         $threshold    = 1e3;
@@ -746,9 +714,7 @@ class Console
         return array_keys($alternatives);
     }
 
-    /**
-     * 返回所有的命名空间.
-     */
+    /** 返回所有的命名空间. */
     private function extractAllNamespaces(string $name): array
     {
         $parts      = explode(':', $name, -1);

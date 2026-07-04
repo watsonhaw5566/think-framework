@@ -17,9 +17,7 @@ use Throwable;
 
 class Buffer
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $buffer = '';
 
     public function __construct(Output $output)

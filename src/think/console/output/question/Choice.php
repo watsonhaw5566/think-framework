@@ -38,9 +38,7 @@ class Choice extends Question
         $this->setAutocompleterValues($choices);
     }
 
-    /**
-     * 可选项.
-     */
+    /** 可选项. */
     public function getChoices(): array
     {
         return $this->choices;
@@ -64,9 +62,7 @@ class Choice extends Question
         return $this->multiselect;
     }
 
-    /**
-     * 获取提示.
-     */
+    /** 获取提示. */
     public function getPrompt(): string
     {
         return $this->prompt;

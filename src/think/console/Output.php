@@ -130,25 +130,19 @@ class Output
         $this->writeln("<{$style}>{$message}</{$style}>");
     }
 
-    /**
-     * 输出空行.
-     */
+    /** 输出空行. */
     public function newLine(int $count = 1): void
     {
         $this->write(str_repeat(PHP_EOL, $count));
     }
 
-    /**
-     * 输出信息并换行.
-     */
+    /** 输出信息并换行. */
     public function writeln(string $messages, int $type = 0): void
     {
         $this->write($messages, true, $type);
     }
 
-    /**
-     * 输出信息.
-     */
+    /** 输出信息. */
     public function write(string $messages, bool $newline = false, int $type = 0): void
     {
         $this->handle->write($messages, $newline, $type);
@@ -169,9 +163,7 @@ class Output
         $this->verbosity = $level;
     }
 
-    /**
-     * 获取输出信息级别.
-     */
+    /** 获取输出信息级别. */
     public function getVerbosity(): int
     {
         return $this->verbosity;
