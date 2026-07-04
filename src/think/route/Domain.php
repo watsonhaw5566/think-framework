@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,26 +9,26 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\route;
 
 use Closure;
-use think\Route;
 use think\Container;
+use think\Route;
 
 /**
- * 域名路由
+ * 域名路由.
  */
 class Domain extends RuleGroup
 {
     /**
-     * 架构函数
-     * @access public
-     * @param  Route       $router   路由对象
-     * @param  string      $name     路由域名
-     * @param  mixed       $rule     域名路由
-     * @param  bool        $lazy   延迟解析
+     * 架构函数.
+     *
+     * @param Route  $router 路由对象
+     * @param string $name   路由域名
+     * @param mixed  $rule   域名路由
+     * @param bool   $lazy   延迟解析
      */
     public function __construct(Route $router, ?string $name = null, $rule = null, bool $lazy = false)
     {
@@ -41,10 +42,9 @@ class Domain extends RuleGroup
     }
 
     /**
-     * 解析分组和域名的路由规则及绑定
-     * @access public
-     * @param  mixed $rule 路由规则
-     * @return void
+     * 解析分组和域名的路由规则及绑定.
+     *
+     * @param mixed $rule 路由规则
      */
     public function parseGroupRule($rule): void
     {
@@ -62,10 +62,7 @@ class Domain extends RuleGroup
     }
 
     /**
-     * 自动加载分组（子目录）路由
-     * @access protected
-     * @param  string  $dir 目录名
-     * @return void
+     * 自动加载分组（子目录）路由.
      */
     protected function loadGroupRoutes(): void
     {

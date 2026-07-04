@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,22 +9,25 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\cache\driver;
 
+use BadFunctionCallException;
 use DateInterval;
 use DateTimeInterface;
+use Predis\Client;
 use think\cache\Driver;
 use think\exception\InvalidCacheException;
 
 class Redis extends Driver
 {
-    /** @var \Predis\Client|\Redis */
+    /** @var Client|\Redis */
     protected $handler;
 
     /**
-     * 配置参数
+     * 配置参数.
+     *
      * @var array
      */
     protected $options = [
@@ -41,8 +45,8 @@ class Redis extends Driver
     ];
 
     /**
-     * 架构函数
-     * @access public
+     * 架构函数.
+     *
      * @param array $options 缓存参数
      */
     public function __construct(array $options = [])
@@ -56,7 +60,7 @@ class Redis extends Driver
     {
         if (!$this->handler) {
             if (extension_loaded('redis')) {
-                $this->handler = new \Redis;
+                $this->handler = new \Redis();
 
                 if ($this->options['persistent']) {
                     $this->handler->pconnect($this->options['host'], (int) $this->options['port'], (int) $this->options['timeout'], 'persistent_id_' . $this->options['select']);
@@ -80,11 +84,11 @@ class Redis extends Driver
                     unset($this->options['password']);
                 }
 
-                $this->handler = new \Predis\Client($this->options, $params);
+                $this->handler = new Client($this->options, $params);
 
                 $this->options['prefix'] = '';
             } else {
-                throw new \BadFunctionCallException('not support: redis');
+                throw new BadFunctionCallException('not support: redis');
             }
 
             if (0 != $this->options['select']) {
@@ -96,10 +100,9 @@ class Redis extends Driver
     }
 
     /**
-     * 判断缓存
-     * @access public
+     * 判断缓存.
+     *
      * @param string $name 缓存变量名
-     * @return bool
      */
     public function has($name): bool
     {
@@ -107,11 +110,10 @@ class Redis extends Driver
     }
 
     /**
-     * 读取缓存
-     * @access public
+     * 读取缓存.
+     *
      * @param string $name    缓存变量名
      * @param mixed  $default 默认值
-     * @return mixed
      */
     public function get($name, $default = null): mixed
     {
@@ -126,17 +128,15 @@ class Redis extends Driver
             return $this->unserialize($value);
         } catch (InvalidCacheException $e) {
             return $this->getDefaultValue($name, $default, true);
-
         }
     }
 
     /**
-     * 写入缓存
-     * @access public
+     * 写入缓存.
+     *
      * @param string                             $name   缓存变量名
      * @param mixed                              $value  存储数据
-     * @param int|DateInterval|DateTimeInterface $expire 有效时间（秒）
-     * @return bool
+     * @param DateInterval|DateTimeInterface|int $expire 有效时间（秒）
      */
     public function set($name, $value, $expire = null): bool
     {
@@ -158,10 +158,11 @@ class Redis extends Driver
     }
 
     /**
-     * 自增缓存（针对数值缓存）
-     * @access public
+     * 自增缓存（针对数值缓存）.
+     *
      * @param string $name 缓存变量名
      * @param int    $step 步长
+     *
      * @return false|int
      */
     public function inc($name, $step = 1)
@@ -172,10 +173,11 @@ class Redis extends Driver
     }
 
     /**
-     * 自减缓存（针对数值缓存）
-     * @access public
+     * 自减缓存（针对数值缓存）.
+     *
      * @param string $name 缓存变量名
      * @param int    $step 步长
+     *
      * @return false|int
      */
     public function dec($name, $step = 1)
@@ -186,34 +188,32 @@ class Redis extends Driver
     }
 
     /**
-     * 删除缓存
-     * @access public
+     * 删除缓存.
+     *
      * @param string $name 缓存变量名
-     * @return bool
      */
     public function delete($name): bool
     {
         $key    = $this->getCacheKey($name);
         $result = $this->handler()->del($key);
+
         return $result > 0;
     }
 
     /**
-     * 清除缓存
-     * @access public
-     * @return bool
+     * 清除缓存.
      */
     public function clear(): bool
     {
         $this->handler()->flushDB();
+
         return true;
     }
 
     /**
-     * 删除缓存标签
-     * @access public
+     * 删除缓存标签.
+     *
      * @param array $keys 缓存标识列表
-     * @return void
      */
     public function clearTag($keys): void
     {
@@ -222,11 +222,10 @@ class Redis extends Driver
     }
 
     /**
-     * 追加TagSet数据
-     * @access public
+     * 追加TagSet数据.
+     *
      * @param string $name  缓存标识
      * @param mixed  $value 数据
-     * @return void
      */
     public function append($name, $value): void
     {
@@ -235,15 +234,15 @@ class Redis extends Driver
     }
 
     /**
-     * 获取标签包含的缓存标识
-     * @access public
+     * 获取标签包含的缓存标识.
+     *
      * @param string $tag 缓存标签
-     * @return array
      */
     public function getTagItems(string $tag): array
     {
         $name = $this->getTagKey($tag);
         $key  = $this->getCacheKey($name);
+
         return $this->handler()->sMembers($key) ?: [];
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -18,7 +19,7 @@ use think\contract\TemplateHandlerInterface;
 use think\helper\Str;
 
 /**
- * PHP原生模板驱动
+ * PHP原生模板驱动.
  */
 class Php implements TemplateHandlerInterface
 {
@@ -47,9 +48,9 @@ class Php implements TemplateHandlerInterface
     }
 
     /**
-     * 检测是否存在模板文件
+     * 检测是否存在模板文件.
+     *
      * @param string $template 模板文件或者模板规则
-     * @return bool
      */
     public function exists(string $template): bool
     {
@@ -70,12 +71,12 @@ class Php implements TemplateHandlerInterface
 
         return $template;
     }
-    
+
     /**
-     * 渲染模板文件
+     * 渲染模板文件.
+     *
      * @param string $template 模板文件
      * @param array  $data     模板变量
-     * @return void
      */
     public function fetch(string $template, array $data = []): void
     {
@@ -94,10 +95,10 @@ class Php implements TemplateHandlerInterface
     }
 
     /**
-     * 渲染模板内容
+     * 渲染模板内容.
+     *
      * @param string $content 模板内容
      * @param array  $data    模板变量
-     * @return void
      */
     public function display(string $content, array $data = []): void
     {
@@ -114,7 +115,7 @@ class Php implements TemplateHandlerInterface
         $paths = [
             $this->app->getBasePath() . $app . $view,
             $this->app->getBasePath() . $view . $app,
-            $this->app->getRootPath() . $view . $app
+            $this->app->getRootPath() . $view . $app,
         ];
 
         foreach ($paths as $path) {
@@ -127,9 +128,9 @@ class Php implements TemplateHandlerInterface
     }
 
     /**
-     * 自动定位模板文件
+     * 自动定位模板文件.
+     *
      * @param string $template 模板文件规则
-     * @return string
      */
     private function parseTemplate(string $template): string
     {
@@ -155,8 +156,8 @@ class Php implements TemplateHandlerInterface
         $depr = $this->config['view_depr'];
 
         if (!str_starts_with($template, '/')) {
-            $template   = str_replace(['/', ':'], $depr, $template);
-            $controller = $controller ?? $request->controller();
+            $template = str_replace(['/', ':'], $depr, $template);
+            $controller ??= $request->controller();
             if (str_contains($controller, '.')) {
                 $pos        = strrpos($controller, '.');
                 $controller = substr($controller, 0, $pos) . '.' . Str::snake(substr($controller, $pos + 1));
@@ -188,9 +189,9 @@ class Php implements TemplateHandlerInterface
     }
 
     /**
-     * 配置模板引擎
+     * 配置模板引擎.
+     *
      * @param array $config 参数
-     * @return void
      */
     public function config(array $config): void
     {
@@ -198,8 +199,10 @@ class Php implements TemplateHandlerInterface
     }
 
     /**
-     * 获取模板引擎配置
+     * 获取模板引擎配置.
+     *
      * @param string $name 参数名
+     *
      * @return mixed
      */
     public function getConfig(string $name)

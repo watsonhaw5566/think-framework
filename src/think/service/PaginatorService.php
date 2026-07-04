@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -17,7 +18,7 @@ use think\paginator\driver\Bootstrap;
 use think\Service;
 
 /**
- * 分页服务类
+ * 分页服务类.
  */
 class PaginatorService extends Service
 {
@@ -39,10 +40,9 @@ class PaginatorService extends Service
         });
 
         Paginator::currentPageResolver(function ($varPage = 'page') {
-
             $page = $this->app->request->param($varPage);
 
-            if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int) $page >= 1) {
+            if (false !== filter_var($page, FILTER_VALIDATE_INT) && (int) $page >= 1) {
                 return (int) $page;
             }
 

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,22 +9,21 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+
 namespace think\event;
 
 use DateTimeImmutable;
 
 /**
- * LogRecord事件类
+ * LogRecord事件类.
  */
 class LogRecord
 {
-    /** @var string */
     public string $type;
 
-    /** @var string|array */
+    /** @var array|string */
     public $message;
 
-    /** @var DateTimeImmutable */
     public DateTimeImmutable $time;
 
     public function __construct($type, $message)

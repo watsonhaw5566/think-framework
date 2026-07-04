@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,10 +9,11 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\route;
 
+use Closure;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -19,45 +21,46 @@ use ReflectionMethod;
 use think\App;
 use think\Container;
 use think\exception\HttpException;
+use think\exception\ValidateException;
 use think\Request;
 use think\Response;
 use think\Validate;
 
 /**
- * 路由调度基础类
+ * 路由调度基础类.
  */
 abstract class Dispatch
 {
     /**
-     * 控制器名
+     * 控制器名.
+     *
      * @var string
      */
     protected $controller;
 
     /**
-     * 操作名
+     * 操作名.
+     *
      * @var string
      */
     protected $actionName;
 
     /**
      * 应用对象
+     *
      * @var App
      */
     protected $app;
 
-    public function __construct(protected Request $request, protected Rule $rule, protected $dispatch, protected array $param = [], protected array $option = [], protected ?RuleItem $miss = null)
-    {
-    }
+    public function __construct(protected Request $request, protected Rule $rule, protected $dispatch, protected array $param = [], protected array $option = [], protected ?RuleItem $miss = null) {}
 
     /**
-     * 执行路由调度
-     * @access public
-     * @return Response
+     * 执行路由调度.
      */
     public function run(): Response
     {
         $data = $this->exec();
+
         return $this->autoResponse($data);
     }
 
@@ -69,7 +72,7 @@ abstract class Dispatch
             $response = Response::create((string) $data->getBody(), 'html', $data->getStatusCode());
 
             foreach ($data->getHeaders() as $header => $values) {
-                $response->header([$header => implode(", ", $values)]);
+                $response->header([$header => implode(', ', $values)]);
             }
         } elseif (!is_null($data)) {
             // 默认自动识别响应输出类型
@@ -79,7 +82,7 @@ abstract class Dispatch
             $data = ob_get_clean();
 
             $content  = false === $data ? '' : $data;
-            $status   = '' === $content && $this->request->isJson() ? 204 : 200;
+            $status   = ''    === $content && $this->request->isJson() ? 204 : 200;
             $response = Response::create($content, 'html', $status);
         }
 
@@ -87,9 +90,7 @@ abstract class Dispatch
     }
 
     /**
-     * 检查路由后置操作
-     * @access protected
-     * @return void
+     * 检查路由后置操作.
      */
     protected function doRouteAfter(): void
     {
@@ -134,13 +135,12 @@ abstract class Dispatch
     }
 
     /**
-     * 获取操作的绑定参数
-     * @access protected
-     * @return array
+     * 获取操作的绑定参数.
      */
     protected function getActionBindVars(): array
     {
         $bind = $this->rule->config('action_bind_param');
+
         return match ($bind) {
             'route' => $this->param,
             'param' => $this->request->param(),
@@ -149,16 +149,16 @@ abstract class Dispatch
     }
 
     /**
-     * 执行中间件调度
-     * @access public
+     * 执行中间件调度.
+     *
      * @param object $instance 控制器实例
      * @param string $action
-     * @return void
      */
     protected function responseWithMiddlewarePipeline($instance, $action)
     {
         // 注册控制器中间件
         $this->registerControllerMiddleware($instance);
+
         return $this->app->middleware->pipeline('controller')
             ->send($this->request)
             ->then(function () use ($instance, $action) {
@@ -168,6 +168,7 @@ abstract class Dispatch
 
                 if (is_callable([$instance, $action])) {
                     $vars = $this->getActionBindVars();
+
                     try {
                         $reflect = new ReflectionMethod($instance, $action);
                         // 严格获取当前操作方法名
@@ -190,14 +191,14 @@ abstract class Dispatch
                 $data = $this->app->invokeReflectMethod($instance, $reflect, $vars);
 
                 return $this->autoResponse($data);
-            });
+            })
+        ;
     }
 
     /**
-     * 使用反射机制注册控制器中间件
-     * @access public
+     * 使用反射机制注册控制器中间件.
+     *
      * @param object $controller 控制器实例
-     * @return void
      */
     protected function registerControllerMiddleware($controller): void
     {
@@ -227,7 +228,8 @@ abstract class Dispatch
 
                 if (isset($options['only']) && !in_array($action, $this->parseActions($options['only']))) {
                     continue;
-                } elseif (isset($options['except']) && in_array($action, $this->parseActions($options['except']))) {
+                }
+                if (isset($options['except']) && in_array($action, $this->parseActions($options['except']))) {
                     continue;
                 }
 
@@ -251,16 +253,15 @@ abstract class Dispatch
     }
 
     /**
-     * 路由绑定模型实例
-     * @access protected
+     * 路由绑定模型实例.
+     *
      * @param array $bindModel 绑定模型
      * @param array $matches   路由变量
-     * @return void
      */
     protected function createBindModel(array $bindModel, array $matches): void
     {
         foreach ($bindModel as $key => $val) {
-            if ($val instanceof \Closure) {
+            if ($val instanceof Closure) {
                 $result = $this->app->invokeFunction($val, $matches);
             } else {
                 $fields = explode('&', $key);
@@ -279,9 +280,8 @@ abstract class Dispatch
                     if (!isset($matches[$field])) {
                         $match = false;
                         break;
-                    } else {
-                        $where[] = [$field, '=', $matches[$field]];
                     }
+                    $where[] = [$field, '=', $matches[$field]];
                 }
 
                 if ($match) {
@@ -297,11 +297,9 @@ abstract class Dispatch
     }
 
     /**
-     * 验证数据
-     * @access protected
-     * @param array $option
-     * @return void
-     * @throws \think\exception\ValidateException
+     * 验证数据.
+     *
+     * @throws ValidateException
      */
     protected function autoValidate(array $option): void
     {
@@ -322,11 +320,12 @@ abstract class Dispatch
             }
         }
 
-        /** @var Validate $v */
+        // @var Validate $v
         $v->message($message)
             ->batch($batch)
             ->failException(true)
-            ->check($this->request->param());
+            ->check($this->request->param())
+        ;
     }
 
     public function getDispatch()
@@ -359,7 +358,7 @@ abstract class Dispatch
         $this->param      = $data['param'];
         $this->controller = $data['controller'];
         $this->actionName = $data['actionName'];
-        
+
         $this->app     = Container::pull('app');
         $this->request = $this->app->request;
     }

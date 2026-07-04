@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -11,21 +12,23 @@
 
 namespace think\console\output\driver;
 
+use InvalidArgumentException;
+use RuntimeException;
 use think\console\Output;
 use think\console\output\Formatter;
+use Throwable;
 
 class Console
 {
-
-    /** @var  Resource */
+    /** @var resource */
     private $stdout;
 
-    /** @var  Formatter */
+    /** @var Formatter */
     private $formatter;
 
     private $terminalDimensions;
 
-    /** @var  Output */
+    /** @var Output */
     private $output;
 
     public function __construct(Output $output)
@@ -61,14 +64,14 @@ class Console
                     $message = strip_tags($this->formatter->format($message));
                     break;
                 default:
-                    throw new \InvalidArgumentException(sprintf('Unknown output type given (%s)', $type));
+                    throw new InvalidArgumentException(sprintf('Unknown output type given (%s)', $type));
             }
 
             $this->doWrite($message, $newline, $stream);
         }
     }
 
-    public function renderException(\Throwable $e)
+    public function renderException(Throwable $e)
     {
         $stderr    = $this->openErrorStream();
         $decorated = $this->hasColorSupport($stderr);
@@ -87,7 +90,6 @@ class Console
             $lines = [];
             foreach (preg_split('/\r?\n/', $e->getMessage()) as $line) {
                 foreach ($this->splitStringByWidth($line, $width - 4) as $line) {
-
                     $lineLength = $this->stringWidth(preg_replace('/\[[^m]*m/', '', $line)) + 4;
                     $lines[]    = [$line, $lineLength];
 
@@ -114,14 +116,14 @@ class Console
                 $trace = $e->getTrace();
                 array_unshift($trace, [
                     'function' => '',
-                    'file'     => $e->getFile() !== null ? $e->getFile() : 'n/a',
-                    'line'     => $e->getLine() !== null ? $e->getLine() : 'n/a',
+                    'file'     => null !== $e->getFile() ? $e->getFile() : 'n/a',
+                    'line'     => null !== $e->getLine() ? $e->getLine() : 'n/a',
                     'args'     => [],
                 ]);
 
                 for ($i = 0, $count = count($trace); $i < $count; ++$i) {
                     $class    = $trace[$i]['class'] ?? '';
-                    $type     = $trace[$i]['type'] ?? '';
+                    $type     = $trace[$i]['type']  ?? '';
                     $function = $trace[$i]['function'];
                     $file     = $trace[$i]['file'] ?? 'n/a';
                     $line     = $trace[$i]['line'] ?? 'n/a';
@@ -133,12 +135,12 @@ class Console
                 $this->write('', true, Output::OUTPUT_NORMAL, $stderr);
             }
         } while ($e = $e->getPrevious());
-
     }
 
     /**
-     * 获取终端宽度
-     * @return int|null
+     * 获取终端宽度.
+     *
+     * @return null|int
      */
     protected function getTerminalWidth()
     {
@@ -148,8 +150,9 @@ class Console
     }
 
     /**
-     * 获取终端高度
-     * @return int|null
+     * 获取终端高度.
+     *
+     * @return null|int
      */
     protected function getTerminalHeight()
     {
@@ -159,8 +162,7 @@ class Console
     }
 
     /**
-     * 获取当前终端的尺寸
-     * @return array
+     * 获取当前终端的尺寸.
      */
     public function getTerminalDimensions(): array
     {
@@ -190,7 +192,8 @@ class Console
     }
 
     /**
-     * 获取stty列数
+     * 获取stty列数.
+     *
      * @return string
      */
     private function getSttyColumns()
@@ -209,11 +212,11 @@ class Console
 
             return $info;
         }
-        return;
     }
 
     /**
-     * 获取终端模式
+     * 获取终端模式.
+     *
      * @return string <width>x<height>
      */
     private function getMode()
@@ -267,6 +270,7 @@ class Console
         foreach (preg_split('//u', $utf8String) as $char) {
             if (mb_strwidth($line . $char, 'utf8') <= $width) {
                 $line .= $char;
+
                 continue;
             }
             $lines[] = str_pad($line, $width);
@@ -288,13 +292,12 @@ class Console
             getenv('OSTYPE'),
             PHP_OS,
         ];
+
         return false !== stripos(implode(';', $checks), 'OS400');
     }
 
     /**
      * 当前环境是否支持写入控制台输出到stdout.
-     *
-     * @return bool
      */
     protected function hasStdoutSupport(): bool
     {
@@ -303,8 +306,6 @@ class Console
 
     /**
      * 当前环境是否支持写入控制台输出到stderr.
-     *
-     * @return bool
      */
     protected function hasStderrSupport(): bool
     {
@@ -319,6 +320,7 @@ class Console
         if (!$this->hasStdoutSupport()) {
             return fopen('php://output', 'w');
         }
+
         return @fopen('php://stdout', 'w') ?: fopen('php://output', 'w');
     }
 
@@ -332,6 +334,7 @@ class Console
 
     /**
      * 将消息写入到输出。
+     *
      * @param string $message 消息
      * @param bool   $newline 是否另起一行
      * @param null   $stream
@@ -342,16 +345,14 @@ class Console
             $stream = $this->stdout;
         }
         if (false === @fwrite($stream, $message . ($newline ? PHP_EOL : ''))) {
-            throw new \RuntimeException('Unable to write output.');
+            throw new RuntimeException('Unable to write output.');
         }
 
         fflush($stream);
     }
 
     /**
-     * 是否支持着色
-     * @param $stream
-     * @return bool
+     * 是否支持着色.
      */
     protected function hasColorSupport($stream): bool
     {
@@ -359,11 +360,10 @@ class Console
             return
             '10.0.10586' === PHP_WINDOWS_VERSION_MAJOR . '.' . PHP_WINDOWS_VERSION_MINOR . '.' . PHP_WINDOWS_VERSION_BUILD
             || false !== getenv('ANSICON')
-            || 'ON' === getenv('ConEmuANSI')
+            || 'ON'    === getenv('ConEmuANSI')
             || 'xterm' === getenv('TERM');
         }
 
         return function_exists('posix_isatty') && @posix_isatty($stream);
     }
-
 }

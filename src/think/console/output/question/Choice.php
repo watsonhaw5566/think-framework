@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -11,18 +12,19 @@
 
 namespace think\console\output\question;
 
+use InvalidArgumentException;
 use think\console\output\Question;
 
 class Choice extends Question
 {
-
     private $choices;
     private $multiselect  = false;
     private $prompt       = ' > ';
     private $errorMessage = 'Value "%s" is invalid';
 
     /**
-     * 构造方法
+     * 构造方法.
+     *
      * @param string $question 问题
      * @param array  $choices  选项
      * @param mixed  $default  默认答案
@@ -37,8 +39,7 @@ class Choice extends Question
     }
 
     /**
-     * 可选项
-     * @return array
+     * 可选项.
      */
     public function getChoices(): array
     {
@@ -46,8 +47,8 @@ class Choice extends Question
     }
 
     /**
-     * 设置可否多选
-     * @param bool $multiselect
+     * 设置可否多选.
+     *
      * @return self
      */
     public function setMultiselect(bool $multiselect)
@@ -64,8 +65,7 @@ class Choice extends Question
     }
 
     /**
-     * 获取提示
-     * @return string
+     * 获取提示.
      */
     public function getPrompt(): string
     {
@@ -73,8 +73,8 @@ class Choice extends Question
     }
 
     /**
-     * 设置提示
-     * @param string $prompt
+     * 设置提示.
+     *
      * @return self
      */
     public function setPrompt(string $prompt)
@@ -85,8 +85,8 @@ class Choice extends Question
     }
 
     /**
-     * 设置错误提示信息
-     * @param string $errorMessage
+     * 设置错误提示信息.
+     *
      * @return self
      */
     public function setErrorMessage(string $errorMessage)
@@ -98,7 +98,8 @@ class Choice extends Question
     }
 
     /**
-     * 获取默认的验证方法
+     * 获取默认的验证方法.
+     *
      * @return callable
      */
     private function getDefaultValidator()
@@ -115,7 +116,7 @@ class Choice extends Question
             if ($multiselect) {
                 // Check for a separated comma values
                 if (!preg_match('/^[a-zA-Z0-9_-]+(?:,[a-zA-Z0-9_-]+)*$/', $selectedChoices, $matches)) {
-                    throw new \InvalidArgumentException(sprintf($errorMessage, $selected));
+                    throw new InvalidArgumentException(sprintf($errorMessage, $selected));
                 }
                 $selectedChoices = explode(',', $selectedChoices);
             } else {
@@ -132,7 +133,7 @@ class Choice extends Question
                 }
 
                 if (count($results) > 1) {
-                    throw new \InvalidArgumentException(sprintf('The provided answer is ambiguous. Value should be one of %s.', implode(' or ', $results)));
+                    throw new InvalidArgumentException(sprintf('The provided answer is ambiguous. Value should be one of %s.', implode(' or ', $results)));
                 }
 
                 $result = array_search($value, $choices);
@@ -148,7 +149,7 @@ class Choice extends Question
                 }
 
                 if (false === $result) {
-                    throw new \InvalidArgumentException(sprintf($errorMessage, $value));
+                    throw new InvalidArgumentException(sprintf($errorMessage, $value));
                 }
                 array_push($multiselectChoices, $result);
             }

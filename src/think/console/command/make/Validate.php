@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -15,13 +16,14 @@ use think\console\command\Make;
 
 class Validate extends Make
 {
-    protected $type = "Validate";
+    protected $type = 'Validate';
 
     protected function configure()
     {
         parent::configure();
         $this->setName('make:validate')
-            ->setDescription('Create a validate class');
+            ->setDescription('Create a validate class')
+        ;
     }
 
     protected function getStub(): string
@@ -33,6 +35,6 @@ class Validate extends Make
 
     protected function getNamespace(string $app): string
     {
-        return parent::getNamespace($app) . '\\validate';
+        return parent::getNamespace($app) . '\validate';
     }
 }

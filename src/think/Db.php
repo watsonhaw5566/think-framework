@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -13,18 +14,15 @@ declare(strict_types=1);
 namespace think;
 
 /**
- * 数据库管理类
- * @package think
+ * 数据库管理类.
+ *
  * @property Config $config
  */
 class Db extends DbManager
 {
     /**
-     * @param Event  $event
-     * @param Config $config
-     * @param Log    $log
-     * @param Cache  $cache
      * @return Db
+     *
      * @codeCoverageIgnore
      */
     public static function __make(Event $event, Config $config, Log $log, Cache $cache)
@@ -43,18 +41,13 @@ class Db extends DbManager
 
     /**
      * 注入模型对象
-     * @access public
-     * @return void
      */
-    protected function modelMaker(): void
-    {
-    }
+    protected function modelMaker(): void {}
 
     /**
      * 设置配置对象
-     * @access public
+     *
      * @param Config $config 配置对象
-     * @return void
      */
     public function setConfig($config): void
     {
@@ -62,10 +55,11 @@ class Db extends DbManager
     }
 
     /**
-     * 获取配置参数
-     * @access public
+     * 获取配置参数.
+     *
      * @param string $name    配置参数
      * @param mixed  $default 默认值
+     *
      * @return mixed
      */
     public function getConfig(string $name = '', $default = null)
@@ -79,7 +73,6 @@ class Db extends DbManager
 
     /**
      * 设置Event对象
-     * @param Event $event
      */
     public function setEvent(Event $event): void
     {
@@ -87,11 +80,10 @@ class Db extends DbManager
     }
 
     /**
-     * 注册回调方法
-     * @access public
+     * 注册回调方法.
+     *
      * @param string   $event    事件名
      * @param callable $callback 回调方法
-     * @return void
      */
     public function event(string $event, callable $callback): void
     {
@@ -101,11 +93,11 @@ class Db extends DbManager
     }
 
     /**
-     * 触发事件
-     * @access public
+     * 触发事件.
+     *
      * @param string $event  事件名
      * @param mixed  $params 传入参数
-     * @param bool   $once
+     *
      * @return mixed
      */
     public function trigger(string $event, $params = null, bool $once = false)

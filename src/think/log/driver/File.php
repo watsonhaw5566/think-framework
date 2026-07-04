@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,21 +9,23 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\log\driver;
 
+use Exception;
 use think\App;
 use think\contract\LogHandlerInterface;
 use think\event\LogRecord;
 
 /**
- * 本地化调试输出到文件
+ * 本地化调试输出到文件.
  */
 class File implements LogHandlerInterface
 {
     /**
-     * 配置参数
+     * 配置参数.
+     *
      * @var array
      */
     protected $config = [
@@ -52,16 +55,15 @@ class File implements LogHandlerInterface
             $this->config['path'] = $app->getRuntimePath() . 'log';
         }
 
-        if (substr($this->config['path'], -1) != DIRECTORY_SEPARATOR) {
+        if (DIRECTORY_SEPARATOR != substr($this->config['path'], -1)) {
             $this->config['path'] .= DIRECTORY_SEPARATOR;
         }
     }
 
     /**
-     * 日志写入接口
-     * @access public
+     * 日志写入接口.
+     *
      * @param array<LogRecord> $log 日志信息
-     * @return bool
      */
     public function save(array $log): bool
     {
@@ -91,9 +93,9 @@ class File implements LogHandlerInterface
                 $messages[$filename] = [];
             }
 
-            $messages[$filename][] = $this->config['json'] ?
-                json_encode(['time' => $time, 'type' => $type, 'msg' => $msg], $this->config['json_options']) :
-                sprintf($this->config['format'], $time, $type, $msg);
+            $messages[$filename][] = $this->config['json']
+                ? json_encode(['time' => $time, 'type' => $type, 'msg' => $msg], $this->config['json_options'])
+                : sprintf($this->config['format'], $time, $type, $msg);
         }
 
         foreach ($messages as $filename => $message) {
@@ -104,11 +106,10 @@ class File implements LogHandlerInterface
     }
 
     /**
-     * 日志写入
-     * @access protected
+     * 日志写入.
+     *
      * @param array  $message     日志信息
      * @param string $destination 日志文件
-     * @return bool
      */
     protected function write(array $message, string $destination): bool
     {
@@ -119,27 +120,23 @@ class File implements LogHandlerInterface
     }
 
     /**
-     * 获取主日志文件名
-     * @access public
-     * @return string
+     * 获取主日志文件名.
      */
     protected function getMasterLogFile(): string
     {
-
         if ($this->config['max_files']) {
             $files = glob($this->config['path'] . '*.log');
 
             try {
                 if (count($files) > $this->config['max_files']) {
-                    set_error_handler(fn() => null);
-                    usort($files, function($a, $b) {
+                    set_error_handler(fn () => null);
+                    usort($files, function ($a, $b) {
                         return filemtime($a) - filemtime($b);
                     });
                     unlink($files[0]);
                     restore_error_handler();
                 }
-            } catch (\Exception $e) {
-                //
+            } catch (Exception $e) {
             }
         }
 
@@ -147,7 +144,6 @@ class File implements LogHandlerInterface
             $name        = is_string($this->config['single']) ? $this->config['single'] : 'single';
             $destination = $this->config['path'] . $name . '.log';
         } else {
-
             if ($this->config['max_files']) {
                 $filename = date('Ymd') . '.log';
             } else {
@@ -161,15 +157,13 @@ class File implements LogHandlerInterface
     }
 
     /**
-     * 获取独立日志文件名
-     * @access public
+     * 获取独立日志文件名.
+     *
      * @param string $path 日志目录
      * @param string $type 日志类型
-     * @return string
      */
     protected function getApartLevelFile(string $path, string $type): string
     {
-
         if ($this->config['single']) {
             $name = is_string($this->config['single']) ? $this->config['single'] : 'single';
 
@@ -184,18 +178,16 @@ class File implements LogHandlerInterface
     }
 
     /**
-     * 检查日志文件大小并自动生成备份文件
-     * @access protected
+     * 检查日志文件大小并自动生成备份文件.
+     *
      * @param string $destination 日志文件
-     * @return void
      */
     protected function checkLogSize(string $destination): void
     {
         if (is_file($destination) && floor($this->config['file_size']) <= filesize($destination)) {
             try {
                 rename($destination, dirname($destination) . DIRECTORY_SEPARATOR . basename($destination, '.log') . '-' . time() . '.log');
-            } catch (\Exception $e) {
-                //
+            } catch (Exception $e) {
             }
         }
     }

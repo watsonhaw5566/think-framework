@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,19 +9,21 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command\make;
 
 use think\console\command\Make;
 
 class Event extends Make
 {
-    protected $type = "Event";
+    protected $type = 'Event';
 
     protected function configure()
     {
         parent::configure();
         $this->setName('make:event')
-            ->setDescription('Create a new event class');
+            ->setDescription('Create a new event class')
+        ;
     }
 
     protected function getStub(): string
@@ -30,6 +33,6 @@ class Event extends Make
 
     protected function getNamespace(string $app): string
     {
-        return parent::getNamespace($app) . '\\event';
+        return parent::getNamespace($app) . '\event';
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -11,9 +12,10 @@
 
 namespace think\console\output\formatter;
 
+use InvalidArgumentException;
+
 class Stack
 {
-
     /**
      * @var Style[]
      */
@@ -25,8 +27,7 @@ class Stack
     private $emptyStyle;
 
     /**
-     * 构造方法
-     * @param Style|null $emptyStyle
+     * 构造方法.
      */
     public function __construct(?Style $emptyStyle = null)
     {
@@ -35,7 +36,7 @@ class Stack
     }
 
     /**
-     * 重置堆栈
+     * 重置堆栈.
      */
     public function reset(): void
     {
@@ -43,8 +44,7 @@ class Stack
     }
 
     /**
-     * 推一个样式进入堆栈
-     * @param Style $style
+     * 推一个样式进入堆栈.
      */
     public function push(Style $style): void
     {
@@ -52,10 +52,9 @@ class Stack
     }
 
     /**
-     * 从堆栈中弹出一个样式
-     * @param Style|null $style
-     * @return Style
-     * @throws \InvalidArgumentException
+     * 从堆栈中弹出一个样式.
+     *
+     * @throws InvalidArgumentException
      */
     public function pop(?Style $style = null): Style
     {
@@ -79,12 +78,11 @@ class Stack
             }
         }
 
-        throw new \InvalidArgumentException('Incorrectly nested style tag found.');
+        throw new InvalidArgumentException('Incorrectly nested style tag found.');
     }
 
     /**
      * 计算堆栈的当前样式。
-     * @return Style
      */
     public function getCurrent(): Style
     {
@@ -96,7 +94,6 @@ class Stack
     }
 
     /**
-     * @param Style $emptyStyle
      * @return Stack
      */
     public function setEmptyStyle(Style $emptyStyle)
@@ -106,9 +103,6 @@ class Stack
         return $this;
     }
 
-    /**
-     * @return Style
-     */
     public function getEmptyStyle(): Style
     {
         return $this->emptyStyle;

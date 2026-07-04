@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\exception;
 
@@ -22,7 +23,7 @@ use think\Response;
 use Throwable;
 
 /**
- * 系统异常处理类
+ * 系统异常处理类.
  */
 class Handle
 {
@@ -34,20 +35,12 @@ class Handle
         ValidateException::class,
     ];
 
-    protected $showErrorMsg = [
+    protected $showErrorMsg = [];
 
-    ];
-
-    public function __construct(protected App $app)
-    {
-    }
+    public function __construct(protected App $app) {}
 
     /**
      * Report or log an exception.
-     *
-     * @access public
-     * @param Throwable $exception
-     * @return void
      */
     public function report(Throwable $exception): void
     {
@@ -60,13 +53,13 @@ class Handle
                     'message' => $this->getMessage($exception),
                     'code'    => $this->getCode($exception),
                 ];
-                $log  = "[{$data['code']}]{$data['message']}[{$data['file']}:{$data['line']}]";
+                $log = "[{$data['code']}]{$data['message']}[{$data['file']}:{$data['line']}]";
             } else {
                 $data = [
                     'code'    => $this->getCode($exception),
                     'message' => $this->getMessage($exception),
                 ];
-                $log  = "[{$data['code']}]{$data['message']}";
+                $log = "[{$data['code']}]{$data['message']}";
             }
 
             if ($this->app->config->get('log.record_trace')) {
@@ -93,28 +86,19 @@ class Handle
 
     /**
      * Render an exception into an HTTP response.
-     *
-     * @access public
-     * @param Request   $request
-     * @param Throwable $e
-     * @return Response
      */
     public function render(Request $request, Throwable $e): Response
     {
         if ($e instanceof HttpResponseException) {
             return $e->getResponse();
-        } elseif ($e instanceof HttpException) {
-            return $this->renderHttpException($request, $e);
-        } else {
-            return $this->convertExceptionToResponse($request, $e);
         }
+        if ($e instanceof HttpException) {
+            return $this->renderHttpException($request, $e);
+        }
+
+        return $this->convertExceptionToResponse($request, $e);
     }
 
-    /**
-     * @access public
-     * @param Output    $output
-     * @param Throwable $e
-     */
     public function renderForConsole(Output $output, Throwable $e): void
     {
         if ($this->app->isDebug()) {
@@ -124,11 +108,6 @@ class Handle
         $output->renderException($e);
     }
 
-    /**
-     * @access protected
-     * @param HttpException $e
-     * @return Response
-     */
     protected function renderHttpException(Request $request, HttpException $e): Response
     {
         $status   = $e->getStatusCode();
@@ -136,15 +115,13 @@ class Handle
 
         if (!$this->app->isDebug() && !empty($template[$status])) {
             return Response::create($template[$status], 'view', $status)->assign(['e' => $e]);
-        } else {
-            return $this->convertExceptionToResponse($request, $e);
         }
+
+        return $this->convertExceptionToResponse($request, $e);
     }
 
     /**
-     * 收集异常数据
-     * @param Throwable $exception
-     * @return array
+     * 收集异常数据.
      */
     protected function convertExceptionToArray(Throwable $exception): array
     {
@@ -152,8 +129,8 @@ class Handle
     }
 
     /**
-     * 是否显示错误信息
-     * @param \Throwable $exception
+     * 是否显示错误信息.
+     *
      * @return bool
      */
     protected function isShowErrorMsg(Throwable $exception)
@@ -168,10 +145,7 @@ class Handle
     }
 
     /**
-     * 获取部署模式异常数据
-     * @access protected
-     * @param Throwable $exception
-     * @return array
+     * 获取部署模式异常数据.
      */
     protected function getDeployMsg(Throwable $exception): array
     {
@@ -190,10 +164,7 @@ class Handle
     }
 
     /**
-     * 收集调试模式异常数据
-     * @access protected
-     * @param Throwable $exception
-     * @return array
+     * 收集调试模式异常数据.
      */
     protected function getDebugMsg(Throwable $exception): array
     {
@@ -234,11 +205,6 @@ class Handle
         return $request->isJson();
     }
 
-    /**
-     * @access protected
-     * @param Throwable $exception
-     * @return Response
-     */
     protected function convertExceptionToResponse(Request $request, Throwable $exception): Response
     {
         if ($this->isJson($request)) {
@@ -268,9 +234,8 @@ class Handle
     /**
      * 获取错误编码
      * ErrorException则使用错误级别作为错误编码
-     * @access protected
-     * @param Throwable $exception
-     * @return int                错误编码
+     *
+     * @return int 错误编码
      */
     protected function getCode(Throwable $exception)
     {
@@ -286,9 +251,8 @@ class Handle
     /**
      * 获取错误信息
      * ErrorException则使用错误级别作为错误编码
-     * @access protected
-     * @param Throwable $exception
-     * @return string                错误信息
+     *
+     * @return string 错误信息
      */
     protected function getMessage(Throwable $exception): string
     {
@@ -315,10 +279,9 @@ class Handle
 
     /**
      * 获取出错文件内容
-     * 获取错误的前9行和后9行
-     * @access protected
-     * @param Throwable $exception
-     * @return array                 错误文件内容
+     * 获取错误的前9行和后9行.
+     *
+     * @return array 错误文件内容
      */
     protected function getSourceCode(Throwable $exception): array
     {
@@ -341,10 +304,9 @@ class Handle
 
     /**
      * 获取异常扩展信息
-     * 用于非调试模式html返回类型显示
-     * @access protected
-     * @param Throwable $exception
-     * @return array                 异常类定义的扩展数据
+     * 用于非调试模式html返回类型显示.
+     *
+     * @return array 异常类定义的扩展数据
      */
     protected function getExtendData(Throwable $exception): array
     {
@@ -358,8 +320,8 @@ class Handle
     }
 
     /**
-     * 获取常量列表
-     * @access protected
+     * 获取常量列表.
+     *
      * @return array 常量列表
      */
     protected function getConst(): array

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -21,7 +22,7 @@ use think\App;
 use think\contract\SessionHandlerInterface;
 
 /**
- * Session 文件驱动
+ * Session 文件驱动.
  */
 class File implements SessionHandlerInterface
 {
@@ -40,7 +41,7 @@ class File implements SessionHandlerInterface
 
         if (empty($this->config['path'])) {
             $this->config['path'] = $app->getRuntimePath() . 'session' . DIRECTORY_SEPARATOR;
-        } elseif (substr($this->config['path'], -1) != DIRECTORY_SEPARATOR) {
+        } elseif (DIRECTORY_SEPARATOR != substr($this->config['path'], -1)) {
             $this->config['path'] .= DIRECTORY_SEPARATOR;
         }
 
@@ -48,8 +49,8 @@ class File implements SessionHandlerInterface
     }
 
     /**
-     * 打开Session
-     * @access protected
+     * 打开Session.
+     *
      * @throws Exception
      */
     protected function init(): void
@@ -67,9 +68,7 @@ class File implements SessionHandlerInterface
     }
 
     /**
-     * Session 垃圾回收
-     * @access public
-     * @return void
+     * Session 垃圾回收.
      */
     public function gc(): void
     {
@@ -86,9 +85,8 @@ class File implements SessionHandlerInterface
     }
 
     /**
-     * 查找文件
-     * @param string  $root
-     * @param Closure $filter
+     * 查找文件.
+     *
      * @return Generator
      */
     protected function findFiles(string $root, Closure $filter)
@@ -108,11 +106,10 @@ class File implements SessionHandlerInterface
     }
 
     /**
-     * 取得变量的存储文件名
-     * @access protected
+     * 取得变量的存储文件名.
+     *
      * @param string $name 缓存变量名
      * @param bool   $auto 是否自动创建目录
-     * @return string
      */
     protected function getFileName(string $name, bool $auto = false): string
     {
@@ -138,10 +135,7 @@ class File implements SessionHandlerInterface
     }
 
     /**
-     * 读取Session
-     * @access public
-     * @param string $sessID
-     * @return string
+     * 读取Session.
      */
     public function read(string $sessID): string
     {
@@ -151,7 +145,7 @@ class File implements SessionHandlerInterface
             $content = $this->readFile($filename);
 
             if ($this->config['data_compress'] && function_exists('gzcompress')) {
-                //启用数据压缩
+                // 启用数据压缩
                 $content = (string) gzuncompress($content);
             }
 
@@ -162,10 +156,7 @@ class File implements SessionHandlerInterface
     }
 
     /**
-     * 写文件（加锁）
-     * @param $path
-     * @param $content
-     * @return bool
+     * 写文件（加锁）.
      */
     protected function writeFile($path, $content): bool
     {
@@ -173,9 +164,7 @@ class File implements SessionHandlerInterface
     }
 
     /**
-     * 读取文件内容(加锁)
-     * @param $path
-     * @return string
+     * 读取文件内容(加锁).
      */
     protected function readFile($path): string
     {
@@ -201,11 +190,7 @@ class File implements SessionHandlerInterface
     }
 
     /**
-     * 写入Session
-     * @access public
-     * @param string $sessID
-     * @param string $sessData
-     * @return bool
+     * 写入Session.
      */
     public function write(string $sessID, string $sessData): bool
     {
@@ -213,7 +198,7 @@ class File implements SessionHandlerInterface
         $data     = $sessData;
 
         if ($this->config['data_compress'] && function_exists('gzcompress')) {
-            //数据压缩
+            // 数据压缩
             $data = gzcompress($data, 3);
         }
 
@@ -221,10 +206,7 @@ class File implements SessionHandlerInterface
     }
 
     /**
-     * 删除Session
-     * @access public
-     * @param string $sessID
-     * @return bool
+     * 删除Session.
      */
     public function delete(string $sessID): bool
     {
@@ -236,10 +218,7 @@ class File implements SessionHandlerInterface
     }
 
     /**
-     * 判断文件是否存在后，删除
-     * @access private
-     * @param string $file
-     * @return bool
+     * 判断文件是否存在后，删除.
      */
     private function unlink(string $file): bool
     {

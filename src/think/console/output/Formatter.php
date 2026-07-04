@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,30 +9,21 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\output;
 
+use InvalidArgumentException;
 use think\console\output\formatter\Stack as StyleStack;
 use think\console\output\formatter\Style;
 
 class Formatter
 {
-
     private $decorated = false;
     private $styles    = [];
     private $styleStack;
 
     /**
-     * 转义
-     * @param string $text
-     * @return string
-     */
-    public static function escape($text)
-    {
-        return preg_replace('/([^\\\\]?)</is', '$1\\<', $text);
-    }
-
-    /**
-     * 初始化命令行输出格式
+     * 初始化命令行输出格式.
      */
     public function __construct()
     {
@@ -46,7 +38,20 @@ class Formatter
     }
 
     /**
-     * 设置外观标识
+     * 转义.
+     *
+     * @param string $text
+     *
+     * @return string
+     */
+    public static function escape($text)
+    {
+        return preg_replace('/([^\\\]?)</is', '$1\<', $text);
+    }
+
+    /**
+     * 设置外观标识.
+     *
      * @param bool $decorated 是否美化文字
      */
     public function setDecorated($decorated)
@@ -55,7 +60,8 @@ class Formatter
     }
 
     /**
-     * 获取外观标识
+     * 获取外观标识.
+     *
      * @return bool
      */
     public function isDecorated()
@@ -64,7 +70,8 @@ class Formatter
     }
 
     /**
-     * 添加一个新样式
+     * 添加一个新样式.
+     *
      * @param string $name  样式名
      * @param Style  $style 样式实例
      */
@@ -74,8 +81,10 @@ class Formatter
     }
 
     /**
-     * 是否有这个样式
+     * 是否有这个样式.
+     *
      * @param string $name
+     *
      * @return bool
      */
     public function hasStyle($name)
@@ -84,23 +93,28 @@ class Formatter
     }
 
     /**
-     * 获取样式
+     * 获取样式.
+     *
      * @param string $name
+     *
      * @return Style
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     public function getStyle($name)
     {
         if (!$this->hasStyle($name)) {
-            throw new \InvalidArgumentException(sprintf('Undefined style: %s', $name));
+            throw new InvalidArgumentException(sprintf('Undefined style: %s', $name));
         }
 
         return $this->styles[strtolower($name)];
     }
 
     /**
-     * 使用所给的样式格式化文字
+     * 使用所给的样式格式化文字.
+     *
      * @param string $message 文字
+     *
      * @return string
      */
     public function format($message)
@@ -108,7 +122,7 @@ class Formatter
         $offset   = 0;
         $output   = '';
         $tagRegex = '[a-z][a-z0-9_=;-]*';
-        preg_match_all("#<(($tagRegex) | /($tagRegex)?)>#isx", $message, $matches, PREG_OFFSET_CAPTURE);
+        preg_match_all("#<(({$tagRegex}) | /({$tagRegex})?)>#isx", $message, $matches, PREG_OFFSET_CAPTURE);
         foreach ($matches[0] as $i => $match) {
             $pos  = $match[1];
             $text = $match[0];
@@ -140,7 +154,7 @@ class Formatter
 
         $output .= $this->applyCurrentStyle(substr($message, $offset));
 
-        return str_replace('\\<', '<', $output);
+        return str_replace('\<', '<', $output);
     }
 
     /**
@@ -152,9 +166,11 @@ class Formatter
     }
 
     /**
-     * 根据字符串创建新的样式实例
+     * 根据字符串创建新的样式实例.
+     *
      * @param string $string
-     * @return Style|bool
+     *
+     * @return bool|Style
      */
     private function createStyleFromString($string)
     {
@@ -177,7 +193,7 @@ class Formatter
             } else {
                 try {
                     $style->setOption($match[1]);
-                } catch (\InvalidArgumentException $e) {
+                } catch (InvalidArgumentException $e) {
                     return false;
                 }
             }
@@ -187,8 +203,10 @@ class Formatter
     }
 
     /**
-     * 从堆栈应用样式到文字
+     * 从堆栈应用样式到文字.
+     *
      * @param string $text 文字
+     *
      * @return string
      */
     private function applyCurrentStyle($text)

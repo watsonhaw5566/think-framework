@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -15,13 +16,14 @@ use think\console\command\Make;
 
 class Middleware extends Make
 {
-    protected $type = "Middleware";
+    protected $type = 'Middleware';
 
     protected function configure()
     {
         parent::configure();
         $this->setName('make:middleware')
-            ->setDescription('Create a new middleware class');
+            ->setDescription('Create a new middleware class')
+        ;
     }
 
     protected function getStub(): string
@@ -31,6 +33,6 @@ class Middleware extends Make
 
     protected function getNamespace(string $app): string
     {
-        return parent::getNamespace($app) . '\\middleware';
+        return parent::getNamespace($app) . '\middleware';
     }
 }

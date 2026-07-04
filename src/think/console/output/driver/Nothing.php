@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -12,10 +13,10 @@
 namespace think\console\output\driver;
 
 use think\console\Output;
+use Throwable;
 
 class Nothing
 {
-
     public function __construct(Output $output)
     {
         // do nothing
@@ -26,7 +27,7 @@ class Nothing
         // do nothing
     }
 
-    public function renderException(\Throwable $e)
+    public function renderException(Throwable $e)
     {
         // do nothing
     }

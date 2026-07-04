@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -12,19 +13,18 @@ declare(strict_types=1);
 
 namespace think;
 
-use SplFileInfo;
 use Closure;
+use SplFileInfo;
 use think\exception\FileException;
 
 /**
- * 文件上传类
- * @package think
+ * 文件上传类.
  */
 class File extends SplFileInfo
 {
-
     /**
-     * 文件hash规则
+     * 文件hash规则.
+     *
      * @var array
      */
     protected $hash = [];
@@ -33,6 +33,7 @@ class File extends SplFileInfo
 
     /**
      * 保存的文件后缀
+     *
      * @var string
      */
     protected $extension;
@@ -48,9 +49,6 @@ class File extends SplFileInfo
 
     /**
      * 获取文件的哈希散列值
-     * @access public
-     * @param string $type
-     * @return string
      */
     public function hash(string $type = 'sha1'): string
     {
@@ -63,8 +61,6 @@ class File extends SplFileInfo
 
     /**
      * 获取文件的MD5值
-     * @access public
-     * @return string
      */
     public function md5(): string
     {
@@ -73,8 +69,6 @@ class File extends SplFileInfo
 
     /**
      * 获取文件的SHA1值
-     * @access public
-     * @return string
      */
     public function sha1(): string
     {
@@ -82,9 +76,7 @@ class File extends SplFileInfo
     }
 
     /**
-     * 获取文件类型信息
-     * @access public
-     * @return string
+     * 获取文件类型信息.
      */
     public function getMime(): string
     {
@@ -94,11 +86,10 @@ class File extends SplFileInfo
     }
 
     /**
-     * 移动文件
-     * @access public
+     * 移动文件.
+     *
      * @param string      $directory 保存路径
-     * @param string|null $name      保存的文件名
-     * @return File
+     * @param null|string $name      保存的文件名
      */
     public function move(string $directory, ?string $name = null): File
     {
@@ -119,10 +110,7 @@ class File extends SplFileInfo
     }
 
     /**
-     * 实例化一个新文件
-     * @param string      $directory
-     * @param null|string $name
-     * @return File
+     * 实例化一个新文件.
      */
     protected function getTargetFile(string $directory, ?string $name = null): File
     {
@@ -140,22 +128,18 @@ class File extends SplFileInfo
     }
 
     /**
-     * 获取文件名
-     * @param string $name
-     * @return string
+     * 获取文件名.
      */
     protected function getName(string $name): string
     {
         $originalName = str_replace('\\', '/', $name);
         $pos          = strrpos($originalName, '/');
-        $originalName = false === $pos ? $originalName : substr($originalName, $pos + 1);
 
-        return $originalName;
+        return false === $pos ? $originalName : substr($originalName, $pos + 1);
     }
 
     /**
-     * 文件扩展名
-     * @return string
+     * 文件扩展名.
      */
     public function extension(): string
     {
@@ -163,9 +147,7 @@ class File extends SplFileInfo
     }
 
     /**
-     * 指定保存文件的扩展名
-     * @param string $extension
-     * @return void
+     * 指定保存文件的扩展名.
      */
     public function setExtension(string $extension): void
     {
@@ -173,26 +155,24 @@ class File extends SplFileInfo
     }
 
     /**
-     * 自动生成文件名
-     * @access public
-     * @param string|Closure|null $rule
-     * @return string
+     * 自动生成文件名.
      */
-    public function hashName(string|Closure|null $rule = null): string
+    public function hashName(Closure|string|null $rule = null): string
     {
         if (!$this->hashName) {
             if ($rule instanceof Closure) {
                 $this->hashName = call_user_func_array($rule, [$this]);
             } else {
                 $this->hashName = match (true) {
-                    in_array($rule, hash_algos()) && $hash = $this->hash($rule)   =>  substr($hash, 0, 2) . DIRECTORY_SEPARATOR . substr($hash, 2),
-                    is_callable($rule)  =>  call_user_func($rule),
-                    default     =>  date('Ymd') . DIRECTORY_SEPARATOR . md5(microtime(true) . $this->getPathname()),
+                    in_array($rule, hash_algos()) && $hash = $this->hash($rule) => substr($hash, 0, 2) . DIRECTORY_SEPARATOR . substr($hash, 2),
+                    is_callable($rule)                                          => call_user_func($rule),
+                    default                                                     => date('Ymd') . DIRECTORY_SEPARATOR . md5(microtime(true) . $this->getPathname()),
                 };
             }
         }
 
         $extension = $this->extension ?? $this->extension();
+
         return $this->hashName . ($extension ? '.' . $extension : '');
     }
 }

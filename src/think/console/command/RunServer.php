@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: Slince <taosikai@yeah.net>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\console\command;
 
@@ -43,7 +44,8 @@ class RunServer extends Command
                 'The document root of the application',
                 ''
             )
-            ->setDescription('PHP Built-in Server for ThinkPHP');
+            ->setDescription('PHP Built-in Server for ThinkPHP')
+        ;
     }
 
     public function execute(Input $input, Output $output)

@@ -9,20 +9,20 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace think;
 
 use DateTimeInterface;
 
 /**
- * Cookie管理类
- * @package think
+ * Cookie管理类.
  */
 class Cookie
 {
     /**
-     * 配置参数
+     * 配置参数.
+     *
      * @var array
      */
     protected $config = [
@@ -41,14 +41,14 @@ class Cookie
     ];
 
     /**
-     * Cookie写入数据
+     * Cookie写入数据.
+     *
      * @var array
      */
     protected $cookie = [];
 
     /**
-     * 构造方法
-     * @access public
+     * 构造方法.
      */
     public function __construct(protected Request $request, array $config = [])
     {
@@ -61,10 +61,11 @@ class Cookie
     }
 
     /**
-     * 获取cookie
-     * @access public
-     * @param  mixed  $name 数据名称
-     * @param  string $default 默认值
+     * 获取cookie.
+     *
+     * @param mixed  $name    数据名称
+     * @param string $default 默认值
+     *
      * @return mixed
      */
     public function get(string $name = '', $default = null)
@@ -73,10 +74,9 @@ class Cookie
     }
 
     /**
-     * 是否存在Cookie参数
-     * @access public
-     * @param  string $name 变量名
-     * @return bool
+     * 是否存在Cookie参数.
+     *
+     * @param string $name 变量名
      */
     public function has(string $name): bool
     {
@@ -84,13 +84,11 @@ class Cookie
     }
 
     /**
-     * Cookie 设置
+     * Cookie 设置.
      *
-     * @access public
-     * @param  string $name  cookie名称
-     * @param  string $value cookie值
-     * @param  mixed  $option 可选参数
-     * @return void
+     * @param string $name   cookie名称
+     * @param string $value  cookie值
+     * @param mixed  $option 可选参数
      */
     public function set(string $name, string $value, $option = null): void
     {
@@ -116,14 +114,12 @@ class Cookie
     }
 
     /**
-     * Cookie 保存
+     * Cookie 保存.
      *
-     * @access public
-     * @param  string $name  cookie名称
-     * @param  string $value cookie值
-     * @param  int    $expire 有效期
-     * @param  array  $option 可选参数
-     * @return void
+     * @param string $name   cookie名称
+     * @param string $value  cookie值
+     * @param int    $expire 有效期
+     * @param array  $option 可选参数
      */
     protected function setCookie(string $name, string $value, int $expire, array $option = []): void
     {
@@ -131,12 +127,11 @@ class Cookie
     }
 
     /**
-     * 永久保存Cookie数据
-     * @access public
-     * @param  string $name  cookie名称
-     * @param  string $value cookie值
-     * @param  mixed  $option 可选参数 可能会是 null|int|string
-     * @return void
+     * 永久保存Cookie数据.
+     *
+     * @param string $name   cookie名称
+     * @param string $value  cookie值
+     * @param mixed  $option 可选参数 可能会是 null|int|string
      */
     public function forever(string $name, string $value = '', $option = null): void
     {
@@ -150,11 +145,10 @@ class Cookie
     }
 
     /**
-     * Cookie删除
-     * @access public
-     * @param  string $name cookie名称
-     * @param  array  $options cookie参数
-     * @return void
+     * Cookie删除.
+     *
+     * @param string $name    cookie名称
+     * @param array  $options cookie参数
      */
     public function delete(string $name, array $options = []): void
     {
@@ -164,9 +158,7 @@ class Cookie
     }
 
     /**
-     * 获取cookie保存数据
-     * @access public
-     * @return array
+     * 获取cookie保存数据.
      */
     public function getCookie(): array
     {
@@ -174,9 +166,7 @@ class Cookie
     }
 
     /**
-     * 保存Cookie
-     * @access public
-     * @return void
+     * 保存Cookie.
      */
     public function save(): void
     {
@@ -197,17 +187,16 @@ class Cookie
     }
 
     /**
-     * 保存Cookie
-     * @access public
-     * @param  string $name cookie名称
-     * @param  string $value cookie值
-     * @param  int    $expire cookie过期时间
-     * @param  string $path 有效的服务器路径
-     * @param  string $domain 有效域名/子域名
-     * @param  bool   $secure 是否仅仅通过HTTPS
-     * @param  bool   $httponly 仅可通过HTTP访问
-     * @param  string $samesite 防止CSRF攻击和用户追踪
-     * @return void
+     * 保存Cookie.
+     *
+     * @param string $name     cookie名称
+     * @param string $value    cookie值
+     * @param int    $expire   cookie过期时间
+     * @param string $path     有效的服务器路径
+     * @param string $domain   有效域名/子域名
+     * @param bool   $secure   是否仅仅通过HTTPS
+     * @param bool   $httponly 仅可通过HTTP访问
+     * @param string $samesite 防止CSRF攻击和用户追踪
      */
     protected function saveCookie(string $name, string $value, int $expire, string $path, string $domain, bool $secure, bool $httponly, string $samesite): void
     {

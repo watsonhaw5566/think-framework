@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -16,8 +17,7 @@ use think\console\input\Option;
 
 class Controller extends Make
 {
-
-    protected $type = "Controller";
+    protected $type = 'Controller';
 
     protected function configure()
     {
@@ -25,7 +25,8 @@ class Controller extends Make
         $this->setName('make:controller')
             ->addOption('api', null, Option::VALUE_NONE, 'Generate an api controller class.')
             ->addOption('plain', null, Option::VALUE_NONE, 'Generate an empty controller class.')
-            ->setDescription('Create a new resource controller class');
+            ->setDescription('Create a new resource controller class')
+        ;
     }
 
     protected function getStub(): string
@@ -50,6 +51,6 @@ class Controller extends Make
 
     protected function getNamespace(string $app): string
     {
-        return parent::getNamespace($app) . '\\controller';
+        return parent::getNamespace($app) . '\controller';
     }
 }

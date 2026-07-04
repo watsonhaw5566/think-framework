@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -38,11 +39,6 @@ class AllowCrossDomain
 
     /**
      * 允许跨域请求
-     * @access public
-     * @param Request $request
-     * @param Closure $next
-     * @param array   $header
-     * @return Response
      */
     public function handle(Request $request, Closure $next, array $header = []): Response
     {

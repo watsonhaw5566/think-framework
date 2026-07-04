@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\middleware;
 
@@ -21,7 +22,7 @@ use think\Request;
 use think\Response;
 
 /**
- * 多语言加载
+ * 多语言加载.
  */
 class LoadLangPack
 {
@@ -33,11 +34,7 @@ class LoadLangPack
     }
 
     /**
-     * 路由初始化（路由规则注册）
-     * @access public
-     * @param Request $request
-     * @param Closure $next
-     * @return Response
+     * 路由初始化（路由规则注册）.
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -54,10 +51,7 @@ class LoadLangPack
     }
 
     /**
-     * 自动侦测设置获取语言选择
-     * @access protected
-     * @param Request $request
-     * @return string
+     * 自动侦测设置获取语言选择.
      */
     protected function detect(Request $request): string
     {
@@ -98,11 +92,10 @@ class LoadLangPack
     }
 
     /**
-     * 保存当前语言到Cookie
-     * @access protected
-     * @param Cookie $cookie Cookie对象
+     * 保存当前语言到Cookie.
+     *
+     * @param Cookie $cookie  Cookie对象
      * @param string $langSet 语言
-     * @return void
      */
     protected function saveToCookie(Cookie $cookie, string $langSet): void
     {

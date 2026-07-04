@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\route;
 
@@ -17,48 +18,53 @@ use think\Container;
 use think\Route;
 
 /**
- * 资源路由类
+ * 资源路由类.
  */
 class Resource extends RuleGroup
 {
     /**
-     * REST方法定义
+     * REST方法定义.
+     *
      * @var array
      */
     protected $rest = [];
 
     /**
-     * 模型绑定
+     * 模型绑定.
+     *
      * @var array
      */
     protected $model = [];
 
     /**
      * 数据验证
+     *
      * @var array
      */
     protected $validate = [];
 
     /**
-     * 中间件
+     * 中间件.
+     *
      * @var array
      */
     protected $middleware = [];
 
     /**
-     * 扩展规则
+     * 扩展规则.
+     *
      * @var Closure
      */
     protected $extend;
 
     /**
-     * 架构函数
-     * @access public
-     * @param  Route         $router     路由对象
-     * @param  RuleGroup     $parent     上级对象
-     * @param  string        $name       资源名称
-     * @param  string        $route      路由地址
-     * @param  array         $rest       资源定义
+     * 架构函数.
+     *
+     * @param Route     $router 路由对象
+     * @param RuleGroup $parent 上级对象
+     * @param string    $name   资源名称
+     * @param string    $route  路由地址
+     * @param array     $rest   资源定义
      */
     public function __construct(Route $router, ?RuleGroup $parent = null, string $name = '', string $route = '', array $rest = [])
     {
@@ -83,22 +89,23 @@ class Resource extends RuleGroup
     }
 
     /**
-     * 扩展额外路由规则
-     * @access public
-     * @param  Closure $extend 路由规则闭包定义
+     * 扩展额外路由规则.
+     *
+     * @param Closure $extend 路由规则闭包定义
+     *
      * @return $this
      */
     public function extend(?Closure $extend)
     {
         $this->extend = $extend;
+
         return $this;
     }
 
     /**
-     * 生成资源路由规则
-     * @access public
-     * @param  mixed $rule 路由规则
-     * @return void
+     * 生成资源路由规则.
+     *
+     * @param mixed $rule 路由规则
      */
     public function parseGroupRule($rule): void
     {
@@ -139,8 +146,8 @@ class Resource extends RuleGroup
             $ruleItem = $this->addRule(trim($prefix . $val[1], '/'), $this->route . '/' . $val[2], $val[0]);
 
             foreach (['model', 'validate', 'middleware', 'pattern'] as $name) {
-                if (isset($this->$name[$key])) {
-                    call_user_func_array([$ruleItem, $name], (array) $this->$name[$key]);
+                if (isset($this->{$name}[$key])) {
+                    call_user_func_array([$ruleItem, $name], (array) $this->{$name}[$key]);
                 }
             }
         }
@@ -157,9 +164,10 @@ class Resource extends RuleGroup
     }
 
     /**
-     * 设置资源允许
-     * @access public
-     * @param  array $only 资源允许
+     * 设置资源允许.
+     *
+     * @param array $only 资源允许
+     *
      * @return $this
      */
     public function only(array $only)
@@ -168,9 +176,10 @@ class Resource extends RuleGroup
     }
 
     /**
-     * 设置资源排除
-     * @access public
-     * @param  array $except 排除资源
+     * 设置资源排除.
+     *
+     * @param array $except 排除资源
+     *
      * @return $this
      */
     public function except(array $except)
@@ -179,9 +188,10 @@ class Resource extends RuleGroup
     }
 
     /**
-     * 设置资源路由的变量
-     * @access public
-     * @param  array $vars 资源变量
+     * 设置资源路由的变量.
+     *
+     * @param array $vars 资源变量
+     *
      * @return $this
      */
     public function vars(array $vars)
@@ -191,12 +201,13 @@ class Resource extends RuleGroup
 
     /**
      * 绑定资源验证
-     * @access public
-     * @param  array|string $name 资源类型或者验证信息
-     * @param  array|string $validate 验证信息
+     *
+     * @param array|string $name     资源类型或者验证信息
+     * @param array|string $validate 验证信息
+     *
      * @return $this
      */
-    public function withValidate(array | string $name, array | string $validate = [])
+    public function withValidate(array|string $name, array|string $validate = [])
     {
         if (is_array($name)) {
             $this->validate = array_merge($this->validate, $name);
@@ -208,13 +219,14 @@ class Resource extends RuleGroup
     }
 
     /**
-     * 绑定资源模型
-     * @access public
-     * @param  array|string $name 资源类型或者模型绑定
-     * @param  array|string $model 模型绑定
+     * 绑定资源模型.
+     *
+     * @param array|string $name  资源类型或者模型绑定
+     * @param array|string $model 模型绑定
+     *
      * @return $this
      */
-    public function withModel(array | string $name, array | string $model = [])
+    public function withModel(array|string $name, array|string $model = [])
     {
         if (is_array($name)) {
             $this->model = array_merge($this->model, $name);
@@ -226,13 +238,14 @@ class Resource extends RuleGroup
     }
 
     /**
-     * 绑定资源中间件
-     * @access public
-     * @param  array|string $name 资源类型或者中间件定义
-     * @param  array|string $middleware 中间件定义
+     * 绑定资源中间件.
+     *
+     * @param array|string $name       资源类型或者中间件定义
+     * @param array|string $middleware 中间件定义
+     *
      * @return $this
      */
-    public function withMiddleware(array | string $name, array | string $middleware = [])
+    public function withMiddleware(array|string $name, array|string $middleware = [])
     {
         if (is_array($name)) {
             $this->middleware = array_merge($this->middleware, $name);
@@ -244,13 +257,14 @@ class Resource extends RuleGroup
     }
 
     /**
-     * rest方法定义和修改
-     * @access public
-     * @param  array|string  $name 方法名称
-     * @param  array|bool    $resource 资源
+     * rest方法定义和修改.
+     *
+     * @param array|string $name     方法名称
+     * @param array|bool   $resource 资源
+     *
      * @return $this
      */
-    public function rest(array | string $name, array | bool $resource = [])
+    public function rest(array|string $name, array|bool $resource = [])
     {
         if (is_array($name)) {
             $this->rest = $resource ? $name : array_merge($this->rest, $name);

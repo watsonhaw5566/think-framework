@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace think\log;
 
@@ -25,23 +26,21 @@ class Channel implements LoggerInterface
     use LoggerTrait;
 
     /**
-     * 日志信息
+     * 日志信息.
+     *
      * @var array<LogRecord>
      */
     protected array $log = [];
 
     /**
-     * 关闭日志
-     * @var bool
+     * 关闭日志.
      */
     protected bool $close = false;
 
-    public function __construct(protected string $name, protected LogHandlerInterface $logger, protected array $allow, protected bool $lazy, protected Event $event)
-    {
-    }
+    public function __construct(protected string $name, protected LogHandlerInterface $logger, protected array $allow, protected bool $lazy, protected Event $event) {}
 
     /**
-     * 关闭通道
+     * 关闭通道.
      */
     public function close(): void
     {
@@ -50,7 +49,7 @@ class Channel implements LoggerInterface
     }
 
     /**
-     * 清空日志
+     * 清空日志.
      */
     public function clear(): void
     {
@@ -58,12 +57,12 @@ class Channel implements LoggerInterface
     }
 
     /**
-     * 记录日志信息
-     * @access public
+     * 记录日志信息.
+     *
      * @param mixed  $msg     日志信息
      * @param string $type    日志级别
      * @param array  $context 替换内容
-     * @param bool   $lazy
+     *
      * @return $this
      */
     public function record($msg, string $type = 'info', array $context = [], bool $lazy = true)
@@ -101,11 +100,12 @@ class Channel implements LoggerInterface
     }
 
     /**
-     * 实时写入日志信息
-     * @access public
+     * 实时写入日志信息.
+     *
      * @param mixed  $msg     调试信息
      * @param string $type    日志级别
      * @param array  $context 替换内容
+     *
      * @return $this
      */
     public function write($msg, string $type = 'info', array $context = [])
@@ -114,7 +114,8 @@ class Channel implements LoggerInterface
     }
 
     /**
-     * 获取日志信息
+     * 获取日志信息.
+     *
      * @return array<LogRecord>
      */
     public function getLog(): array
@@ -123,8 +124,7 @@ class Channel implements LoggerInterface
     }
 
     /**
-     * 保存日志
-     * @return bool
+     * 保存日志.
      */
     public function save(): bool
     {
@@ -146,9 +146,6 @@ class Channel implements LoggerInterface
      *
      * @param mixed             $level
      * @param string|Stringable $message
-     * @param array             $context
-     *
-     * @return void
      */
     public function log($level, $message, array $context = []): void
     {

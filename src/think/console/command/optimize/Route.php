@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command\optimize;
 
 use DirectoryIterator;
@@ -27,7 +29,8 @@ class Route extends Command
     {
         $this->setName('optimize:route')
             ->addArgument('dir', Argument::OPTIONAL, 'dir name .')
-            ->setDescription('Build app route cache.');
+            ->setDescription('Build app route cache.')
+        ;
     }
 
     protected function execute(Input $input, Output $output)
@@ -36,9 +39,10 @@ class Route extends Command
 
         foreach ($dirs as $dir) {
             $path = $this->app->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . ($dir ? $dir . DIRECTORY_SEPARATOR : '');
+
             try {
                 $cache = $this->buildRouteCache($dir);
-                if (! is_dir($path)) {
+                if (!is_dir($path)) {
                     mkdir($path, 0755, true);
                 }
                 file_put_contents($path . 'route.php', $cache);
@@ -58,7 +62,7 @@ class Route extends Command
                 continue;
             }
 
-            if ($fileinfo->getType() == 'file' && $fileinfo->getExtension() == 'php') {
+            if ('file' == $fileinfo->getType() && 'php' == $fileinfo->getExtension()) {
                 $groupName = str_replace('\\', '/', substr_replace($fileinfo->getPath(), '', 0, strlen($root)));
                 if ($groupName) {
                     $this->app->route->group($groupName, function () use ($fileinfo) {
@@ -80,14 +84,14 @@ class Route extends Command
 
         // 路由检测
         $autoGroup = $this->app->route->config('route_auto_group');
-        $path = $this->app->getRootPath() . ($dir ? 'app' . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR : '') . 'route' . DIRECTORY_SEPARATOR;
-        if (! is_dir($path)) {
+        $path      = $this->app->getRootPath() . ($dir ? 'app' . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR : '') . 'route' . DIRECTORY_SEPARATOR;
+        if (!is_dir($path)) {
             throw new InvalidArgumentException("{$path} directory does not exist");
         }
 
         $this->scanRoute($path, $path, $autoGroup);
 
-        //触发路由载入完成事件
+        // 触发路由载入完成事件
         $this->app->event->trigger(RouteLoaded::class);
         $rules = $this->app->route->getName();
 
@@ -95,7 +99,8 @@ class Route extends Command
     }
 
     /**
-     * 获取默认目录名
+     * 获取默认目录名.
+     *
      * @return array<int, ?string>
      */
     private function getDefaultDirs(): array

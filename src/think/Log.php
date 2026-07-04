@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -22,28 +23,27 @@ use think\log\Channel;
 use think\log\ChannelSet;
 
 /**
- * 日志管理类
- * @package think
+ * 日志管理类.
+ *
  * @mixin Channel
  */
 class Log extends Manager implements LoggerInterface
 {
     use LoggerTrait;
-    const EMERGENCY = 'emergency';
-    const ALERT = 'alert';
-    const CRITICAL = 'critical';
-    const ERROR = 'error';
-    const WARNING = 'warning';
-    const NOTICE = 'notice';
-    const INFO = 'info';
-    const DEBUG = 'debug';
-    const SQL = 'sql';
+    public const EMERGENCY = 'emergency';
+    public const ALERT     = 'alert';
+    public const CRITICAL  = 'critical';
+    public const ERROR     = 'error';
+    public const WARNING   = 'warning';
+    public const NOTICE    = 'notice';
+    public const INFO      = 'info';
+    public const DEBUG     = 'debug';
+    public const SQL       = 'sql';
 
-    protected $namespace = '\\think\\log\\driver\\';
+    protected $namespace = '\think\log\driver\\';
 
     /**
-     * 默认驱动
-     * @return string|null
+     * 默认驱动.
      */
     public function getDefaultDriver(): ?string
     {
@@ -51,10 +51,11 @@ class Log extends Manager implements LoggerInterface
     }
 
     /**
-     * 获取日志配置
-     * @access public
+     * 获取日志配置.
+     *
      * @param null|string $name    名称
      * @param mixed       $default 默认值
+     *
      * @return mixed
      */
     public function getConfig(?string $name = null, $default = null)
@@ -67,10 +68,10 @@ class Log extends Manager implements LoggerInterface
     }
 
     /**
-     * 获取渠道配置
-     * @param string $channel
-     * @param string $name
-     * @param mixed  $default
+     * 获取渠道配置.
+     *
+     * @param mixed $default
+     *
      * @return array
      */
     public function getChannelConfig(string $channel, ?string $name = null, $default = null)
@@ -79,15 +80,17 @@ class Log extends Manager implements LoggerInterface
             return Arr::get($config, $name, $default);
         }
 
-        throw new InvalidArgumentException("Channel [$channel] not found.");
+        throw new InvalidArgumentException("Channel [{$channel}] not found.");
     }
 
     /**
-     * driver()的别名
-     * @param string|array $name 渠道名
+     * driver()的别名.
+     *
+     * @param array|string $name 渠道名
+     *
      * @return Channel|ChannelSet
      */
-    public function channel(string|array|null $name = null)
+    public function channel(array|string|null $name = null)
     {
         if (is_array($name)) {
             return new ChannelSet($this, $name);
@@ -105,8 +108,8 @@ class Log extends Manager implements LoggerInterface
     {
         $driver = parent::createDriver($name);
 
-        $lazy = !$this->getChannelConfig($name, "realtime_write", false) && !$this->app->runningInConsole();
-        $allow = array_merge($this->getConfig("level", []), $this->getChannelConfig($name, "level", []));
+        $lazy  = !$this->getChannelConfig($name, 'realtime_write', false) && !$this->app->runningInConsole();
+        $allow = array_merge($this->getConfig('level', []), $this->getChannelConfig($name, 'level', []));
 
         return new Channel($name, $driver, $allow, $lazy, $this->app->event);
     }
@@ -117,12 +120,13 @@ class Log extends Manager implements LoggerInterface
     }
 
     /**
-     * 清空日志信息
-     * @access public
-     * @param string|array $channel 日志通道名
+     * 清空日志信息.
+     *
+     * @param array|string $channel 日志通道名
+     *
      * @return $this
      */
-    public function clear(string|array $channel = '*')
+    public function clear(array|string $channel = '*')
     {
         if ('*' == $channel) {
             $channel = array_keys($this->drivers);
@@ -134,12 +138,13 @@ class Log extends Manager implements LoggerInterface
     }
 
     /**
-     * 关闭本次请求日志写入
-     * @access public
-     * @param string|array $channel 日志通道名
+     * 关闭本次请求日志写入.
+     *
+     * @param array|string $channel 日志通道名
+     *
      * @return $this
      */
-    public function close(string|array $channel = '*')
+    public function close(array|string $channel = '*')
     {
         if ('*' == $channel) {
             $channel = array_keys($this->drivers);
@@ -151,10 +156,9 @@ class Log extends Manager implements LoggerInterface
     }
 
     /**
-     * 获取日志信息
-     * @access public
+     * 获取日志信息.
+     *
      * @param string $channel 日志通道名
-     * @return array
      */
     public function getLog(?string $channel = null): array
     {
@@ -162,9 +166,7 @@ class Log extends Manager implements LoggerInterface
     }
 
     /**
-     * 保存日志信息
-     * @access public
-     * @return bool
+     * 保存日志信息.
      */
     public function save(): bool
     {
@@ -177,12 +179,12 @@ class Log extends Manager implements LoggerInterface
     }
 
     /**
-     * 记录日志信息
-     * @access public
+     * 记录日志信息.
+     *
      * @param mixed  $msg     日志信息
      * @param string $type    日志级别
      * @param array  $context 替换内容
-     * @param bool   $lazy
+     *
      * @return $this
      */
     public function record($msg, string $type = 'info', array $context = [], bool $lazy = true)
@@ -195,11 +197,12 @@ class Log extends Manager implements LoggerInterface
     }
 
     /**
-     * 实时写入日志信息
-     * @access public
+     * 实时写入日志信息.
+     *
      * @param mixed  $msg     调试信息
      * @param string $type    日志级别
      * @param array  $context 替换内容
+     *
      * @return $this
      */
     public function write($msg, string $type = 'info', array $context = [])
@@ -208,8 +211,8 @@ class Log extends Manager implements LoggerInterface
     }
 
     /**
-     * 注册日志写入事件监听
-     * @param $listener
+     * 注册日志写入事件监听.
+     *
      * @return Event
      */
     public function listen($listener)
@@ -218,12 +221,11 @@ class Log extends Manager implements LoggerInterface
     }
 
     /**
-     * 记录日志信息
-     * @access public
-     * @param mixed $level   日志级别
-     * @param string|Stringable   $message 日志信息
-     * @param array  $context 替换内容
-     * @return void
+     * 记录日志信息.
+     *
+     * @param mixed             $level   日志级别
+     * @param string|Stringable $message 日志信息
+     * @param array             $context 替换内容
      */
     public function log($level, $message, array $context = []): void
     {
@@ -231,11 +233,10 @@ class Log extends Manager implements LoggerInterface
     }
 
     /**
-     * 记录sql信息
-     * @access public
-     * @param string|Stringable  $message 日志信息
-     * @param array $context 替换内容
-     * @return void
+     * 记录sql信息.
+     *
+     * @param string|Stringable $message 日志信息
+     * @param array             $context 替换内容
      */
     public function sql($message, array $context = []): void
     {

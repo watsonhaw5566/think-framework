@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,41 +9,44 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\route;
 
+use Closure;
 use think\Exception;
 use think\facade\Validate;
 use think\Request;
 use think\Route;
 
 /**
- * 路由规则类
+ * 路由规则类.
  */
 class RuleItem extends Rule
 {
     /**
-     * 是否为MISS规则
+     * 是否为MISS规则.
+     *
      * @var bool
      */
     protected $miss = false;
 
     /**
-     * 是否为额外自动注册的OPTIONS规则
+     * 是否为额外自动注册的OPTIONS规则.
+     *
      * @var bool
      */
     protected $autoOption = false;
 
     /**
-     * 架构函数
-     * @access public
-     * @param  Route             $router 路由实例
-     * @param  RuleGroup         $parent 上级对象
-     * @param  string            $name 路由标识
-     * @param  string            $rule 路由规则
-     * @param  string|\Closure   $route 路由地址
-     * @param  string            $method 请求类型
+     * 架构函数.
+     *
+     * @param Route          $router 路由实例
+     * @param RuleGroup      $parent 上级对象
+     * @param string         $name   路由标识
+     * @param string         $rule   路由规则
+     * @param Closure|string $route  路由地址
+     * @param string         $method 请求类型
      */
     public function __construct(Route $router, RuleGroup $parent, ?string $name = null, string $rule = '', $route = null, string $method = '*')
     {
@@ -57,20 +61,19 @@ class RuleItem extends Rule
     }
 
     /**
-     * 设置当前路由规则为MISS路由
-     * @access public
+     * 设置当前路由规则为MISS路由.
+     *
      * @return $this
      */
     public function setMiss()
     {
         $this->miss = true;
+
         return $this;
     }
 
     /**
-     * 判断当前路由规则是否为MISS路由
-     * @access public
-     * @return bool
+     * 判断当前路由规则是否为MISS路由.
      */
     public function isMiss(): bool
     {
@@ -79,8 +82,6 @@ class RuleItem extends Rule
 
     /**
      * 获取当前路由的URL后缀
-     * @access public
-     * @return string|null
      */
     public function getSuffix(): ?string
     {
@@ -94,10 +95,9 @@ class RuleItem extends Rule
     }
 
     /**
-     * 路由规则预处理
-     * @access public
-     * @param  string      $rule     路由规则
-     * @return void
+     * 路由规则预处理.
+     *
+     * @param string $rule 路由规则
      */
     public function setRule(string $rule): void
     {
@@ -125,9 +125,8 @@ class RuleItem extends Rule
     }
 
     /**
-     * 设置别名
-     * @access public
-     * @param  string     $name
+     * 设置别名.
+     *
      * @return $this
      */
     public function name(string $name)
@@ -139,10 +138,9 @@ class RuleItem extends Rule
     }
 
     /**
-     * 设置路由标识 用于URL反解生成
-     * @access protected
-     * @param  bool $first 是否插入开头
-     * @return void
+     * 设置路由标识 用于URL反解生成.
+     *
+     * @param bool $first 是否插入开头
      */
     protected function setRuleName(bool $first = false): void
     {
@@ -152,12 +150,13 @@ class RuleItem extends Rule
     }
 
     /**
-     * 检测路由
-     * @access public
-     * @param  Request      $request  请求对象
-     * @param  string       $url      访问地址
-     * @param  array        $match    匹配路由变量
-     * @param  bool         $completeMatch   路由是否完全匹配
+     * 检测路由.
+     *
+     * @param Request $request       请求对象
+     * @param string  $url           访问地址
+     * @param array   $match         匹配路由变量
+     * @param bool    $completeMatch 路由是否完全匹配
+     *
      * @return Dispatch|false
      */
     public function checkRule(Request $request, string $url, ?array $match = null, bool $completeMatch = false)
@@ -184,11 +183,12 @@ class RuleItem extends Rule
     }
 
     /**
-     * 检测路由（含路由匹配）
-     * @access public
-     * @param  Request      $request  请求对象
-     * @param  string       $url      访问地址
-     * @param  bool         $completeMatch   路由是否完全匹配
+     * 检测路由（含路由匹配）.
+     *
+     * @param Request $request       请求对象
+     * @param string  $url           访问地址
+     * @param bool    $completeMatch 路由是否完全匹配
+     *
      * @return Dispatch|false
      */
     public function check(Request $request, string $url, bool $completeMatch = false)
@@ -197,12 +197,11 @@ class RuleItem extends Rule
     }
 
     /**
-     * URL后缀及Slash检查
-     * @access protected
-     * @param  Request      $request  请求对象
-     * @param  string       $url      访问地址
-     * @param  array        $option   路由参数
-     * @return string
+     * URL后缀及Slash检查.
+     *
+     * @param Request $request 请求对象
+     * @param string  $url     访问地址
+     * @param array   $option  路由参数
      */
     protected function urlSuffixCheck(Request $request, string $url, array $option = []): string
     {
@@ -221,12 +220,13 @@ class RuleItem extends Rule
     }
 
     /**
-     * 检测URL和规则路由是否匹配
-     * @access private
-     * @param  string    $url URL地址
-     * @param  array     $option    路由参数
-     * @param  array     $pattern   变量规则
-     * @param  bool      $completeMatch   是否完全匹配
+     * 检测URL和规则路由是否匹配.
+     *
+     * @param string $url           URL地址
+     * @param array  $option        路由参数
+     * @param array  $pattern       变量规则
+     * @param bool   $completeMatch 是否完全匹配
+     *
      * @return array|false
      */
     private function checkMatch(string $url, array $option, array $pattern, bool $completeMatch)
@@ -259,9 +259,11 @@ class RuleItem extends Rule
             // 静态路由
             if ($case && (0 === strcmp($rule, $url) || (!$completeMatch && 0 === strncmp($rule . $depr, $url . $depr, strlen($rule . $depr))))) {
                 return $var;
-            } elseif (!$case && (0 === strcasecmp($rule, $url) || (!$completeMatch && 0 === strncasecmp($rule . $depr, $url . $depr, strlen($rule . $depr))))) {
+            }
+            if (!$case && (0 === strcasecmp($rule, $url) || (!$completeMatch && 0 === strncasecmp($rule . $depr, $url . $depr, strlen($rule . $depr))))) {
                 return $var;
             }
+
             return false;
         }
 
@@ -309,9 +311,10 @@ class RuleItem extends Rule
     }
 
     /**
-     * 设置路由所属分组（用于注解路由）
-     * @access public
-     * @param  string $name 分组名称或者标识
+     * 设置路由所属分组（用于注解路由）.
+     *
+     * @param string $name 分组名称或者标识
+     *
      * @return $this
      */
     public function group(string $name)

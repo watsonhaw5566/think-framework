@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -12,34 +13,36 @@ declare(strict_types=1);
 
 namespace think;
 
+use Exception;
 use think\contract\TemplateHandlerInterface;
 use think\helper\Arr;
 
 /**
- * 视图类
- * @package think
+ * 视图类.
  */
 class View extends Manager
 {
-
-    protected $namespace = '\\think\\view\\driver\\';
+    protected $namespace = '\think\view\driver\\';
 
     /**
-     * 模板变量
+     * 模板变量.
+     *
      * @var array
      */
     protected $data = [];
 
     /**
-     * 内容过滤
+     * 内容过滤.
+     *
      * @var mixed
      */
     protected $filter;
 
     /**
-     * 获取模板引擎
-     * @access public
+     * 获取模板引擎.
+     *
      * @param string $type 模板引擎类型
+     *
      * @return TemplateHandlerInterface
      */
     public function engine(?string $type = null)
@@ -49,12 +52,13 @@ class View extends Manager
 
     /**
      * 模板变量赋值
-     * @access public
-     * @param string|array $name  模板变量
+     *
+     * @param array|string $name  模板变量
      * @param mixed        $value 变量值
+     *
      * @return $this
      */
-    public function assign(string|array $name, $value = null)
+    public function assign(array|string $name, $value = null)
     {
         if (is_array($name)) {
             $this->data = array_merge($this->data, $name);
@@ -66,24 +70,26 @@ class View extends Manager
     }
 
     /**
-     * 视图过滤
-     * @access public
-     * @param Callable $filter 过滤方法或闭包
+     * 视图过滤.
+     *
+     * @param callable $filter 过滤方法或闭包
+     *
      * @return $this
      */
     public function filter(?callable $filter = null)
     {
         $this->filter = $filter;
+
         return $this;
     }
 
     /**
-     * 解析和获取模板内容 用于输出
-     * @access public
+     * 解析和获取模板内容 用于输出.
+     *
      * @param string $template 模板文件名或者内容
      * @param array  $vars     模板变量
-     * @return string
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function fetch(string $template = '', array $vars = []): string
     {
@@ -93,11 +99,10 @@ class View extends Manager
     }
 
     /**
-     * 渲染内容输出
-     * @access public
+     * 渲染内容输出.
+     *
      * @param string $content 内容
      * @param array  $vars    模板变量
-     * @return string
      */
     public function display(string $content, array $vars = []): string
     {
@@ -107,10 +112,9 @@ class View extends Manager
     }
 
     /**
-     * 获取模板引擎渲染内容
-     * @param $callback
-     * @return string
-     * @throws \Exception
+     * 获取模板引擎渲染内容.
+     *
+     * @throws Exception
      */
     protected function getContent($callback): string
     {
@@ -121,8 +125,9 @@ class View extends Manager
         // 渲染输出
         try {
             $callback();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ob_end_clean();
+
             throw $e;
         }
 
@@ -138,7 +143,7 @@ class View extends Manager
 
     /**
      * 模板变量赋值
-     * @access public
+     *
      * @param string $name  变量名
      * @param mixed  $value 变量值
      */
@@ -149,8 +154,9 @@ class View extends Manager
 
     /**
      * 取得模板显示变量的值
-     * @access protected
+     *
      * @param string $name 模板变量
+     *
      * @return mixed
      */
     public function __get($name)
@@ -159,9 +165,10 @@ class View extends Manager
     }
 
     /**
-     * 检测模板变量是否设置
-     * @access public
+     * 检测模板变量是否设置.
+     *
      * @param string $name 模板变量名
+     *
      * @return bool
      */
     public function __isset($name)
@@ -173,12 +180,14 @@ class View extends Manager
     {
         $config = $this->app->config->get('view', []);
         Arr::forget($config, 'type');
+
         return $config;
     }
 
     /**
-     * 默认驱动
-     * @return string|null
+     * 默认驱动.
+     *
+     * @return null|string
      */
     public function getDefaultDriver()
     {

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -17,7 +18,6 @@ use think\File;
 
 class UploadedFile extends File
 {
-
     private $test = false;
     private $originalName;
     private $mimeType;
@@ -41,11 +41,10 @@ class UploadedFile extends File
     }
 
     /**
-     * 上传文件
-     * @access public
+     * 上传文件.
+     *
      * @param string      $directory 保存路径
-     * @param string|null $name      保存的文件名
-     * @return File
+     * @param null|string $name      保存的文件名
      */
     public function move(string $directory, ?string $name = null): File
     {
@@ -75,9 +74,7 @@ class UploadedFile extends File
     }
 
     /**
-     * 获取错误信息
-     * @access public
-     * @return string
+     * 获取错误信息.
      */
     protected function getErrorMessage(): string
     {
@@ -92,8 +89,7 @@ class UploadedFile extends File
     }
 
     /**
-     * 获取上传文件类型信息
-     * @return string
+     * 获取上传文件类型信息.
      */
     public function getOriginalMime(): string
     {
@@ -101,8 +97,7 @@ class UploadedFile extends File
     }
 
     /**
-     * 上传文件名
-     * @return string
+     * 上传文件名.
      */
     public function getOriginalName(): string
     {
@@ -110,8 +105,7 @@ class UploadedFile extends File
     }
 
     /**
-     * 获取上传文件扩展名
-     * @return string
+     * 获取上传文件扩展名.
      */
     public function getOriginalExtension(): string
     {
@@ -119,8 +113,7 @@ class UploadedFile extends File
     }
 
     /**
-     * 获取文件扩展名
-     * @return string
+     * 获取文件扩展名.
      */
     public function extension(): string
     {

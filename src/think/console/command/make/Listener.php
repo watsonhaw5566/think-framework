@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,19 +9,21 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command\make;
 
 use think\console\command\Make;
 
 class Listener extends Make
 {
-    protected $type = "Listener";
+    protected $type = 'Listener';
 
     protected function configure()
     {
         parent::configure();
         $this->setName('make:listener')
-            ->setDescription('Create a new listener class');
+            ->setDescription('Create a new listener class')
+        ;
     }
 
     protected function getStub(): string
@@ -30,6 +33,6 @@ class Listener extends Make
 
     protected function getNamespace(string $app): string
     {
-        return parent::getNamespace($app) . '\\listener';
+        return parent::getNamespace($app) . '\listener';
     }
 }

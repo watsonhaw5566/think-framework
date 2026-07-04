@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command\optimize;
 
 use InvalidArgumentException;
@@ -25,7 +27,8 @@ class Config extends Command
     {
         $this->setName('optimize:config')
             ->addArgument('dir', Argument::OPTIONAL, 'dir name .')
-            ->setDescription('Build config cache.');
+            ->setDescription('Build config cache.')
+        ;
     }
 
     protected function execute(Input $input, Output $output)
@@ -34,9 +37,10 @@ class Config extends Command
 
         foreach ($dirs as $dir) {
             $path = $this->app->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . ($dir ? $dir . DIRECTORY_SEPARATOR : '');
+
             try {
                 $cache = $this->buildCache($dir);
-                if (! is_dir($path)) {
+                if (!is_dir($path)) {
                     mkdir($path, 0755, true);
                 }
                 file_put_contents($path . 'config.php', $cache);
@@ -51,7 +55,7 @@ class Config extends Command
     private function buildCache(?string $dir = null): string
     {
         $path = $this->app->getRootPath() . ($dir ? 'app' . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR : '') . 'config' . DIRECTORY_SEPARATOR;
-        if (! is_dir($path)) {
+        if (!is_dir($path)) {
             throw new InvalidArgumentException("{$path} directory does not exist");
         }
 
@@ -68,7 +72,8 @@ class Config extends Command
     }
 
     /**
-     * 获取默认目录名
+     * 获取默认目录名.
+     *
      * @return array<int, ?string>
      */
     private function getDefaultDirs(): array
@@ -78,6 +83,7 @@ class Config extends Command
         if ($this->isInstalledMultiApp()) {
             $dirs = array_merge($dirs, $this->discoveryMultiAppDirs('config'));
         }
+
         return $dirs;
     }
 }

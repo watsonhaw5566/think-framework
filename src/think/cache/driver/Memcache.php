@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,22 +9,24 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\cache\driver;
 
+use BadFunctionCallException;
 use DateInterval;
 use DateTimeInterface;
 use think\cache\Driver;
 use think\exception\InvalidCacheException;
 
 /**
- * Memcache缓存类
+ * Memcache缓存类.
  */
 class Memcache extends Driver
 {
     /**
-     * 配置参数
+     * 配置参数.
+     *
      * @var array
      */
     protected $options = [
@@ -39,22 +42,23 @@ class Memcache extends Driver
     ];
 
     /**
-     * 架构函数
-     * @access public
+     * 架构函数.
+     *
      * @param array $options 缓存参数
-     * @throws \BadFunctionCallException
+     *
+     * @throws BadFunctionCallException
      */
     public function __construct(array $options = [])
     {
         if (!extension_loaded('memcache')) {
-            throw new \BadFunctionCallException('not support: memcache');
+            throw new BadFunctionCallException('not support: memcache');
         }
 
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
         }
 
-        $this->handler = new \Memcache;
+        $this->handler = new \Memcache();
 
         // 支持集群
         $hosts = (array) $this->options['host'];
@@ -67,17 +71,16 @@ class Memcache extends Driver
         // 建立连接
         foreach ($hosts as $i => $host) {
             $port = $ports[$i] ?? $ports[0];
-            $this->options['timeout'] > 0 ?
-            $this->handler->addServer($host, (int) $port, $this->options['persistent'], 1, (int) $this->options['timeout']) :
-            $this->handler->addServer($host, (int) $port, $this->options['persistent'], 1);
+            $this->options['timeout'] > 0
+            ? $this->handler->addServer($host, (int) $port, $this->options['persistent'], 1, (int) $this->options['timeout'])
+            : $this->handler->addServer($host, (int) $port, $this->options['persistent'], 1);
         }
     }
 
     /**
-     * 判断缓存
-     * @access public
+     * 判断缓存.
+     *
      * @param string $name 缓存变量名
-     * @return bool
      */
     public function has($name): bool
     {
@@ -87,11 +90,10 @@ class Memcache extends Driver
     }
 
     /**
-     * 读取缓存
-     * @access public
+     * 读取缓存.
+     *
      * @param string $name    缓存变量名
      * @param mixed  $default 默认值
-     * @return mixed
      */
     public function get($name, $default = null): mixed
     {
@@ -105,12 +107,11 @@ class Memcache extends Driver
     }
 
     /**
-     * 写入缓存
-     * @access public
+     * 写入缓存.
+     *
      * @param string                             $name   缓存变量名
      * @param mixed                              $value  存储数据
-     * @param int|DateTimeInterface|DateInterval $expire 有效时间（秒）
-     * @return bool
+     * @param DateInterval|DateTimeInterface|int $expire 有效时间（秒）
      */
     public function set($name, $value, $expire = null): bool
     {
@@ -130,10 +131,11 @@ class Memcache extends Driver
     }
 
     /**
-     * 自增缓存（针对数值缓存）
-     * @access public
+     * 自增缓存（针对数值缓存）.
+     *
      * @param string $name 缓存变量名
      * @param int    $step 步长
+     *
      * @return false|int
      */
     public function inc($name, $step = 1)
@@ -148,10 +150,11 @@ class Memcache extends Driver
     }
 
     /**
-     * 自减缓存（针对数值缓存）
-     * @access public
+     * 自减缓存（针对数值缓存）.
+     *
      * @param string $name 缓存变量名
      * @param int    $step 步长
+     *
      * @return false|int
      */
     public function dec($name, $step = 1)
@@ -164,25 +167,22 @@ class Memcache extends Driver
     }
 
     /**
-     * 删除缓存
-     * @access public
+     * 删除缓存.
+     *
      * @param string     $name 缓存变量名
      * @param bool|false $ttl
-     * @return bool
      */
     public function delete($name, $ttl = false): bool
     {
         $key = $this->getCacheKey($name);
 
-        return false === $ttl ?
-        $this->handler->delete($key) :
-        $this->handler->delete($key, $ttl);
+        return false === $ttl
+        ? $this->handler->delete($key)
+        : $this->handler->delete($key, $ttl);
     }
 
     /**
-     * 清除缓存
-     * @access public
-     * @return bool
+     * 清除缓存.
      */
     public function clear(): bool
     {
@@ -190,10 +190,9 @@ class Memcache extends Driver
     }
 
     /**
-     * 删除缓存标签
-     * @access public
+     * 删除缓存标签.
+     *
      * @param array $keys 缓存标识列表
-     * @return void
      */
     public function clearTag($keys): void
     {

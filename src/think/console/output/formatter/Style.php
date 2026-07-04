@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -10,6 +11,8 @@
 // +----------------------------------------------------------------------
 
 namespace think\console\output\formatter;
+
+use InvalidArgumentException;
 
 class Style
 {
@@ -48,10 +51,12 @@ class Style
     private $options = [];
 
     /**
-     * 初始化输出的样式
-     * @param string|null $foreground 字体颜色
-     * @param string|null $background 背景色
+     * 初始化输出的样式.
+     *
+     * @param null|string $foreground 字体颜色
+     * @param null|string $background 背景色
      * @param array       $options    格式
+     *
      * @api
      */
     public function __construct($foreground = null, $background = null, array $options = [])
@@ -68,9 +73,12 @@ class Style
     }
 
     /**
-     * 设置字体颜色
-     * @param string|null $color 颜色名
-     * @throws \InvalidArgumentException
+     * 设置字体颜色.
+     *
+     * @param null|string $color 颜色名
+     *
+     * @throws InvalidArgumentException
+     *
      * @api
      */
     public function setForeground($color = null)
@@ -82,16 +90,19 @@ class Style
         }
 
         if (!isset(static::$availableForegroundColors[$color])) {
-            throw new \InvalidArgumentException(sprintf('Invalid foreground color specified: "%s". Expected one of (%s)', $color, implode(', ', array_keys(static::$availableForegroundColors))));
+            throw new InvalidArgumentException(sprintf('Invalid foreground color specified: "%s". Expected one of (%s)', $color, implode(', ', array_keys(static::$availableForegroundColors))));
         }
 
         $this->foreground = static::$availableForegroundColors[$color];
     }
 
     /**
-     * 设置背景色
-     * @param string|null $color 颜色名
-     * @throws \InvalidArgumentException
+     * 设置背景色.
+     *
+     * @param null|string $color 颜色名
+     *
+     * @throws InvalidArgumentException
+     *
      * @api
      */
     public function setBackground($color = null)
@@ -103,22 +114,25 @@ class Style
         }
 
         if (!isset(static::$availableBackgroundColors[$color])) {
-            throw new \InvalidArgumentException(sprintf('Invalid background color specified: "%s". Expected one of (%s)', $color, implode(', ', array_keys(static::$availableBackgroundColors))));
+            throw new InvalidArgumentException(sprintf('Invalid background color specified: "%s". Expected one of (%s)', $color, implode(', ', array_keys(static::$availableBackgroundColors))));
         }
 
         $this->background = static::$availableBackgroundColors[$color];
     }
 
     /**
-     * 设置字体格式
+     * 设置字体格式.
+     *
      * @param string $option 格式名
-     * @throws \InvalidArgumentException When the option name isn't defined
+     *
+     * @throws InvalidArgumentException When the option name isn't defined
+     *
      * @api
      */
     public function setOption(string $option): void
     {
         if (!isset(static::$availableOptions[$option])) {
-            throw new \InvalidArgumentException(sprintf('Invalid option specified: "%s". Expected one of (%s)', $option, implode(', ', array_keys(static::$availableOptions))));
+            throw new InvalidArgumentException(sprintf('Invalid option specified: "%s". Expected one of (%s)', $option, implode(', ', array_keys(static::$availableOptions))));
         }
 
         if (!in_array(static::$availableOptions[$option], $this->options)) {
@@ -127,14 +141,16 @@ class Style
     }
 
     /**
-     * 重置字体格式
+     * 重置字体格式.
+     *
      * @param string $option 格式名
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     public function unsetOption(string $option): void
     {
         if (!isset(static::$availableOptions[$option])) {
-            throw new \InvalidArgumentException(sprintf('Invalid option specified: "%s". Expected one of (%s)', $option, implode(', ', array_keys(static::$availableOptions))));
+            throw new InvalidArgumentException(sprintf('Invalid option specified: "%s". Expected one of (%s)', $option, implode(', ', array_keys(static::$availableOptions))));
         }
 
         $pos = array_search(static::$availableOptions[$option], $this->options);
@@ -144,8 +160,7 @@ class Style
     }
 
     /**
-     * 批量设置字体格式
-     * @param array $options
+     * 批量设置字体格式.
      */
     public function setOptions(array $options)
     {
@@ -157,9 +172,9 @@ class Style
     }
 
     /**
-     * 应用样式到文字
+     * 应用样式到文字.
+     *
      * @param string $text 文字
-     * @return string
      */
     public function apply(string $text): string
     {

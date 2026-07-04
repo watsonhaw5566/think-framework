@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -18,24 +19,24 @@ use think\helper\Str;
 abstract class Manager
 {
     /**
-     * 驱动
+     * 驱动.
+     *
      * @var array
      */
     protected $drivers = [];
 
     /**
-     * 驱动的命名空间
+     * 驱动的命名空间.
+     *
      * @var string
      */
-    protected $namespace = null;
+    protected $namespace;
 
-    public function __construct(protected App $app)
-    {
-    }
+    public function __construct(protected App $app) {}
 
     /**
-     * 获取驱动实例
-     * @param null|string $name
+     * 获取驱动实例.
+     *
      * @return mixed
      */
     protected function driver(?string $name = null)
@@ -53,8 +54,8 @@ abstract class Manager
     }
 
     /**
-     * 获取驱动实例
-     * @param string $name
+     * 获取驱动实例.
+     *
      * @return mixed
      */
     protected function getDriver(string $name)
@@ -63,8 +64,8 @@ abstract class Manager
     }
 
     /**
-     * 获取驱动类型
-     * @param string $name
+     * 获取驱动类型.
+     *
      * @return mixed
      */
     protected function resolveType(string $name)
@@ -73,8 +74,8 @@ abstract class Manager
     }
 
     /**
-     * 获取驱动配置
-     * @param string $name
+     * 获取驱动配置.
+     *
      * @return mixed
      */
     protected function resolveConfig(string $name)
@@ -83,9 +84,7 @@ abstract class Manager
     }
 
     /**
-     * 获取驱动类
-     * @param string $type
-     * @return string
+     * 获取驱动类.
      */
     protected function resolveClass(string $type): string
     {
@@ -97,26 +96,25 @@ abstract class Manager
             }
         }
 
-        throw new InvalidArgumentException("Driver [$type] not supported.");
+        throw new InvalidArgumentException("Driver [{$type}] not supported.");
     }
 
     /**
-     * 获取驱动参数
-     * @param $name
-     * @return array
+     * 获取驱动参数.
+     *
+     * @param mixed $name
      */
     protected function resolveParams($name): array
     {
         $config = $this->resolveConfig($name);
+
         return [$config];
     }
 
     /**
-     * 创建驱动
+     * 创建驱动.
      *
-     * @param string $name
      * @return mixed
-     *
      */
     protected function createDriver(string $name)
     {
@@ -127,7 +125,7 @@ abstract class Manager
         $params = $this->resolveParams($name);
 
         if (method_exists($this, $method)) {
-            return $this->$method(...$params);
+            return $this->{$method}(...$params);
         }
 
         $class = $this->resolveClass($type);
@@ -136,14 +134,15 @@ abstract class Manager
     }
 
     /**
-     * 移除一个驱动实例
+     * 移除一个驱动实例.
      *
-     * @param array|string|null $name
+     * @param null|array|string $name
+     *
      * @return $this
      */
     public function forgetDriver($name = null)
     {
-        $name = $name ?? $this->getDefaultDriver();
+        $name ??= $this->getDefaultDriver();
 
         foreach ((array) $name as $cacheName) {
             if (isset($this->drivers[$cacheName])) {
@@ -155,19 +154,22 @@ abstract class Manager
     }
 
     /**
-     * 默认驱动
-     * @return string|null
+     * 默认驱动.
+     *
+     * @return null|string
      */
     abstract public function getDefaultDriver();
 
     /**
-     * 动态调用
+     * 动态调用.
+     *
      * @param string $method
      * @param array  $parameters
+     *
      * @return mixed
      */
     public function __call($method, $parameters)
     {
-        return $this->driver()->$method(...$parameters);
+        return $this->driver()->{$method}(...$parameters);
     }
 }

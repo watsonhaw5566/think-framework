@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -15,13 +16,14 @@ use think\console\command\Make;
 
 class Service extends Make
 {
-    protected $type = "Service";
+    protected $type = 'Service';
 
     protected function configure()
     {
         parent::configure();
         $this->setName('make:service')
-            ->setDescription('Create a new Service class');
+            ->setDescription('Create a new Service class')
+        ;
     }
 
     protected function getStub(): string
@@ -31,6 +33,6 @@ class Service extends Make
 
     protected function getNamespace(string $app): string
     {
-        return parent::getNamespace($app) . '\\service';
+        return parent::getNamespace($app) . '\service';
     }
 }

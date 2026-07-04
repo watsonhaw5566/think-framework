@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,31 +9,33 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\route;
 
 /**
- * 资源路由注册类
+ * 资源路由注册类.
  */
 class ResourceRegister
 {
     /**
-     * 资源路由
-     * @var Resource
+     * 资源路由.
+     *
+     * @var resource
      */
     protected $resource;
 
     /**
-     * 是否注册过
+     * 是否注册过.
+     *
      * @var bool
      */
     protected $registered = false;
 
     /**
-     * 架构函数
-     * @access public
-     * @param  Resource   $resource     资源路由
+     * 架构函数.
+     *
+     * @param resource $resource 资源路由
      */
     public function __construct(Resource $resource)
     {
@@ -40,22 +43,21 @@ class ResourceRegister
     }
 
     /**
-     * 注册资源路由
-     * @access protected
-     * @return void
+     * 注册资源路由.
      */
     protected function register()
     {
         $this->registered = true;
-        
+
         $this->resource->parseGroupRule($this->resource->getRule());
     }
 
     /**
-     * 动态方法
-     * @access public
+     * 动态方法.
+     *
      * @param string $method 方法名
      * @param array  $args   调用参数
+     *
      * @return mixed
      */
     public function __call($method, $args)

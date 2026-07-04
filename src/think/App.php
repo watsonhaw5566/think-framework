@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think;
 
@@ -20,7 +21,8 @@ use think\initializer\Error;
 use think\initializer\RegisterService;
 
 /**
- * App 基础类
+ * App 基础类.
+ *
  * @property Route      $route
  * @property Config     $config
  * @property Cache      $cache
@@ -40,85 +42,99 @@ use think\initializer\RegisterService;
 class App extends Container
 {
     /**
-     * 核心框架版本 
+     * 核心框架版本.
+     *
      * @deprecated 已经废弃 请改用version()方法
-     */    
+     */
     public const VERSION = '8.0.0';
 
     /**
-     * 应用调试模式
+     * 应用调试模式.
+     *
      * @var bool
      */
     protected $appDebug = false;
 
     /**
-     * 公共环境变量标识
+     * 公共环境变量标识.
+     *
      * @var string
      */
     protected $baseEnvName = '';
 
     /**
-     * 环境变量标识
+     * 环境变量标识.
+     *
      * @var string
      */
     protected $envName = '';
 
     /**
-     * 应用开始时间
+     * 应用开始时间.
+     *
      * @var float
      */
     protected $beginTime;
 
     /**
-     * 应用内存初始占用
+     * 应用内存初始占用.
+     *
      * @var int
      */
     protected $beginMem;
 
     /**
-     * 当前应用类库命名空间
+     * 当前应用类库命名空间.
+     *
      * @var string
      */
     protected $namespace = 'app';
 
     /**
-     * 应用根目录
+     * 应用根目录.
+     *
      * @var string
      */
     protected $rootPath = '';
 
     /**
-     * 框架目录
+     * 框架目录.
+     *
      * @var string
      */
     protected $thinkPath = '';
 
     /**
-     * 应用目录
+     * 应用目录.
+     *
      * @var string
      */
     protected $appPath = '';
 
     /**
-     * Runtime目录
+     * Runtime目录.
+     *
      * @var string
      */
     protected $runtimePath = '';
 
     /**
-     * 路由定义目录
+     * 路由定义目录.
+     *
      * @var string
      */
     protected $routePath = '';
 
     /**
      * 配置后缀
+     *
      * @var string
      */
     protected $configExt = '.php';
 
     /**
-     * 应用初始化器
+     * 应用初始化器.
+     *
      * @var array
      */
     protected $initializers = [
@@ -129,18 +145,21 @@ class App extends Container
 
     /**
      * 注册的系统服务
+     *
      * @var array
      */
     protected $services = [];
 
     /**
-     * 初始化
+     * 初始化.
+     *
      * @var bool
      */
     protected $initialized = false;
 
     /**
-     * 容器绑定标识
+     * 容器绑定标识.
+     *
      * @var array
      */
     protected $bind = [
@@ -171,8 +190,8 @@ class App extends Container
     ];
 
     /**
-     * 架构方法
-     * @access public
+     * 架构方法.
+     *
      * @param string $rootPath 应用根目录
      */
     public function __construct(string $rootPath = '')
@@ -194,12 +213,13 @@ class App extends Container
 
     /**
      * 注册服务
-     * @access public
+     *
      * @param Service|string $service 服务
      * @param bool           $force   强制重新注册
-     * @return Service|null
+     *
+     * @return null|Service
      */
-    public function register(Service | string $service, bool $force = false)
+    public function register(Service|string $service, bool $force = false)
     {
         $registered = $this->getService($service);
 
@@ -224,8 +244,9 @@ class App extends Container
 
     /**
      * 执行服务
-     * @access public
+     *
      * @param Service $service 服务
+     *
      * @return mixed
      */
     public function bootService(Service $service)
@@ -237,33 +258,32 @@ class App extends Container
 
     /**
      * 获取服务
-     * @param string|Service $service
-     * @return Service|null
      */
-    public function getService(Service | string $service): ?Service
+    public function getService(Service|string $service): ?Service
     {
         $name = is_string($service) ? $service : $service::class;
+
         return array_values(array_filter($this->services, function ($value) use ($name) {
             return $value instanceof $name;
         }, ARRAY_FILTER_USE_BOTH))[0] ?? null;
     }
 
     /**
-     * 开启应用调试模式
-     * @access public
+     * 开启应用调试模式.
+     *
      * @param bool $debug 开启应用调试模式
+     *
      * @return $this
      */
     public function debug(bool $debug = true)
     {
         $this->appDebug = $debug;
+
         return $this;
     }
 
     /**
-     * 是否为调试模式
-     * @access public
-     * @return bool
+     * 是否为调试模式.
      */
     public function isDebug(): bool
     {
@@ -271,21 +291,21 @@ class App extends Container
     }
 
     /**
-     * 设置应用命名空间
-     * @access public
+     * 设置应用命名空间.
+     *
      * @param string $namespace 应用命名空间
+     *
      * @return $this
      */
     public function setNamespace(string $namespace)
     {
         $this->namespace = $namespace;
+
         return $this;
     }
 
     /**
-     * 获取应用类库命名空间
-     * @access public
-     * @return string
+     * 获取应用类库命名空间.
      */
     public function getNamespace(): string
     {
@@ -293,33 +313,35 @@ class App extends Container
     }
 
     /**
-     * 设置公共环境变量标识
-     * @access public
+     * 设置公共环境变量标识.
+     *
      * @param string $name 环境标识
+     *
      * @return $this
      */
     public function setBaseEnvName(string $name)
     {
         $this->baseEnvName = $name;
+
         return $this;
     }
 
     /**
-     * 设置环境变量标识
-     * @access public
+     * 设置环境变量标识.
+     *
      * @param string $name 环境标识
+     *
      * @return $this
      */
     public function setEnvName(string $name)
     {
         $this->envName = $name;
+
         return $this;
     }
 
     /**
-     * 获取框架版本
-     * @access public
-     * @return string
+     * 获取框架版本.
      */
     public function version(): string
     {
@@ -327,9 +349,7 @@ class App extends Container
     }
 
     /**
-     * 获取应用根目录
-     * @access public
-     * @return string
+     * 获取应用根目录.
      */
     public function getRootPath(): string
     {
@@ -337,9 +357,7 @@ class App extends Container
     }
 
     /**
-     * 获取应用基础目录
-     * @access public
-     * @return string
+     * 获取应用基础目录.
      */
     public function getBasePath(): string
     {
@@ -347,9 +365,7 @@ class App extends Container
     }
 
     /**
-     * 获取当前应用目录
-     * @access public
-     * @return string
+     * 获取当前应用目录.
      */
     public function getAppPath(): string
     {
@@ -357,7 +373,8 @@ class App extends Container
     }
 
     /**
-     * 设置应用目录
+     * 设置应用目录.
+     *
      * @param string $path 应用目录
      */
     public function setAppPath(string $path)
@@ -366,9 +383,7 @@ class App extends Container
     }
 
     /**
-     * 获取应用运行时目录
-     * @access public
-     * @return string
+     * 获取应用运行时目录.
      */
     public function getRuntimePath(): string
     {
@@ -376,7 +391,8 @@ class App extends Container
     }
 
     /**
-     * 设置runtime目录
+     * 设置runtime目录.
+     *
      * @param string $path 定义目录
      */
     public function setRuntimePath(string $path): void
@@ -385,9 +401,7 @@ class App extends Container
     }
 
     /**
-     * 获取核心框架目录
-     * @access public
-     * @return string
+     * 获取核心框架目录.
      */
     public function getThinkPath(): string
     {
@@ -395,9 +409,7 @@ class App extends Container
     }
 
     /**
-     * 获取应用配置目录
-     * @access public
-     * @return string
+     * 获取应用配置目录.
      */
     public function getConfigPath(): string
     {
@@ -406,8 +418,6 @@ class App extends Container
 
     /**
      * 获取配置后缀
-     * @access public
-     * @return string
      */
     public function getConfigExt(): string
     {
@@ -415,9 +425,7 @@ class App extends Container
     }
 
     /**
-     * 获取应用开启时间
-     * @access public
-     * @return float
+     * 获取应用开启时间.
      */
     public function getBeginTime(): float
     {
@@ -425,9 +433,7 @@ class App extends Container
     }
 
     /**
-     * 获取应用初始内存占用
-     * @access public
-     * @return int
+     * 获取应用初始内存占用.
      */
     public function getBeginMem(): int
     {
@@ -435,10 +441,9 @@ class App extends Container
     }
 
     /**
-     * 加载环境变量定义
-     * @access public
+     * 加载环境变量定义.
+     *
      * @param string $envName 环境标识
-     * @return void
      */
     public function loadEnv(string $envName = ''): void
     {
@@ -451,8 +456,8 @@ class App extends Container
     }
 
     /**
-     * 初始化应用
-     * @access public
+     * 初始化应用.
+     *
      * @return $this
      */
     public function initialize()
@@ -493,7 +498,8 @@ class App extends Container
     }
 
     /**
-     * 是否初始化过
+     * 是否初始化过.
+     *
      * @return bool
      */
     public function initialized()
@@ -502,8 +508,7 @@ class App extends Container
     }
 
     /**
-     * 加载语言包
-     * @return void
+     * 加载语言包.
      */
     public function loadLangPack(): void
     {
@@ -513,9 +518,7 @@ class App extends Container
     }
 
     /**
-     * 引导应用
-     * @access public
-     * @return void
+     * 引导应用.
      */
     public function boot(): void
     {
@@ -525,9 +528,7 @@ class App extends Container
     }
 
     /**
-     * 加载应用文件和配置
-     * @access protected
-     * @return void
+     * 加载应用文件和配置.
      */
     protected function load(): void
     {
@@ -558,8 +559,7 @@ class App extends Container
     }
 
     /**
-     * 加载配置文件
-     * @return void
+     * 加载配置文件.
      */
     public function loadConfig()
     {
@@ -576,9 +576,7 @@ class App extends Container
     }
 
     /**
-     * 调试模式设置
-     * @access protected
-     * @return void
+     * 调试模式设置.
      */
     protected function debugModeInit(): void
     {
@@ -592,7 +590,7 @@ class App extends Container
         }
 
         if (!$this->runningInConsole()) {
-            //重新申请一块比较大的buffer
+            // 重新申请一块比较大的buffer
             if (ob_get_level() > 0) {
                 $output = ob_get_clean();
             }
@@ -604,10 +602,9 @@ class App extends Container
     }
 
     /**
-     * 注册应用事件
-     * @access protected
+     * 注册应用事件.
+     *
      * @param array $event 事件数据
-     * @return void
      */
     public function loadEvent(array $event): void
     {
@@ -621,16 +618,15 @@ class App extends Container
 
         if (isset($event['subscribe'])) {
             $this->event->subscribe($event['subscribe']);
-        }      
+        }
     }
 
     /**
-     * 解析应用类名（支持多模块）
-     * @access public
-     * @param string $layer 层名 controller model ...
-     * @param string $name  类名
+     * 解析应用类名（支持多模块）.
+     *
+     * @param string $layer  层名 controller model ...
+     * @param string $name   类名
      * @param string $module 模块名
-     * @return string
      */
     public function parseClass(string $layer, string $name, ?string $module = ''): string
     {
@@ -639,7 +635,7 @@ class App extends Container
             // 多模块模式
             $layer = $module . $layer;
         } else {
-            $name  = $module . $name;
+            $name = $module . $name;
         }
         $name  = str_replace(['/', '.'], '\\', $name);
         $array = explode('\\', $name);
@@ -650,18 +646,15 @@ class App extends Container
     }
 
     /**
-     * 是否运行在命令行下
-     * @return bool
+     * 是否运行在命令行下.
      */
     public function runningInConsole(): bool
     {
-        return php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg';
+        return 'cli' === php_sapi_name() || 'phpdbg' === php_sapi_name();
     }
 
     /**
-     * 获取应用根目录
-     * @access protected
-     * @return string
+     * 获取应用根目录.
      */
     protected function getDefaultRootPath(): string
     {

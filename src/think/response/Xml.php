@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -18,7 +19,7 @@ use think\Model;
 use think\Response;
 
 /**
- * XML Response
+ * XML Response.
  */
 class Xml extends Response
 {
@@ -28,7 +29,7 @@ class Xml extends Response
         'root_node' => 'think',
         // 根节点属性
         'root_attr' => '',
-        //数字索引的子节点名
+        // 数字索引的子节点名
         'item_node' => 'item',
         // 数字索引子节点key转换的属性名
         'item_key'  => 'id',
@@ -45,9 +46,10 @@ class Xml extends Response
     }
 
     /**
-     * 处理数据
-     * @access protected
-     * @param  mixed $data 要处理的数据
+     * 处理数据.
+     *
+     * @param mixed $data 要处理的数据
+     *
      * @return mixed
      */
     protected function output($data): string
@@ -58,6 +60,7 @@ class Xml extends Response
                 $xml      = "<?xml version=\"1.0\" encoding=\"{$encoding}\"?>";
                 $data     = $xml . $data;
             }
+
             return $data;
         }
 
@@ -67,14 +70,13 @@ class Xml extends Response
 
     /**
      * XML编码
-     * @access protected
-     * @param  mixed $data 数据
-     * @param  string $root 根节点名
-     * @param  string $item 数字索引的子节点名
-     * @param  mixed  $attr 根节点属性
-     * @param  string $id   数字索引子节点key转换的属性名
-     * @param  string $encoding 数据编码
-     * @return string
+     *
+     * @param mixed  $data     数据
+     * @param string $root     根节点名
+     * @param string $item     数字索引的子节点名
+     * @param mixed  $attr     根节点属性
+     * @param string $id       数字索引子节点key转换的属性名
+     * @param string $encoding 数据编码
      */
     protected function xmlEncode($data, string $root, string $item, $attr, string $id, string $encoding): string
     {
@@ -98,11 +100,10 @@ class Xml extends Response
 
     /**
      * 数据XML编码
-     * @access protected
-     * @param  mixed  $data 数据
-     * @param  string $item 数字索引时的节点名称
-     * @param  string $id   数字索引key转换为的属性名
-     * @return string
+     *
+     * @param mixed  $data 数据
+     * @param string $item 数字索引时的节点名称
+     * @param string $id   数字索引key转换为的属性名
      */
     protected function dataToXml($data, string $item, string $id): string
     {

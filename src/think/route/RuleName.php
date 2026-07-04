@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -13,35 +14,37 @@ declare(strict_types=1);
 namespace think\route;
 
 /**
- * 路由标识管理类
+ * 路由标识管理类.
  */
 class RuleName
 {
     /**
-     * 路由标识
+     * 路由标识.
+     *
      * @var array
      */
     protected $item = [];
 
     /**
-     * 路由规则
+     * 路由规则.
+     *
      * @var array
      */
     protected $rule = [];
 
     /**
-     * 路由分组
+     * 路由分组.
+     *
      * @var array
      */
     protected $group = [];
 
     /**
-     * 注册路由标识
-     * @access public
-     * @param  string   $name  路由标识
-     * @param  RuleItem $ruleItem 路由规则
-     * @param  bool     $first 是否优先
-     * @return void
+     * 注册路由标识.
+     *
+     * @param string   $name     路由标识
+     * @param RuleItem $ruleItem 路由规则
+     * @param bool     $first    是否优先
      */
     public function setName(string $name, RuleItem $ruleItem, bool $first = false): void
     {
@@ -55,11 +58,10 @@ class RuleName
     }
 
     /**
-     * 注册路由分组标识
-     * @access public
-     * @param  string    $name  路由分组标识
-     * @param  RuleGroup $group 路由分组
-     * @return void
+     * 注册路由分组标识.
+     *
+     * @param string    $name  路由分组标识
+     * @param RuleGroup $group 路由分组
      */
     public function setGroup(string $name, RuleGroup $group): void
     {
@@ -67,11 +69,10 @@ class RuleName
     }
 
     /**
-     * 注册路由规则
-     * @access public
-     * @param  string   $rule  路由规则
-     * @param  RuleItem $ruleItem 路由
-     * @return void
+     * 注册路由规则.
+     *
+     * @param string   $rule     路由规则
+     * @param RuleItem $ruleItem 路由
      */
     public function setRule(string $rule, RuleItem $ruleItem): void
     {
@@ -85,9 +86,10 @@ class RuleName
     }
 
     /**
-     * 根据路由规则获取路由对象（列表）
-     * @access public
-     * @param  string $rule   路由标识
+     * 根据路由规则获取路由对象（列表）.
+     *
+     * @param string $rule 路由标识
+     *
      * @return RuleItem[]
      */
     public function getRule(string $rule): array
@@ -96,10 +98,9 @@ class RuleName
     }
 
     /**
-     * 根据路由分组标识获取分组
-     * @access public
-     * @param  string $name 路由分组标识
-     * @return RuleGroup|null
+     * 根据路由分组标识获取分组.
+     *
+     * @param string $name 路由分组标识
      */
     public function getGroup(string $name): ?RuleGroup
     {
@@ -107,32 +108,27 @@ class RuleName
     }
 
     /**
-     * 是否已经存在分组
-     * @access public
-     * @param  string $name 路由分组标识
-     * @return bool
+     * 是否已经存在分组.
+     *
+     * @param string $name 路由分组标识
      */
-    public function hasGroup(string $name): bool 
+    public function hasGroup(string $name): bool
     {
         return isset($this->group[strtolower($name)]);
     }
 
     /**
-     * 清空路由规则
-     * @access public
-     * @return void
+     * 清空路由规则.
      */
     public function clear(): void
     {
-        $this->item = [];
-        $this->rule = [];
+        $this->item  = [];
+        $this->rule  = [];
         $this->group = [];
     }
 
     /**
-     * 获取全部路由列表
-     * @access public
-     * @return array
+     * 获取全部路由列表.
      */
     public function getRuleList(): array
     {
@@ -144,9 +140,9 @@ class RuleName
                 foreach (['method', 'rule', 'name', 'route', 'domain', 'pattern', 'option'] as $param) {
                     $call = 'get' . $param;
                     if ('rule' == $param) {
-                        $val[$param] = $item->$call() ?: '/';
+                        $val[$param] = $item->{$call}() ?: '/';
                     } else {
-                        $val[$param] = $item->$call();
+                        $val[$param] = $item->{$call}();
                     }
                 }
 
@@ -162,10 +158,9 @@ class RuleName
     }
 
     /**
-     * 导入路由标识
-     * @access public
-     * @param  array $item 路由标识
-     * @return void
+     * 导入路由标识.
+     *
+     * @param array $item 路由标识
      */
     public function import(array $item): void
     {
@@ -173,12 +168,11 @@ class RuleName
     }
 
     /**
-     * 根据路由标识获取路由信息（用于URL生成）
-     * @access public
-     * @param  string $name   路由标识
-     * @param  string $domain 域名
-     * @param  string $method 请求类型
-     * @return array
+     * 根据路由标识获取路由信息（用于URL生成）.
+     *
+     * @param string $name   路由标识
+     * @param string $domain 域名
+     * @param string $method 请求类型
      */
     public function getName(?string $name = null, ?string $domain = null, string $method = '*'): array
     {
@@ -209,10 +203,9 @@ class RuleName
     }
 
     /**
-     * 获取路由信息
-     * @access protected
-     * @param  RuleItem $item 路由规则
-     * @return array
+     * 获取路由信息.
+     *
+     * @param RuleItem $item 路由规则
      */
     protected function getRuleItemInfo(RuleItem $item): array
     {

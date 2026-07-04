@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\cache;
 
@@ -24,64 +25,68 @@ use think\exception\InvalidCacheException;
 use Throwable;
 
 /**
- * 缓存基础类
+ * 缓存基础类.
  */
 abstract class Driver implements CacheHandlerInterface
 {
     /**
-     * 驱动句柄
+     * 驱动句柄.
+     *
      * @var object
      */
-    protected $handler = null;
+    protected $handler;
 
     /**
-     * 缓存读取次数
+     * 缓存读取次数.
+     *
      * @var int
      */
     protected $readTimes = 0;
 
     /**
-     * 缓存写入次数
+     * 缓存写入次数.
+     *
      * @var int
      */
     protected $writeTimes = 0;
 
     /**
-     * 缓存参数
+     * 缓存参数.
+     *
      * @var array
      */
     protected $options = [];
 
     /**
-     * 缓存标签
+     * 缓存标签.
+     *
      * @var array
      */
     protected $tag = [];
 
     /**
      * 获取有效期
-     * @access protected
-     * @param int|DateInterval|DateTimeInterface $expire 有效期
-     * @return int
+     *
+     * @param DateInterval|DateTimeInterface|int $expire 有效期
      */
-    protected function getExpireTime(int | DateInterval | DateTimeInterface $expire): int
+    protected function getExpireTime(DateInterval|DateTimeInterface|int $expire): int
     {
         if ($expire instanceof DateTimeInterface) {
             $expire = $expire->getTimestamp() - time();
         } elseif ($expire instanceof DateInterval) {
             $expire = DateTime::createFromFormat('U', (string) time())
                 ->add($expire)
-                ->format('U') - time();
+                ->format('U') - time()
+            ;
         }
 
         return $expire;
     }
 
     /**
-     * 获取实际的缓存标识
-     * @access public
+     * 获取实际的缓存标识.
+     *
      * @param string $name 缓存名
-     * @return string
      */
     public function getCacheKey(string $name): string
     {
@@ -89,10 +94,11 @@ abstract class Driver implements CacheHandlerInterface
     }
 
     /**
-     * 读取缓存并删除
-     * @access public
-     * @param string $name 缓存变量名
+     * 读取缓存并删除.
+     *
+     * @param string $name    缓存变量名
      * @param mixed  $default 默认值
+     *
      * @return mixed
      */
     public function pull($name, $default = null)
@@ -100,17 +106,18 @@ abstract class Driver implements CacheHandlerInterface
         if ($this->has($name)) {
             $result = $this->get($name, $default);
             $this->delete($name);
+
             return $result;
         }
+
         return $this->getDefaultValue($name, $default);
     }
 
     /**
-     * 追加（数组）缓存
-     * @access public
+     * 追加（数组）缓存.
+     *
      * @param string $name  缓存变量名
      * @param mixed  $value 存储数据
-     * @return void
      */
     public function push($name, $value): void
     {
@@ -132,11 +139,10 @@ abstract class Driver implements CacheHandlerInterface
     }
 
     /**
-     * 追加TagSet数据
-     * @access public
+     * 追加TagSet数据.
+     *
      * @param string $name  缓存变量名
      * @param mixed  $value 存储数据
-     * @return void
      */
     public function append($name, $value): void
     {
@@ -144,11 +150,12 @@ abstract class Driver implements CacheHandlerInterface
     }
 
     /**
-     * 如果不存在则写入缓存
-     * @access public
+     * 如果不存在则写入缓存.
+     *
      * @param string                             $name   缓存变量名
      * @param mixed                              $value  存储数据
-     * @param int|DateInterval|DateTimeInterface $expire 有效时间 0为永久
+     * @param DateInterval|DateTimeInterface|int $expire 有效时间 0为永久
+     *
      * @return mixed
      */
     public function remember($name, $value, $expire = null)
@@ -180,8 +187,9 @@ abstract class Driver implements CacheHandlerInterface
 
             // 解锁
             $this->delete($name . '_lock');
-        } catch (Exception | Throwable $e) {
+        } catch (Exception|Throwable $e) {
             $this->delete($name . '_lock');
+
             throw $e;
         }
 
@@ -189,9 +197,10 @@ abstract class Driver implements CacheHandlerInterface
     }
 
     /**
-     * 缓存标签
-     * @access public
-     * @param string|array $name 标签名
+     * 缓存标签.
+     *
+     * @param array|string $name 标签名
+     *
      * @return TagSet
      */
     public function tag($name)
@@ -207,22 +216,21 @@ abstract class Driver implements CacheHandlerInterface
     }
 
     /**
-     * 获取标签包含的缓存标识
-     * @access public
+     * 获取标签包含的缓存标识.
+     *
      * @param string $tag 标签标识
-     * @return array
      */
     public function getTagItems(string $tag): array
     {
         $name = $this->getTagKey($tag);
+
         return $this->get($name, []);
     }
 
     /**
-     * 获取实际标签名
-     * @access public
+     * 获取实际标签名.
+     *
      * @param string $tag 标签名
-     * @return string
      */
     public function getTagKey(string $tag): string
     {
@@ -230,9 +238,10 @@ abstract class Driver implements CacheHandlerInterface
     }
 
     /**
-     * 序列化数据
-     * @access protected
+     * 序列化数据.
+     *
      * @param mixed $data 缓存数据
+     *
      * @return string
      */
     protected function serialize($data)
@@ -241,15 +250,16 @@ abstract class Driver implements CacheHandlerInterface
             return $data;
         }
 
-        $serialize = $this->options['serialize'][0] ?? "serialize";
+        $serialize = $this->options['serialize'][0] ?? 'serialize';
 
         return $serialize($data);
     }
 
     /**
-     * 反序列化数据
-     * @access protected
+     * 反序列化数据.
+     *
      * @param string $data 缓存数据
+     *
      * @return mixed
      */
     protected function unserialize($data)
@@ -257,25 +267,27 @@ abstract class Driver implements CacheHandlerInterface
         if (is_numeric($data)) {
             return $data;
         }
+
         try {
-            $unserialize = $this->options['serialize'][1] ?? "unserialize";
+            $unserialize = $this->options['serialize'][1] ?? 'unserialize';
             $content     = $unserialize($data);
             if (is_null($content)) {
-                throw new InvalidCacheException;
-            } else {
-                return $content;
+                throw new InvalidCacheException();
             }
-        } catch (Exception | Throwable $e) {
-            throw new InvalidCacheException;
+
+            return $content;
+        } catch (Exception|Throwable $e) {
+            throw new InvalidCacheException();
         }
     }
 
     /**
      * 获取默认值
-     * @access protected
-     * @param string $name 缓存标识
-     * @param mixed $default 默认值
-     * @param bool $fail 是否有异常
+     *
+     * @param string $name    缓存标识
+     * @param mixed  $default 默认值
+     * @param bool   $fail    是否有异常
+     *
      * @return mixed
      */
     protected function getDefaultValue($name, $default, $fail = false)
@@ -283,13 +295,13 @@ abstract class Driver implements CacheHandlerInterface
         if ($fail && $this->options['fail_delete']) {
             $this->delete($name);
         }
+
         return $default instanceof Closure ? $default() : $default;
     }
 
     /**
-     * 返回句柄对象，可执行其它高级方法
+     * 返回句柄对象，可执行其它高级方法.
      *
-     * @access public
      * @return object
      */
     public function handler()
@@ -298,10 +310,9 @@ abstract class Driver implements CacheHandlerInterface
     }
 
     /**
-     * 返回缓存读取次数
-     * @return int
+     * 返回缓存读取次数.
+     *
      * @deprecated
-     * @access public
      */
     public function getReadTimes(): int
     {
@@ -309,10 +320,9 @@ abstract class Driver implements CacheHandlerInterface
     }
 
     /**
-     * 返回缓存写入次数
-     * @return int
+     * 返回缓存写入次数.
+     *
      * @deprecated
-     * @access public
      */
     public function getWriteTimes(): int
     {
@@ -320,11 +330,11 @@ abstract class Driver implements CacheHandlerInterface
     }
 
     /**
-     * 读取缓存
-     * @access public
+     * 读取缓存.
+     *
      * @param iterable $keys    缓存变量名
      * @param mixed    $default 默认值
-     * @return iterable
+     *
      * @throws InvalidArgumentException
      */
     public function getMultiple($keys, $default = null): iterable
@@ -339,11 +349,10 @@ abstract class Driver implements CacheHandlerInterface
     }
 
     /**
-     * 写入缓存
-     * @access public
-     * @param iterable                                 $values 缓存数据
-     * @param null|int|\DateInterval|DateTimeInterface $ttl    有效时间 0为永久
-     * @return bool
+     * 写入缓存.
+     *
+     * @param iterable                                $values 缓存数据
+     * @param null|DateInterval|DateTimeInterface|int $ttl    有效时间 0为永久
      */
     public function setMultiple($values, $ttl = null): bool
     {
@@ -359,10 +368,10 @@ abstract class Driver implements CacheHandlerInterface
     }
 
     /**
-     * 删除缓存
-     * @access public
+     * 删除缓存.
+     *
      * @param iterable $keys 缓存变量名
-     * @return bool
+     *
      * @throws InvalidArgumentException
      */
     public function deleteMultiple($keys): bool

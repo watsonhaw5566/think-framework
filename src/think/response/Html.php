@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -16,12 +17,13 @@ use think\Cookie;
 use think\Response;
 
 /**
- * Html Response
+ * Html Response.
  */
 class Html extends Response
 {
     /**
-     * 输出type
+     * 输出type.
+     *
      * @var string
      */
     protected $contentType = 'text/html';

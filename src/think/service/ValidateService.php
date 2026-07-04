@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -16,7 +17,7 @@ use think\Service;
 use think\Validate;
 
 /**
- * 验证服务类
+ * 验证服务类.
  */
 class ValidateService extends Service
 {

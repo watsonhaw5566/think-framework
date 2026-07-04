@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -11,13 +12,13 @@
 
 namespace think\console\output\descriptor;
 
+use InvalidArgumentException;
 use think\Console as ThinkConsole;
 use think\console\Command;
 
 class Console
 {
-
-    const GLOBAL_NAMESPACE = '_global';
+    public const GLOBAL_NAMESPACE = '_global';
 
     /**
      * @var ThinkConsole
@@ -45,9 +46,9 @@ class Console
     private $aliases;
 
     /**
-     * 构造方法
-     * @param ThinkConsole $console
-     * @param string|null  $namespace
+     * 构造方法.
+     *
+     * @param null|string $namespace
      */
     public function __construct(ThinkConsole $console, $namespace = null)
     {
@@ -55,9 +56,6 @@ class Console
         $this->namespace = $namespace;
     }
 
-    /**
-     * @return array
-     */
     public function getNamespaces(): array
     {
         if (null === $this->namespaces) {
@@ -80,14 +78,12 @@ class Console
     }
 
     /**
-     * @param string $name
-     * @return Command
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function getCommand(string $name): Command
     {
         if (!isset($this->commands[$name]) && !isset($this->aliases[$name])) {
-            throw new \InvalidArgumentException(sprintf('Command %s does not exist.', $name));
+            throw new InvalidArgumentException(sprintf('Command %s does not exist.', $name));
         }
 
         return $this->commands[$name] ?? $this->aliases[$name];
@@ -125,10 +121,6 @@ class Console
         }
     }
 
-    /**
-     * @param array $commands
-     * @return array
-     */
     private function sortCommands(array $commands): array
     {
         $namespacedCommands = [];

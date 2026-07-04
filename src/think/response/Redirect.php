@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -18,11 +19,10 @@ use think\Response;
 use think\Session;
 
 /**
- * Redirect Response
+ * Redirect Response.
  */
 class Redirect extends Response
 {
-
     protected $request;
 
     public function __construct(Cookie $cookie, Request $request, Session $session, $data = '', int $code = 302)
@@ -39,14 +39,14 @@ class Redirect extends Response
     public function data($data)
     {
         $this->header['Location'] = $data;
+
         return parent::data($data);
     }
 
     /**
-     * 处理数据
-     * @access protected
-     * @param  mixed $data 要处理的数据
-     * @return string
+     * 处理数据.
+     *
+     * @param mixed $data 要处理的数据
      */
     protected function output($data): string
     {
@@ -54,10 +54,11 @@ class Redirect extends Response
     }
 
     /**
-     * 重定向传值（通过Session）
-     * @access protected
-     * @param  string|array  $name 变量名或者数组
-     * @param  mixed         $value 值
+     * 重定向传值（通过Session）.
+     *
+     * @param array|string $name  变量名或者数组
+     * @param mixed        $value 值
+     *
      * @return $this
      */
     public function with($name, $value = null)
@@ -74,8 +75,10 @@ class Redirect extends Response
     }
 
     /**
-     * 记住当前url后跳转
-     * @access public
+     * 记住当前url后跳转.
+     *
+     * @param mixed $complete
+     *
      * @return $this
      */
     public function remember($complete = false)
@@ -86,8 +89,8 @@ class Redirect extends Response
     }
 
     /**
-     * 跳转到上次记住的url
-     * @access public
+     * 跳转到上次记住的url.
+     *
      * @return $this
      */
     public function restore()

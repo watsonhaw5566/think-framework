@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -13,8 +14,6 @@ declare(strict_types=1);
 namespace think\event;
 
 /**
- * 路由加载完成事件
+ * 路由加载完成事件.
  */
-class RouteLoaded
-{
-}
+class RouteLoaded {}

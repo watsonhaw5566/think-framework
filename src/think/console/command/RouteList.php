@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,8 +9,10 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command;
 
+use Closure;
 use DirectoryIterator;
 use think\console\Command;
 use think\console\Input;
@@ -32,10 +35,11 @@ class RouteList extends Command
     protected function configure()
     {
         $this->setName('route:list')
-            ->addArgument('style', Argument::OPTIONAL, "the style of the table.", 'default')
+            ->addArgument('style', Argument::OPTIONAL, 'the style of the table.', 'default')
             ->addOption('sort', 's', Option::VALUE_OPTIONAL, 'order by rule name.', 0)
             ->addOption('more', 'm', Option::VALUE_NONE, 'show route options.')
-            ->setDescription('show route list.');
+            ->setDescription('show route list.')
+        ;
     }
 
     protected function execute(Input $input, Output $output)
@@ -60,10 +64,10 @@ class RouteList extends Command
                 continue;
             }
 
-            if ($fileinfo->getType() == 'file' && $fileinfo->getExtension() == 'php') {
+            if ('file' == $fileinfo->getType() && 'php' == $fileinfo->getExtension()) {
                 $groupName = str_replace('\\', '/', substr_replace($fileinfo->getPath(), '', 0, strlen($root)));
                 if ($groupName) {
-                    $this->app->route->group($groupName, function()  use ($fileinfo) {
+                    $this->app->route->group($groupName, function () use ($fileinfo) {
                         include $fileinfo->getRealPath();
                     });
                 } else {
@@ -84,7 +88,7 @@ class RouteList extends Command
 
         $this->scanRoute($path, $path, $autoGroup);
 
-        //触发路由载入完成事件
+        // 触发路由载入完成事件
         $this->app->event->trigger(RouteLoaded::class);
 
         $table = new Table();
@@ -102,9 +106,9 @@ class RouteList extends Command
 
         foreach ($routeList as $item) {
             if (is_array($item['route'])) {
-                $item['route'] = '[' . $item['route'][0] .' , ' . $item['route'][1] . ']';
+                $item['route'] = '[' . $item['route'][0] . ' , ' . $item['route'][1] . ']';
             } else {
-                $item['route'] = $item['route'] instanceof \Closure ? '<Closure>' : $item['route'];
+                $item['route'] = $item['route'] instanceof Closure ? '<Closure>' : $item['route'];
             }
             $row = [$item['rule'], $item['route'], $item['method'], $item['name']];
 
@@ -124,6 +128,7 @@ class RouteList extends Command
             uasort($rows, function ($a, $b) use ($sort) {
                 $itemA = $a[$sort] ?? null;
                 $itemB = $b[$sort] ?? null;
+
                 return strcasecmp($itemA, $itemB);
             });
         }
@@ -137,5 +142,4 @@ class RouteList extends Command
 
         return $this->table($table);
     }
-
 }

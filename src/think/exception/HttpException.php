@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,16 +9,17 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace think\exception;
 
 use Exception;
+use RuntimeException;
 
 /**
- * HTTP异常
+ * HTTP异常.
  */
-class HttpException extends \RuntimeException
+class HttpException extends RuntimeException
 {
     public function __construct(private int $statusCode, string $message = '', ?Exception $previous = null, private array $headers = [], $code = 0)
     {

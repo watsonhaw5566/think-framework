@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -15,15 +16,13 @@ namespace think\log;
 use think\Log;
 
 /**
- * Class ChannelSet
- * @package think\log
+ * Class ChannelSet.
+ *
  * @mixin Channel
  */
 class ChannelSet
 {
-    public function __construct(protected Log $log, protected array $channels)
-    {
-    }
+    public function __construct(protected Log $log, protected array $channels) {}
 
     public function __call($method, $arguments)
     {
