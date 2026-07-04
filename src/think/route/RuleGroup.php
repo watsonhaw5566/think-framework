@@ -377,6 +377,7 @@ class RuleGroup extends Rule
 
         if ($result) {
             $var = [];
+            $pos = null;
             foreach ($match as $key => $val) {
                 if (is_string($key) && '' !== $val) {
                     [$name, $pos] = explode('_THINK_', $key);
@@ -385,7 +386,7 @@ class RuleGroup extends Rule
                 }
             }
 
-            if (!isset($pos)) {
+            if (null === $pos) {
                 foreach ($regex as $key => $item) {
                     if (str_starts_with(str_replace(['\/', '\-', '\\' . $depr], ['/', '-', $depr], $item), $match[0])) {
                         $pos = $key;

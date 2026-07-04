@@ -62,13 +62,13 @@ if (!function_exists('app')) {
     /**
      * 快速获取容器中的实例 支持依赖注入.
      *
-     * @template T
+     * @template T of object
      *
      * @param class-string<T>|string $name        类名或标识 默认获取当前应用实例
      * @param array                  $args        参数
      * @param bool                   $newInstance 是否每次创建新的实例
      *
-     * @return App|object|T
+     * @return ($name is class-string<T> ? T : App|object)
      */
     function app(string $name = '', array $args = [], bool $newInstance = false)
     {
@@ -171,7 +171,7 @@ if (!function_exists('cookie')) {
             return str_starts_with($name, '?') ? Cookie::has(substr($name, 1)) : Cookie::get($name);
         } else {
             // 设置
-            return Cookie::set($name, $value, $option);
+            Cookie::set($name, $value, $option);
         }
     }
 }

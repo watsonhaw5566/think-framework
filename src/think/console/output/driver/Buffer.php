@@ -20,9 +20,8 @@ class Buffer
     /** @var string */
     private $buffer = '';
 
-    public function __construct(Output $output)
+    public function __construct(private ?Output $output = null)
     {
-        // do nothing
     }
 
     public function fetch()

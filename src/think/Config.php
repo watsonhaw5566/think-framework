@@ -44,7 +44,7 @@ class Config
         $path = $app->getConfigPath();
         $ext  = $app->getConfigExt();
 
-        return new static($path, $ext);
+        return new self($path, $ext);
     }
 
     /**

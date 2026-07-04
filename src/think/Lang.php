@@ -74,7 +74,7 @@ class Lang
 
     public static function __make(App $app, Config $config)
     {
-        return new static($app, $config->get('lang'));
+        return new self($app, $config->get('lang'));
     }
 
     /** 获取当前语言配置. */
