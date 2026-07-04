@@ -68,6 +68,8 @@ class Request implements ArrayAccess
     protected $get        = [];
     protected $post       = [];
     protected $put        = [];
+    protected $delete     = [];
+    protected $patch      = [];
     protected $request    = [];
     protected $cookie     = [];
     protected $server     = [];
@@ -95,7 +97,7 @@ class Request implements ArrayAccess
 
     public static function __make(App $app)
     {
-        $request = new static();
+        $request = new self();
         if (function_exists('apache_request_headers') && $result = apache_request_headers()) {
             $header = $result;
         } else {
@@ -123,7 +125,7 @@ class Request implements ArrayAccess
         $request->put     = $inputData;
         $request->request = $_REQUEST;
         $request->cookie  = $_COOKIE;
-        $request->file    = $_FILES ?? [];
+        $request->file    = $_FILES;
 
         return $request;
     }

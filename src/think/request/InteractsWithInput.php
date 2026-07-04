@@ -9,7 +9,7 @@ namespace think\request;
 
 use think\file\UploadedFile;
 use think\File;
-use think\Lang;
+use think\facade\Lang;
 use think\Exception;
 use InvalidArgumentException;
 
