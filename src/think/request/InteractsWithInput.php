@@ -393,7 +393,7 @@ trait InteractsWithInput
             }
         }
 
-        return ($checkEmpty && '' === $param) ? false : true;
+        return !(($checkEmpty && '' === $param));
     }
 
     public function only(array $name, $data = 'param', array|string|null $filter = ''): array
