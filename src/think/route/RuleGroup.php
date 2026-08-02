@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,12 +9,11 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\route;
 
 use Closure;
-use DirectoryIterator;
 use think\Container;
 use think\Exception;
 use think\helper\Str;
@@ -90,7 +90,7 @@ class RuleGroup extends Rule
                 $this->dispatcher($rule);
                 $this->rule = '';
             } else {
-                $this->sub  =  $rule ?: $this->name;
+                $this->sub = $rule ?: $this->name;
             }
         }
 
@@ -120,7 +120,7 @@ class RuleGroup extends Rule
         if ($this->parent && $this->parent->getFullName()) {
             $this->fullName = $this->parent->getFullName() . ($this->name ? '/' . $this->name : '');
             if ($this->sub) {
-                $this->sub  = $this->parent->getFullName() . '/' . $this->sub;
+                $this->sub = $this->parent->getFullName() . '/' . $this->sub;
             }
         } else {
             $this->fullName = $this->name;
@@ -250,7 +250,7 @@ class RuleGroup extends Rule
         $url = str_replace('|', '/', $url);
         if (!$this->config('url_route_must')) {
             $item = $this->router->getRuleName()->getName($url);
-            if (!empty($item) && $item[0]['rule'] != $url){
+            if (!empty($item) && $item[0]['rule'] != $url) {
                 // 定义过路由地址的 不支持访问
                 return false;
             }
@@ -362,6 +362,7 @@ class RuleGroup extends Rule
                 }
             } elseif ($item instanceof RuleGroup) {
                 $array = $item->getrules();
+
                 return $this->checkMergeRuleRegex($request, $array, ltrim($url, $depr), $completeMatch);
             }
         }
@@ -445,6 +446,7 @@ class RuleGroup extends Rule
         } elseif (isset($this->miss['*'])) {
             $miss = $this->miss['*'];
         }
+
         return $miss ?? null;
     }
 
@@ -478,6 +480,7 @@ class RuleGroup extends Rule
         if ($prefix) {
             $this->prefix('\\' . $class . '@');
         }
+
         return $this;
     }
 
@@ -494,6 +497,7 @@ class RuleGroup extends Rule
         if ($prefix) {
             $this->prefix($controller . '/');
         }
+
         return $this;
     }
 
@@ -510,6 +514,7 @@ class RuleGroup extends Rule
         if ($prefix) {
             $this->prefix($namespace . '\\');
         }
+
         return $this;
     }
 
@@ -526,6 +531,7 @@ class RuleGroup extends Rule
         if ($prefix) {
             $this->prefix('app\\'. $name . '\\controller\\');
         }
+
         return $this;
     }
 
@@ -542,6 +548,7 @@ class RuleGroup extends Rule
         if ($prefix) {
             $this->prefix($layer . '/');
         }
+
         return $this;
     }
 
@@ -569,10 +576,10 @@ class RuleGroup extends Rule
         [$bind, $param] = $this->parseBindAppendParam($this->bind);
 
         [$call, $bind] = match (substr($bind, 0, 1)) {
-            '\\' => ['bindToClass', substr($bind, 1)],
-            '@' => ['bindToController', substr($bind, 1)],
-            '/' => ['bindToLayer', substr($bind, 1)],
-            ':' => ['bindToNamespace', substr($bind, 1)],
+            '\\'    => ['bindToClass', substr($bind, 1)],
+            '@'     => ['bindToController', substr($bind, 1)],
+            '/'     => ['bindToLayer', substr($bind, 1)],
+            ':'     => ['bindToNamespace', substr($bind, 1)],
             default => ['bindToClass', $bind],
         };
 
@@ -589,6 +596,7 @@ class RuleGroup extends Rule
             [$bind, $query] = explode('?', $bind);
             parse_str($query, $vars);
         }
+
         return [$bind, $vars];
     }
 
@@ -721,6 +729,7 @@ class RuleGroup extends Rule
     public function addRuleItem(Rule $rule)
     {
         $this->rules[] = $rule;
+
         return $this;
     }
 
@@ -785,6 +794,7 @@ class RuleGroup extends Rule
 
         return array_filter($this->rules, function ($item) use ($method) {
             $ruleMethod = $item->getMethod();
+
             return '*' == $ruleMethod || str_contains($ruleMethod, $method);
         });
     }

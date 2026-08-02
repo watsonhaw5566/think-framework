@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -11,9 +12,14 @@
 
 namespace think\console\output;
 
+use Closure;
+use Countable;
+use InvalidArgumentException;
+use LogicException;
+use Traversable;
+
 class Question
 {
-
     private $question;
     private $attempts;
     private $hidden         = false;
@@ -69,7 +75,7 @@ class Question
     public function setHidden($hidden)
     {
         if ($this->autocompleterValues) {
-            throw new \LogicException('A hidden question cannot use the autocompleter.');
+            throw new LogicException('A hidden question cannot use the autocompleter.');
         }
 
         $this->hidden = (bool) $hidden;
@@ -100,7 +106,7 @@ class Question
 
     /**
      * 获取自动完成
-     * @return null|array|\Traversable
+     * @return null|array|Traversable
      */
     public function getAutocompleterValues()
     {
@@ -109,10 +115,10 @@ class Question
 
     /**
      * 设置自动完成的值
-     * @param null|array|\Traversable $values
+     * @param null|array|Traversable $values
      * @return Question
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
+     * @throws InvalidArgumentException
+     * @throws LogicException
      */
     public function setAutocompleterValues($values)
     {
@@ -121,13 +127,13 @@ class Question
         }
 
         if (null !== $values && !is_array($values)) {
-            if (!$values instanceof \Traversable || $values instanceof \Countable) {
-                throw new \InvalidArgumentException('Autocompleter values can be either an array, `null` or an object implementing both `Countable` and `Traversable` interfaces.');
+            if (!$values instanceof Traversable || $values instanceof Countable) {
+                throw new InvalidArgumentException('Autocompleter values can be either an array, `null` or an object implementing both `Countable` and `Traversable` interfaces.');
             }
         }
 
         if ($this->hidden) {
-            throw new \LogicException('A hidden question cannot use the autocompleter.');
+            throw new LogicException('A hidden question cannot use the autocompleter.');
         }
 
         $this->autocompleterValues = $values;
@@ -160,12 +166,12 @@ class Question
      * 设置最大重试次数
      * @param null|int $attempts
      * @return Question
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function setMaxAttempts($attempts)
     {
         if (null !== $attempts && $attempts < 1) {
-            throw new \InvalidArgumentException('Maximum number of attempts must be a positive value.');
+            throw new InvalidArgumentException('Maximum number of attempts must be a positive value.');
         }
 
         $this->attempts = $attempts;
@@ -184,7 +190,7 @@ class Question
 
     /**
      * 设置响应的回调
-     * @param string|\Closure $normalizer
+     * @param string|Closure $normalizer
      * @return Question
      */
     public function setNormalizer($normalizer)
@@ -197,7 +203,7 @@ class Question
     /**
      * 获取响应回调
      * The normalizer can ba a callable (a string), a closure or a class implementing __invoke.
-     * @return string|\Closure
+     * @return string|Closure
      */
     public function getNormalizer()
     {

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -74,6 +75,7 @@ class View extends Response
     public function isContent(bool $content = true)
     {
         $this->isContent = $content;
+
         return $this;
     }
 
@@ -87,6 +89,7 @@ class View extends Response
     {
         // 渲染模板输出
         $this->view->filter($this->filter);
+
         return $this->isContent ?
             $this->view->display($data, $this->vars) :
             $this->view->fetch($data, $this->vars);
@@ -134,6 +137,7 @@ class View extends Response
     public function filter(?callable $filter = null)
     {
         $this->filter = $filter;
+
         return $this;
     }
 

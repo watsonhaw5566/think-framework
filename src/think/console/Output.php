@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\console;
 
@@ -43,19 +44,19 @@ use Throwable;
 class Output
 {
     // 不显示信息(静默)
-    const VERBOSITY_QUIET        = 0;
+    public const VERBOSITY_QUIET = 0;
     // 正常信息
-    const VERBOSITY_NORMAL       = 1;
+    public const VERBOSITY_NORMAL = 1;
     // 详细信息
-    const VERBOSITY_VERBOSE      = 2;
+    public const VERBOSITY_VERBOSE = 2;
     // 非常详细的信息
-    const VERBOSITY_VERY_VERBOSE = 3;
+    public const VERBOSITY_VERY_VERBOSE = 3;
     // 调试信息
-    const VERBOSITY_DEBUG        = 4;
+    public const VERBOSITY_DEBUG = 4;
 
-    const OUTPUT_NORMAL = 0;
-    const OUTPUT_RAW    = 1;
-    const OUTPUT_PLAIN  = 2;
+    public const OUTPUT_NORMAL = 0;
+    public const OUTPUT_RAW    = 1;
+    public const OUTPUT_PLAIN  = 2;
 
     // 输出信息级别
     private $verbosity = self::VERBOSITY_NORMAL;
@@ -219,6 +220,7 @@ class Output
     {
         if (in_array($method, $this->styles)) {
             array_unshift($args, $method);
+
             return call_user_func_array([$this, 'block'], $args);
         }
 

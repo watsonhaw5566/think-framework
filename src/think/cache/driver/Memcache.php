@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\cache\driver;
 
@@ -16,6 +17,7 @@ use DateInterval;
 use DateTimeInterface;
 use think\cache\Driver;
 use think\exception\InvalidCacheException;
+use BadFunctionCallException;
 
 /**
  * Memcache缓存类
@@ -42,19 +44,19 @@ class Memcache extends Driver
      * 架构函数
      * @access public
      * @param array $options 缓存参数
-     * @throws \BadFunctionCallException
+     * @throws BadFunctionCallException
      */
     public function __construct(array $options = [])
     {
         if (!extension_loaded('memcache')) {
-            throw new \BadFunctionCallException('not support: memcache');
+            throw new BadFunctionCallException('not support: memcache');
         }
 
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
         }
 
-        $this->handler = new \Memcache;
+        $this->handler = new \Memcache();
 
         // 支持集群
         $hosts = (array) $this->options['host'];

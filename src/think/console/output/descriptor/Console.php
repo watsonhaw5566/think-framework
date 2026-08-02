@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -13,11 +14,11 @@ namespace think\console\output\descriptor;
 
 use think\Console as ThinkConsole;
 use think\console\Command;
+use InvalidArgumentException;
 
 class Console
 {
-
-    const GLOBAL_NAMESPACE = '_global';
+    public const GLOBAL_NAMESPACE = '_global';
 
     /**
      * @var ThinkConsole
@@ -82,12 +83,12 @@ class Console
     /**
      * @param string $name
      * @return Command
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function getCommand(string $name): Command
     {
         if (!isset($this->commands[$name]) && !isset($this->aliases[$name])) {
-            throw new \InvalidArgumentException(sprintf('Command %s does not exist.', $name));
+            throw new InvalidArgumentException(sprintf('Command %s does not exist.', $name));
         }
 
         return $this->commands[$name] ?? $this->aliases[$name];

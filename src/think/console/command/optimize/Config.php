@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command\optimize;
 
 use InvalidArgumentException;
@@ -34,6 +36,7 @@ class Config extends Command
 
         foreach ($dirs as $dir) {
             $path = $this->app->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . ($dir ? $dir . DIRECTORY_SEPARATOR : '');
+
             try {
                 $cache = $this->buildCache($dir);
                 if (! is_dir($path)) {
@@ -78,6 +81,7 @@ class Config extends Command
         if ($this->isInstalledMultiApp()) {
             $dirs = array_merge($dirs, $this->discoveryMultiAppDirs('config'));
         }
+
         return $dirs;
     }
 }

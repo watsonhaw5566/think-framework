@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,13 +9,14 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\log\driver;
 
 use think\App;
 use think\contract\LogHandlerInterface;
 use think\event\LogRecord;
+use Exception;
 
 /**
  * 本地化调试输出到文件
@@ -131,14 +133,14 @@ class File implements LogHandlerInterface
 
             try {
                 if (count($files) > $this->config['max_files']) {
-                    set_error_handler(fn() => null);
-                    usort($files, function($a, $b) {
+                    set_error_handler(fn () => null);
+                    usort($files, function ($a, $b) {
                         return filemtime($a) - filemtime($b);
                     });
                     unlink($files[0]);
                     restore_error_handler();
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 //
             }
         }
@@ -194,7 +196,7 @@ class File implements LogHandlerInterface
         if (is_file($destination) && floor($this->config['file_size']) <= filesize($destination)) {
             try {
                 rename($destination, dirname($destination) . DIRECTORY_SEPARATOR . basename($destination, '.log') . '-' . time() . '.log');
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 //
             }
         }

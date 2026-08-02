@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,27 +9,18 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\output;
 
 use think\console\output\formatter\Stack as StyleStack;
 use think\console\output\formatter\Style;
+use InvalidArgumentException;
 
 class Formatter
 {
-
     private $decorated = false;
     private $styles    = [];
     private $styleStack;
-
-    /**
-     * 转义
-     * @param string $text
-     * @return string
-     */
-    public static function escape($text)
-    {
-        return preg_replace('/([^\\\\]?)</is', '$1\\<', $text);
-    }
 
     /**
      * 初始化命令行输出格式
@@ -43,6 +35,16 @@ class Formatter
         $this->setStyle('warning', new Style('black', 'yellow'));
 
         $this->styleStack = new StyleStack();
+    }
+
+    /**
+     * 转义
+     * @param string $text
+     * @return string
+     */
+    public static function escape($text)
+    {
+        return preg_replace('/([^\\\\]?)</is', '$1\\<', $text);
     }
 
     /**
@@ -87,12 +89,12 @@ class Formatter
      * 获取样式
      * @param string $name
      * @return Style
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function getStyle($name)
     {
         if (!$this->hasStyle($name)) {
-            throw new \InvalidArgumentException(sprintf('Undefined style: %s', $name));
+            throw new InvalidArgumentException(sprintf('Undefined style: %s', $name));
         }
 
         return $this->styles[strtolower($name)];
@@ -177,7 +179,7 @@ class Formatter
             } else {
                 try {
                     $style->setOption($match[1]);
-                } catch (\InvalidArgumentException $e) {
+                } catch (InvalidArgumentException $e) {
                     return false;
                 }
             }

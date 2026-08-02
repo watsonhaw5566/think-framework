@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\console;
 
@@ -23,7 +24,6 @@ use think\console\input\Option;
 
 abstract class Command
 {
-
     /** @var  Console */
     private $console;
     private $name;
@@ -498,6 +498,7 @@ abstract class Command
     {
         $content = $table->render();
         $this->output->writeln($content);
+
         return $content;
     }
 

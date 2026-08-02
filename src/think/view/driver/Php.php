@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -70,7 +71,7 @@ class Php implements TemplateHandlerInterface
 
         return $template;
     }
-    
+
     /**
      * 渲染模板文件
      * @param string $template 模板文件

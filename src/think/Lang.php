@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think;
 
@@ -213,6 +214,7 @@ class Lang
 
         if ($this->config['allow_group'] && str_contains($name, '.')) {
             [$name1, $name2] = explode('.', $name, 2);
+
             return isset($this->lang[$range][strtolower($name1)][$name2]);
         }
 

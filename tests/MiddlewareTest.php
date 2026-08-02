@@ -78,6 +78,7 @@ class MiddlewareTest extends TestCase
         });
         $bar->shouldReceive('handle')->once()->andReturnUsing(function ($request, $next) use ($e) {
             $next($request);
+
             throw  $e;
         });
 

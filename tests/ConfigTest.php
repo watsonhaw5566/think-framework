@@ -59,6 +59,7 @@ class ConfigTest extends TestCase
             if ($name === 'test.key2' && is_null($value)) {
                 return 'default_from_hook';
             }
+
             return $value;
         });
 
@@ -92,6 +93,7 @@ class ConfigTest extends TestCase
             if (str_contains($name, 'key1')) {
                 return 'test_hooked_' . $value;
             }
+
             return $value;
         }, 'test');
 
@@ -100,6 +102,7 @@ class ConfigTest extends TestCase
             if (str_contains($name, 'key1')) {
                 return 'other_hooked_' . $value;
             }
+
             return $value;
         }, 'other');
 
@@ -141,6 +144,7 @@ class ConfigTest extends TestCase
             if ($name === 'test.nonexistent') {
                 return null; // This should trigger default value
             }
+
             return $value;
         });
 
@@ -160,6 +164,7 @@ class ConfigTest extends TestCase
             if ($name === 'database') {
                 return array_merge($value, ['key3' => 'added_by_hook']);
             }
+
             return $value;
         }, 'database');
 
@@ -181,6 +186,7 @@ class ConfigTest extends TestCase
         // Register hook with counter
         $config->hook(function ($name, $value) use (&$hookCallCount) {
             $hookCallCount++;
+
             return $value ? $value . '_processed' : 'processed_default';
         });
 

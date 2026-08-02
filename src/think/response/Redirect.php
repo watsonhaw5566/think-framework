@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -22,7 +23,6 @@ use think\Session;
  */
 class Redirect extends Response
 {
-
     protected $request;
 
     public function __construct(Cookie $cookie, Request $request, Session $session, $data = '', int $code = 302)
@@ -39,6 +39,7 @@ class Redirect extends Response
     public function data($data)
     {
         $this->header['Location'] = $data;
+
         return parent::data($data);
     }
 

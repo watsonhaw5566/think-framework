@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -37,6 +38,7 @@ abstract class Make extends Command
 
         if (is_file($pathname)) {
             $output->writeln('<error>' . $this->type . ':' . $classname . ' already exists!</error>');
+
             return false;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think;
 
@@ -196,6 +197,7 @@ class Route
     public function lazy(bool $lazy = true)
     {
         $this->lazy = $lazy;
+
         return $this;
     }
 
@@ -333,6 +335,7 @@ class Route
             if (is_string($item)) {
                 $item = $this->domains[$item];
             }
+
             return $item->getBind();
         }
     }
@@ -476,7 +479,7 @@ class Route
         } else {
             $group = $this->group($name, $route);
         }
-        
+
         return $group->module($name);
     }
 
@@ -640,7 +643,7 @@ class Route
     public function redirect(string $rule, string $route = '', int $status = 301): RuleItem
     {
         return $this->rule($rule, function (Request $request) use ($status, $route) {
-            $search  = $replace  = [];
+            $search  = $replace = [];
             $matches = $request->rule()->getVars();
 
             foreach ($matches as $key => $value) {
@@ -653,6 +656,7 @@ class Route
             }
 
             $route = str_replace($search, $replace, $route);
+
             return Response::create($route, 'redirect')->code($status);
         }, '*');
     }

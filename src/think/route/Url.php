@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -14,6 +15,7 @@ namespace think\route;
 
 use think\App;
 use think\Route;
+use InvalidArgumentException;
 
 /**
  * 路由地址生成
@@ -65,6 +67,7 @@ class Url
     public function vars(array $vars = [])
     {
         $this->vars = $vars;
+
         return $this;
     }
 
@@ -77,6 +80,7 @@ class Url
     public function suffix(string|bool $suffix)
     {
         $this->suffix = $suffix;
+
         return $this;
     }
 
@@ -89,6 +93,7 @@ class Url
     public function domain(string|bool $domain)
     {
         $this->domain = $domain;
+
         return $this;
     }
 
@@ -101,6 +106,7 @@ class Url
     public function root(string $root)
     {
         $this->root = $root;
+
         return $this;
     }
 
@@ -113,6 +119,7 @@ class Url
     public function https(bool $https = true)
     {
         $this->https = $https;
+
         return $this;
     }
 
@@ -210,7 +217,7 @@ class Url
             // 直接作为路由地址解析
             $url = substr($url, 1);
         } elseif ('' === $url) {
-            $url  = $request->pathinfo();
+            $url = $request->pathinfo();
         } else {
             $controller = $request->controller();
             $path       = explode('/', $url);
@@ -394,7 +401,7 @@ class Url
                 $suffix = $match[2];
             }
         } elseif (!empty($rule) && isset($name)) {
-            throw new \InvalidArgumentException('route name not exists:' . $name);
+            throw new InvalidArgumentException('route name not exists:' . $name);
         } else {
             // 检测URL绑定
             $bind = $this->route->getDomainBind($domain && is_string($domain) ? $domain : null);

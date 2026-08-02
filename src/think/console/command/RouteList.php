@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command;
 
 use DirectoryIterator;
@@ -18,6 +20,7 @@ use think\console\input\Option;
 use think\console\Output;
 use think\console\Table;
 use think\event\RouteLoaded;
+use Closure;
 
 class RouteList extends Command
 {
@@ -63,7 +66,7 @@ class RouteList extends Command
             if ($fileinfo->getType() == 'file' && $fileinfo->getExtension() == 'php') {
                 $groupName = str_replace('\\', '/', substr_replace($fileinfo->getPath(), '', 0, strlen($root)));
                 if ($groupName) {
-                    $this->app->route->group($groupName, function()  use ($fileinfo) {
+                    $this->app->route->group($groupName, function () use ($fileinfo) {
                         include $fileinfo->getRealPath();
                     });
                 } else {
@@ -104,7 +107,7 @@ class RouteList extends Command
             if (is_array($item['route'])) {
                 $item['route'] = '[' . $item['route'][0] .' , ' . $item['route'][1] . ']';
             } else {
-                $item['route'] = $item['route'] instanceof \Closure ? '<Closure>' : $item['route'];
+                $item['route'] = $item['route'] instanceof Closure ? '<Closure>' : $item['route'];
             }
             $row = [$item['rule'], $item['route'], $item['method'], $item['name']];
 
@@ -124,6 +127,7 @@ class RouteList extends Command
             uasort($rows, function ($a, $b) use ($sort) {
                 $itemA = $a[$sort] ?? null;
                 $itemB = $b[$sort] ?? null;
+
                 return strcasecmp($itemA, $itemB);
             });
         }

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -16,7 +17,6 @@ use think\console\input\Option;
 
 class Controller extends Make
 {
-
     protected $type = "Controller";
 
     protected function configure()

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command\optimize;
 
 use DirectoryIterator;
@@ -36,6 +38,7 @@ class Route extends Command
 
         foreach ($dirs as $dir) {
             $path = $this->app->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . ($dir ? $dir . DIRECTORY_SEPARATOR : '');
+
             try {
                 $cache = $this->buildRouteCache($dir);
                 if (! is_dir($path)) {
@@ -80,7 +83,7 @@ class Route extends Command
 
         // 路由检测
         $autoGroup = $this->app->route->config('route_auto_group');
-        $path = $this->app->getRootPath() . ($dir ? 'app' . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR : '') . 'route' . DIRECTORY_SEPARATOR;
+        $path      = $this->app->getRootPath() . ($dir ? 'app' . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR : '') . 'route' . DIRECTORY_SEPARATOR;
         if (! is_dir($path)) {
             throw new InvalidArgumentException("{$path} directory does not exist");
         }

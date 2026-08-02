@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command\optimize;
 
 use Exception;
@@ -61,9 +63,10 @@ class Schema extends Command
         if ($reflect->isAbstract() || ! $reflect->isSubclassOf('\think\Model')) {
             return;
         }
+
         try {
             /** @var \think\Model $model */
-            $model = new $class;
+            $model      = new $class();
             $connection = $model->db()->getConnection();
             if ($connection instanceof PDOConnection) {
                 $table = $model->getTable();
@@ -111,10 +114,10 @@ class Schema extends Command
     private function cacheModel(?string $dir = null): void
     {
         if ($dir) {
-            $modelDir = $this->app->getAppPath() . $dir . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR;
+            $modelDir  = $this->app->getAppPath() . $dir . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR;
             $namespace = 'app\\' . $dir;
         } else {
-            $modelDir = $this->app->getAppPath() . 'model' . DIRECTORY_SEPARATOR;
+            $modelDir  = $this->app->getAppPath() . 'model' . DIRECTORY_SEPARATOR;
             $namespace = 'app';
         }
 
@@ -156,6 +159,7 @@ class Schema extends Command
         if ($this->isInstalledMultiApp()) {
             $dirs = array_merge($dirs, $this->discoveryMultiAppDirs('model'));
         }
+
         return $dirs;
     }
 }

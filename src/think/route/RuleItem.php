@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\route;
 
@@ -16,6 +17,7 @@ use think\Exception;
 use think\facade\Validate;
 use think\Request;
 use think\Route;
+use Closure;
 
 /**
  * 路由规则类
@@ -41,7 +43,7 @@ class RuleItem extends Rule
      * @param  RuleGroup         $parent 上级对象
      * @param  string            $name 路由标识
      * @param  string            $rule 路由规则
-     * @param  string|\Closure   $route 路由地址
+     * @param  string|Closure   $route 路由地址
      * @param  string            $method 请求类型
      */
     public function __construct(Route $router, RuleGroup $parent, ?string $name = null, string $rule = '', $route = null, string $method = '*')
@@ -64,6 +66,7 @@ class RuleItem extends Rule
     public function setMiss()
     {
         $this->miss = true;
+
         return $this;
     }
 
@@ -262,6 +265,7 @@ class RuleItem extends Rule
             } elseif (!$case && (0 === strcasecmp($rule, $url) || (!$completeMatch && 0 === strncasecmp($rule . $depr, $url . $depr, strlen($rule . $depr))))) {
                 return $var;
             }
+
             return false;
         }
 

@@ -51,6 +51,7 @@ class HttpTest extends TestCase
             if ($withRoute) {
                 $withRoute();
             }
+
             return $req === $request;
         })->andReturn($response);
 

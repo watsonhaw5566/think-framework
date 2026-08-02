@@ -2,7 +2,6 @@
 
 namespace think\tests;
 
-use Closure;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use think\Pipeline;
@@ -18,9 +17,9 @@ class PipelineTest extends TestCase
 
     public function testSend()
     {
-        $data = 'test data';
+        $data   = 'test data';
         $result = $this->pipeline->send($data);
-        
+
         $this->assertSame($this->pipeline, $result);
     }
 
@@ -34,9 +33,9 @@ class PipelineTest extends TestCase
                 return $next($passable . ' pipe2');
             }
         ];
-        
+
         $result = $this->pipeline->through($pipes);
-        
+
         $this->assertSame($this->pipeline, $result);
     }
 
@@ -48,9 +47,9 @@ class PipelineTest extends TestCase
         $pipe2 = function ($passable, $next) {
             return $next($passable . ' pipe2');
         };
-        
+
         $result = $this->pipeline->through($pipe1, $pipe2);
-        
+
         $this->assertSame($this->pipeline, $result);
     }
 
@@ -64,48 +63,51 @@ class PipelineTest extends TestCase
                 return $next($passable . ' pipe2');
             }
         ];
-        
+
         $destination = function ($passable) {
             return $passable . ' destination';
         };
-        
+
         $result = $this->pipeline
             ->send('start')
             ->through($pipes)
             ->then($destination);
-        
+
         $this->assertEquals('start pipe1 pipe2 destination', $result);
     }
 
     public function testPipelineExecutesInCorrectOrder()
     {
         $order = [];
-        
+
         $pipes = [
             function ($passable, $next) use (&$order) {
                 $order[] = 'pipe1_before';
-                $result = $next($passable);
+                $result  = $next($passable);
                 $order[] = 'pipe1_after';
+
                 return $result;
             },
             function ($passable, $next) use (&$order) {
                 $order[] = 'pipe2_before';
-                $result = $next($passable);
+                $result  = $next($passable);
                 $order[] = 'pipe2_after';
+
                 return $result;
             }
         ];
-        
+
         $destination = function ($passable) use (&$order) {
             $order[] = 'destination';
+
             return $passable;
         };
-        
+
         $this->pipeline
             ->send('test')
             ->through($pipes)
             ->then($destination);
-        
+
         $expected = ['pipe1_before', 'pipe2_before', 'destination', 'pipe2_after', 'pipe1_after'];
         $this->assertEquals($expected, $order);
     }
@@ -115,12 +117,12 @@ class PipelineTest extends TestCase
         $destination = function ($passable) {
             return $passable . ' processed';
         };
-        
+
         $result = $this->pipeline
             ->send('test')
             ->through([])
             ->then($destination);
-        
+
         $this->assertEquals('test processed', $result);
     }
 
@@ -129,27 +131,30 @@ class PipelineTest extends TestCase
         $pipes = [
             function ($passable, $next) {
                 $passable['pipe1'] = true;
+
                 return $next($passable);
             },
             function ($passable, $next) {
                 $passable['pipe2'] = true;
+
                 return $next($passable);
             }
         ];
-        
+
         $destination = function ($passable) {
             $passable['destination'] = true;
+
             return $passable;
         };
-        
+
         $result = $this->pipeline
             ->send([])
             ->through($pipes)
             ->then($destination);
-        
+
         $expected = [
-            'pipe1' => true,
-            'pipe2' => true,
+            'pipe1'       => true,
+            'pipe2'       => true,
             'destination' => true
         ];
         $this->assertEquals($expected, $result);
@@ -162,22 +167,23 @@ class PipelineTest extends TestCase
                 if ($passable === 'stop') {
                     return 'stopped';
                 }
+
                 return $next($passable);
             },
             function ($passable, $next) {
                 return $next($passable . ' pipe2');
             }
         ];
-        
+
         $destination = function ($passable) {
             return $passable . ' destination';
         };
-        
+
         $result = $this->pipeline
             ->send('stop')
             ->through($pipes)
             ->then($destination);
-        
+
         $this->assertEquals('stopped', $result);
     }
 
@@ -188,14 +194,14 @@ class PipelineTest extends TestCase
                 return $next($passable);
             }
         ];
-        
+
         $destination = function ($passable) {
             throw new Exception('Destination error');
         };
-        
+
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Destination error');
-        
+
         $this->pipeline
             ->send('test')
             ->through($pipes)
@@ -209,14 +215,14 @@ class PipelineTest extends TestCase
                 throw new Exception('Pipe error');
             }
         ];
-        
+
         $destination = function ($passable) {
             return $passable;
         };
-        
+
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Pipe error');
-        
+
         $this->pipeline
             ->send('test')
             ->through($pipes)
@@ -228,7 +234,7 @@ class PipelineTest extends TestCase
         $result = $this->pipeline->whenException(function ($passable, $e) {
             return 'handled';
         });
-        
+
         $this->assertSame($this->pipeline, $result);
     }
 
@@ -239,11 +245,11 @@ class PipelineTest extends TestCase
                 throw new Exception('Test exception');
             }
         ];
-        
+
         $destination = function ($passable) {
             return $passable;
         };
-        
+
         $result = $this->pipeline
             ->send('test')
             ->through($pipes)
@@ -251,7 +257,7 @@ class PipelineTest extends TestCase
                 return 'handled: ' . $e->getMessage();
             })
             ->then($destination);
-        
+
         $this->assertEquals('handled: Test exception', $result);
     }
 
@@ -262,26 +268,27 @@ class PipelineTest extends TestCase
                 throw new Exception('Test exception');
             }
         ];
-        
+
         $destination = function ($passable) {
             return $passable;
         };
-        
-        $handlerCalled = false;
-        $receivedPassable = null;
+
+        $handlerCalled     = false;
+        $receivedPassable  = null;
         $receivedException = null;
-        
+
         $this->pipeline
             ->send('original data')
             ->through($pipes)
             ->whenException(function ($passable, $e) use (&$handlerCalled, &$receivedPassable, &$receivedException) {
-                $handlerCalled = true;
-                $receivedPassable = $passable;
+                $handlerCalled     = true;
+                $receivedPassable  = $passable;
                 $receivedException = $e;
+
                 return 'handled';
             })
             ->then($destination);
-        
+
         $this->assertTrue($handlerCalled);
         $this->assertEquals('original data', $receivedPassable);
         $this->assertInstanceOf(Exception::class, $receivedException);
@@ -293,7 +300,7 @@ class PipelineTest extends TestCase
         $destination = function ($passable) {
             throw new Exception('Destination exception');
         };
-        
+
         $result = $this->pipeline
             ->send('test')
             ->through([])
@@ -301,7 +308,7 @@ class PipelineTest extends TestCase
                 return 'destination handled: ' . $e->getMessage();
             })
             ->then($destination);
-        
+
         $this->assertEquals('destination handled: Destination exception', $result);
     }
 
@@ -310,6 +317,7 @@ class PipelineTest extends TestCase
         $pipes = [
             function ($passable, $next) {
                 $passable[] = 'pipe1';
+
                 return $next($passable);
             },
             function ($passable, $next) {
@@ -317,27 +325,30 @@ class PipelineTest extends TestCase
                     throw new Exception('Pipe2 error');
                 }
                 $passable[] = 'pipe2';
+
                 return $next($passable);
             },
             function ($passable, $next) {
                 $passable[] = 'pipe3';
+
                 return $next($passable);
             }
         ];
-        
+
         $destination = function ($passable) {
             $passable[] = 'destination';
+
             return $passable;
         };
-        
+
         // Normal execution
         $result1 = $this->pipeline
             ->send(['start'])
             ->through($pipes)
             ->then($destination);
-        
+
         $this->assertEquals(['start', 'pipe1', 'pipe2', 'pipe3', 'destination'], $result1);
-        
+
         // With exception handling
         $result2 = $this->pipeline
             ->send(['start', 'error'])
@@ -346,7 +357,7 @@ class PipelineTest extends TestCase
                 return ['error_handled', $e->getMessage()];
             })
             ->then($destination);
-        
+
         $this->assertEquals(['error_handled', 'Pipe2 error'], $result2);
     }
 }

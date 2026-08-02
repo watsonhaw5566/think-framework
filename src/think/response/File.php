@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -85,6 +86,7 @@ class File extends Response
     public function isContent(bool $content = true)
     {
         $this->isContent = $content;
+
         return $this;
     }
 
@@ -97,6 +99,7 @@ class File extends Response
     public function expire(int $expire)
     {
         $this->expire = $expire;
+
         return $this;
     }
 
@@ -109,6 +112,7 @@ class File extends Response
     public function mimeType(string $mimeType)
     {
         $this->mimeType = $mimeType;
+
         return $this;
     }
 
@@ -121,6 +125,7 @@ class File extends Response
     public function force(bool $force)
     {
         $this->force = $force;
+
         return $this;
     }
 

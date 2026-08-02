@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\cache;
 
@@ -100,8 +101,10 @@ abstract class Driver implements CacheHandlerInterface
         if ($this->has($name)) {
             $result = $this->get($name, $default);
             $this->delete($name);
+
             return $result;
         }
+
         return $this->getDefaultValue($name, $default);
     }
 
@@ -182,6 +185,7 @@ abstract class Driver implements CacheHandlerInterface
             $this->delete($name . '_lock');
         } catch (Exception | Throwable $e) {
             $this->delete($name . '_lock');
+
             throw $e;
         }
 
@@ -215,6 +219,7 @@ abstract class Driver implements CacheHandlerInterface
     public function getTagItems(string $tag): array
     {
         $name = $this->getTagKey($tag);
+
         return $this->get($name, []);
     }
 
@@ -257,16 +262,17 @@ abstract class Driver implements CacheHandlerInterface
         if (is_numeric($data)) {
             return $data;
         }
+
         try {
             $unserialize = $this->options['serialize'][1] ?? "unserialize";
             $content     = $unserialize($data);
             if (is_null($content)) {
-                throw new InvalidCacheException;
+                throw new InvalidCacheException();
             } else {
                 return $content;
             }
         } catch (Exception | Throwable $e) {
-            throw new InvalidCacheException;
+            throw new InvalidCacheException();
         }
     }
 
@@ -283,6 +289,7 @@ abstract class Driver implements CacheHandlerInterface
         if ($fail && $this->options['fail_delete']) {
             $this->delete($name);
         }
+
         return $default instanceof Closure ? $default() : $default;
     }
 
@@ -342,7 +349,7 @@ abstract class Driver implements CacheHandlerInterface
      * 写入缓存
      * @access public
      * @param iterable                                 $values 缓存数据
-     * @param null|int|\DateInterval|DateTimeInterface $ttl    有效时间 0为永久
+     * @param null|int|DateInterval|DateTimeInterface $ttl    有效时间 0为永久
      * @return bool
      */
     public function setMultiple($values, $ttl = null): bool

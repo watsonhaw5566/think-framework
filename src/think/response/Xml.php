@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -58,6 +59,7 @@ class Xml extends Response
                 $xml      = "<?xml version=\"1.0\" encoding=\"{$encoding}\"?>";
                 $data     = $xml . $data;
             }
+
             return $data;
         }
 

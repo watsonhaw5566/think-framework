@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -13,6 +14,7 @@ declare(strict_types=1);
 namespace think;
 
 use Throwable;
+use InvalidArgumentException;
 
 /**
  * 响应输出基础类
@@ -118,6 +120,7 @@ abstract class Response
     public function setSession(Session $session)
     {
         $this->session = $session;
+
         return $this;
     }
 
@@ -125,7 +128,7 @@ abstract class Response
      * 发送数据到客户端
      * @access public
      * @return void
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function send(): void
     {
@@ -152,7 +155,7 @@ abstract class Response
             if (function_exists('fastcgi_finish_request')) {
                 // 提高页面响应
                 fastcgi_finish_request();
-            }            
+            }
         } catch (Throwable $e) {
             // 继续执行，不中断响应发送
             Container::getInstance()->log->error($e->getMessage());
@@ -272,7 +275,7 @@ abstract class Response
                 '__toString',
             ])
         ) {
-            throw new \InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
+            throw new InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
         }
 
         $this->content = (string) $content;
@@ -400,7 +403,7 @@ abstract class Response
                     '__toString',
                 ])
             ) {
-                throw new \InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
+                throw new InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
             }
 
             $this->content = (string) $content;

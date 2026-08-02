@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -18,10 +19,10 @@ use think\console\input\Definition as InputDefinition;
 use think\console\input\Option as InputOption;
 use think\console\Output;
 use think\console\output\descriptor\Console as ConsoleDescription;
+use InvalidArgumentException;
 
 class Descriptor
 {
-
     /**
      * @var Output
      */
@@ -51,7 +52,7 @@ class Descriptor
                 $this->describeConsole($object, $options);
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf('Object of type "%s" is not describable.', $object::class));
+                throw new InvalidArgumentException(sprintf('Object of type "%s" is not describable.', $object::class));
         }
     }
 
@@ -98,7 +99,7 @@ class Descriptor
     protected function describeInputOption(InputOption $option, array $options = [])
     {
         if ($option->acceptValue() && null !== $option->getDefault()
-            && (!is_array($option->getDefault())
+                                   && (!is_array($option->getDefault())
                 || count($option->getDefault()))
         ) {
             $default = sprintf('<comment> [default: %s]</comment>', $this->formatDefaultValue($option->getDefault()));

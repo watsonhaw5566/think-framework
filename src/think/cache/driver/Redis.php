@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\cache\driver;
 
@@ -16,6 +17,7 @@ use DateInterval;
 use DateTimeInterface;
 use think\cache\Driver;
 use think\exception\InvalidCacheException;
+use BadFunctionCallException;
 
 class Redis extends Driver
 {
@@ -56,7 +58,7 @@ class Redis extends Driver
     {
         if (!$this->handler) {
             if (extension_loaded('redis')) {
-                $this->handler = new \Redis;
+                $this->handler = new \Redis();
 
                 if ($this->options['persistent']) {
                     $this->handler->pconnect($this->options['host'], (int) $this->options['port'], (int) $this->options['timeout'], 'persistent_id_' . $this->options['select']);
@@ -84,7 +86,7 @@ class Redis extends Driver
 
                 $this->options['prefix'] = '';
             } else {
-                throw new \BadFunctionCallException('not support: redis');
+                throw new BadFunctionCallException('not support: redis');
             }
 
             if (0 != $this->options['select']) {
@@ -195,6 +197,7 @@ class Redis extends Driver
     {
         $key    = $this->getCacheKey($name);
         $result = $this->handler()->del($key);
+
         return $result > 0;
     }
 
@@ -206,6 +209,7 @@ class Redis extends Driver
     public function clear(): bool
     {
         $this->handler()->flushDB();
+
         return true;
     }
 
@@ -244,6 +248,7 @@ class Redis extends Driver
     {
         $name = $this->getTagKey($tag);
         $key  = $this->getCacheKey($name);
+
         return $this->handler()->sMembers($key) ?: [];
     }
 

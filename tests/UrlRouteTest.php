@@ -54,6 +54,7 @@ class UrlRouteTest extends TestCase
         $request->shouldReceive('pathinfo')->andReturn($path);
         $request->shouldReceive('url')->andReturn('/' . $path);
         $request->shouldReceive('method')->andReturn(strtoupper($method));
+
         return $request;
     }
 

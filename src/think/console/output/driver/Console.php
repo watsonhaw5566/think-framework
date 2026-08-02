@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -13,10 +14,12 @@ namespace think\console\output\driver;
 
 use think\console\Output;
 use think\console\output\Formatter;
+use InvalidArgumentException;
+use RuntimeException;
+use Throwable;
 
 class Console
 {
-
     /** @var  Resource */
     private $stdout;
 
@@ -61,14 +64,14 @@ class Console
                     $message = strip_tags($this->formatter->format($message));
                     break;
                 default:
-                    throw new \InvalidArgumentException(sprintf('Unknown output type given (%s)', $type));
+                    throw new InvalidArgumentException(sprintf('Unknown output type given (%s)', $type));
             }
 
             $this->doWrite($message, $newline, $stream);
         }
     }
 
-    public function renderException(\Throwable $e)
+    public function renderException(Throwable $e)
     {
         $stderr    = $this->openErrorStream();
         $decorated = $this->hasColorSupport($stderr);
@@ -121,7 +124,7 @@ class Console
 
                 for ($i = 0, $count = count($trace); $i < $count; ++$i) {
                     $class    = $trace[$i]['class'] ?? '';
-                    $type     = $trace[$i]['type'] ?? '';
+                    $type     = $trace[$i]['type']  ?? '';
                     $function = $trace[$i]['function'];
                     $file     = $trace[$i]['file'] ?? 'n/a';
                     $line     = $trace[$i]['line'] ?? 'n/a';
@@ -209,6 +212,7 @@ class Console
 
             return $info;
         }
+
         return;
     }
 
@@ -288,6 +292,7 @@ class Console
             getenv('OSTYPE'),
             PHP_OS,
         ];
+
         return false !== stripos(implode(';', $checks), 'OS400');
     }
 
@@ -319,6 +324,7 @@ class Console
         if (!$this->hasStdoutSupport()) {
             return fopen('php://output', 'w');
         }
+
         return @fopen('php://stdout', 'w') ?: fopen('php://output', 'w');
     }
 
@@ -342,7 +348,7 @@ class Console
             $stream = $this->stdout;
         }
         if (false === @fwrite($stream, $message . ($newline ? PHP_EOL : ''))) {
-            throw new \RuntimeException('Unable to write output.');
+            throw new RuntimeException('Unable to write output.');
         }
 
         fflush($stream);
@@ -359,7 +365,7 @@ class Console
             return
             '10.0.10586' === PHP_WINDOWS_VERSION_MAJOR . '.' . PHP_WINDOWS_VERSION_MINOR . '.' . PHP_WINDOWS_VERSION_BUILD
             || false !== getenv('ANSICON')
-            || 'ON' === getenv('ConEmuANSI')
+            || 'ON'    === getenv('ConEmuANSI')
             || 'xterm' === getenv('TERM');
         }
 

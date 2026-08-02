@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -12,6 +13,7 @@
 namespace think\console\output\driver;
 
 use think\console\Output;
+use Throwable;
 
 class Buffer
 {
@@ -34,6 +36,7 @@ class Buffer
     {
         $content      = $this->buffer;
         $this->buffer = '';
+
         return $content;
     }
 
@@ -49,7 +52,7 @@ class Buffer
         }
     }
 
-    public function renderException(\Throwable $e)
+    public function renderException(Throwable $e)
     {
         // do nothing
     }

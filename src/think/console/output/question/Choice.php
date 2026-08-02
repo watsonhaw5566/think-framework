@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -12,10 +13,10 @@
 namespace think\console\output\question;
 
 use think\console\output\Question;
+use InvalidArgumentException;
 
 class Choice extends Question
 {
-
     private $choices;
     private $multiselect  = false;
     private $prompt       = ' > ';
@@ -115,7 +116,7 @@ class Choice extends Question
             if ($multiselect) {
                 // Check for a separated comma values
                 if (!preg_match('/^[a-zA-Z0-9_-]+(?:,[a-zA-Z0-9_-]+)*$/', $selectedChoices, $matches)) {
-                    throw new \InvalidArgumentException(sprintf($errorMessage, $selected));
+                    throw new InvalidArgumentException(sprintf($errorMessage, $selected));
                 }
                 $selectedChoices = explode(',', $selectedChoices);
             } else {
@@ -132,7 +133,7 @@ class Choice extends Question
                 }
 
                 if (count($results) > 1) {
-                    throw new \InvalidArgumentException(sprintf('The provided answer is ambiguous. Value should be one of %s.', implode(' or ', $results)));
+                    throw new InvalidArgumentException(sprintf('The provided answer is ambiguous. Value should be one of %s.', implode(' or ', $results)));
                 }
 
                 $result = array_search($value, $choices);
@@ -148,7 +149,7 @@ class Choice extends Question
                 }
 
                 if (false === $result) {
-                    throw new \InvalidArgumentException(sprintf($errorMessage, $value));
+                    throw new InvalidArgumentException(sprintf($errorMessage, $value));
                 }
                 array_push($multiselectChoices, $result);
             }

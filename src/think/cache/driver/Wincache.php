@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\cache\driver;
 
@@ -16,6 +17,7 @@ use DateInterval;
 use DateTimeInterface;
 use think\cache\Driver;
 use think\exception\InvalidCacheException;
+use BadFunctionCallException;
 
 /**
  * Wincache缓存驱动
@@ -38,12 +40,12 @@ class Wincache extends Driver
      * 架构函数
      * @access public
      * @param array $options 缓存参数
-     * @throws \BadFunctionCallException
+     * @throws BadFunctionCallException
      */
     public function __construct(array $options = [])
     {
         if (!function_exists('wincache_ucache_info')) {
-            throw new \BadFunctionCallException('not support: WinCache');
+            throw new BadFunctionCallException('not support: WinCache');
         }
 
         if (!empty($options)) {
@@ -76,6 +78,7 @@ class Wincache extends Driver
     public function get($name, $default = null): mixed
     {
         $key = $this->getCacheKey($name);
+
         try {
             return wincache_ucache_exists($key) ? $this->unserialize(wincache_ucache_get($key)) : $this->getDefaultValue($name, $default);
         } catch (InvalidCacheException $e) {

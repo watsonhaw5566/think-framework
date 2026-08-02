@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace think\cache;
 
@@ -110,7 +111,9 @@ class TagSet
         // 指定标签清除
         foreach ($this->tag as $tag) {
             $keys = $this->handler->getTagItems($tag);
-            if (!empty($keys)) $this->handler->clearTag($keys);
+            if (!empty($keys)) {
+                $this->handler->clearTag($keys);
+            }
 
             $key = $this->handler->getTagKey($tag);
             $this->handler->delete($key);

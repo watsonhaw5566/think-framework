@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\route\dispatch;
 
@@ -67,6 +68,7 @@ class Callback extends Dispatch
                 }
             } else {
                 $vars = $this->getActionBindVars();
+
                 return $this->app->invoke($route, $vars);
             }
         }
@@ -78,7 +80,7 @@ class Callback extends Dispatch
             [$module, $controller] = explode('/' . $layer . '/', $controller, 2);
             $module                = trim(str_replace('app/', '', $module . '/'), '/');
         } else {
-            $module      = '';
+            $module = '';
         }
 
         if ($module && !empty($this->option['auto_middleware'])) {
@@ -108,10 +110,11 @@ class Callback extends Dispatch
                 throw new ClassNotFoundException('class not exists:' . $this->class, $this->class);
             }
 
-            return $this->responseWithMiddlewarePipeline($instance, $this->action);            
+            return $this->responseWithMiddlewarePipeline($instance, $this->action);
         }
 
         $vars = $this->getActionBindVars();
+
         return $this->app->invoke($this->dispatch, $vars);
     }
 }
