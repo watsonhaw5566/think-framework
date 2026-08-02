@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+
 namespace think\console\command;
 
 use think\console\Command;
@@ -76,9 +78,11 @@ class Clear extends Command
      * @param $filename string 文件路径
      * @return bool
      */
-    protected function cacheHasExpired($filename) {
+    protected function cacheHasExpired($filename)
+    {
         $content = file_get_contents($filename);
-        $expire = (int) substr($content, 8, 12);
+        $expire  = (int) substr($content, 8, 12);
+
         return 0 != $expire && time() - $expire > filemtime($filename);
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -27,7 +28,7 @@ class ModelService extends Service
         Model::setInvoker([$this->app, 'invoke']);
         Model::maker(function (Model $model) {
             if (method_exists($model, 'setOption')) {
-                // 兼容ORM4.0 
+                // 兼容ORM4.0
                 $model->setOption('db', $this->app->db);
                 $model->setOption('event', $this->app->event);
                 $model->setOption('invoker', [$this->app, 'invoke']);

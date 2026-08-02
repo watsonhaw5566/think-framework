@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+
 namespace think;
 
 use Closure;
@@ -30,6 +32,7 @@ class Pipeline
     public function send($passable)
     {
         $this->passable = $passable;
+
         return $this;
     }
 
@@ -41,6 +44,7 @@ class Pipeline
     public function through($pipes)
     {
         $this->pipes = is_array($pipes) ? $pipes : func_get_args();
+
         return $this;
     }
 
@@ -74,6 +78,7 @@ class Pipeline
     public function whenException($handler)
     {
         $this->exceptionHandler = $handler;
+
         return $this;
     }
 
@@ -101,6 +106,7 @@ class Pipeline
         if ($this->exceptionHandler) {
             return call_user_func($this->exceptionHandler, $passable, $e);
         }
+
         throw $e;
     }
 }

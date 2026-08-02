@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+
 namespace think\session\driver;
 
 use Psr\SimpleCache\CacheInterface;
@@ -16,7 +18,6 @@ use think\helper\Arr;
 
 class Cache implements SessionHandlerInterface
 {
-
     /** @var CacheInterface */
     protected $handler;
 

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think;
 
@@ -17,6 +18,7 @@ use Closure;
 /**
  * 配置管理类
  * @package think
+ * @phpstan-consistent-constructor
  */
 class Config
 {
@@ -82,7 +84,7 @@ class Config
         $type   = pathinfo($file, PATHINFO_EXTENSION);
         $config = [];
         $config = match ($type) {
-            'php' => include $file,
+            'php'         => include $file,
             'yml', 'yaml' => function_exists('yaml_parse_file') ? yaml_parse_file($file) : [],
             'ini'         => parse_ini_file($file, true, INI_SCANNER_TYPED) ?: [],
             'json'        => json_decode(file_get_contents($file), true),
@@ -147,6 +149,7 @@ class Config
         if (!str_contains($name, '.')) {
             $name   = strtolower($name);
             $result = $this->pull($name);
+
             return $this->hook ? $this->lazy($name, $result, []) : $result;
         }
 
@@ -188,6 +191,7 @@ class Config
                 return $default;
             }
         }
+
         return $result ?? ($value ?: $default);
     }
 
@@ -202,6 +206,7 @@ class Config
     {
         if (empty($name)) {
             $this->config = array_merge($this->config, array_change_key_case($config));
+
             return $this->config;
         }
 

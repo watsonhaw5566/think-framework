@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -14,6 +15,8 @@ namespace think\response;
 
 use think\Cookie;
 use think\Response;
+use Exception;
+use InvalidArgumentException;
 
 /**
  * Json Response
@@ -38,7 +41,7 @@ class Json extends Response
      * @access protected
      * @param  mixed $data 要处理的数据
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function output($data): string
     {
@@ -47,14 +50,15 @@ class Json extends Response
             $data = json_encode($data, $this->options['json_encode_param']);
 
             if (false === $data) {
-                throw new \InvalidArgumentException(json_last_error_msg());
+                throw new InvalidArgumentException(json_last_error_msg());
             }
 
             return $data;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($e->getPrevious()) {
                 throw $e->getPrevious();
             }
+
             throw $e;
         }
     }

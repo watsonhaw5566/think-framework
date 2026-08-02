@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -11,16 +12,19 @@
 
 namespace think\console\input;
 
+use InvalidArgumentException;
+use LogicException;
+
 class Argument
 {
     // 必传参数
-    const REQUIRED = 1;
+    public const REQUIRED = 1;
 
     // 可选参数
-    const OPTIONAL = 2;
+    public const OPTIONAL = 2;
 
     // 数组参数
-    const IS_ARRAY = 4;
+    public const IS_ARRAY = 4;
 
     /**
      * 参数名
@@ -52,14 +56,14 @@ class Argument
      * @param int    $mode        参数类型: self::REQUIRED 或者 self::OPTIONAL
      * @param string $description 描述
      * @param mixed  $default     默认值 (仅 self::OPTIONAL 类型有效)
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(string $name, ?int $mode = null, string $description = '', $default = null)
     {
         if (null === $mode) {
             $mode = self::OPTIONAL;
         } elseif (!is_int($mode) || $mode > 7 || $mode < 1) {
-            throw new \InvalidArgumentException(sprintf('Argument mode "%s" is not valid.', $mode));
+            throw new InvalidArgumentException(sprintf('Argument mode "%s" is not valid.', $mode));
         }
 
         $this->name        = $name;
@@ -99,19 +103,19 @@ class Argument
     /**
      * 设置默认值
      * @param mixed $default 默认值
-     * @throws \LogicException
+     * @throws LogicException
      */
     public function setDefault($default = null): void
     {
         if (self::REQUIRED === $this->mode && null !== $default) {
-            throw new \LogicException('Cannot set a default value except for InputArgument::OPTIONAL mode.');
+            throw new LogicException('Cannot set a default value except for InputArgument::OPTIONAL mode.');
         }
 
         if ($this->isArray()) {
             if (null === $default) {
                 $default = [];
             } elseif (!is_array($default)) {
-                throw new \LogicException('A default value for an array argument must be an array.');
+                throw new LogicException('A default value for an array argument must be an array.');
             }
         }
 

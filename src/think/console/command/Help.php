@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -19,7 +20,6 @@ use think\console\Output;
 
 class Help extends Command
 {
-
     private $command;
 
     /**

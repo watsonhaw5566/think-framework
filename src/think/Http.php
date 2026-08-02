@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -62,6 +63,7 @@ class Http
     public function name(string $name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -88,6 +90,7 @@ class Http
         }
 
         $this->path = $path;
+
         return $this;
     }
 
@@ -130,6 +133,7 @@ class Http
     public function setBind(bool $bind = true)
     {
         $this->isBind = $bind;
+
         return $this;
     }
 
@@ -261,11 +265,11 @@ class Http
         return $this->app->make(Handle::class)->render($request, $e);
     }
 
-/**
-     * HttpEnd
-     * @param Response $response
-     * @return void
-     */
+    /**
+         * HttpEnd
+         * @param Response $response
+         * @return void
+         */
     public function end(Response $response): void
     {
         try {

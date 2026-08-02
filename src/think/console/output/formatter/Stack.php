@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -11,9 +12,10 @@
 
 namespace think\console\output\formatter;
 
+use InvalidArgumentException;
+
 class Stack
 {
-
     /**
      * @var Style[]
      */
@@ -55,7 +57,7 @@ class Stack
      * 从堆栈中弹出一个样式
      * @param Style|null $style
      * @return Style
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function pop(?Style $style = null): Style
     {
@@ -79,7 +81,7 @@ class Stack
             }
         }
 
-        throw new \InvalidArgumentException('Incorrectly nested style tag found.');
+        throw new InvalidArgumentException('Incorrectly nested style tag found.');
     }
 
     /**

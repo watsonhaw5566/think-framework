@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -136,6 +137,7 @@ class Middleware
                     if (!$response instanceof Response) {
                         throw new LogicException('The middleware must return Response instance');
                     }
+
                     return $response;
                 };
             }, $this->sortMiddleware($this->queue[$type] ?? [])))
@@ -189,7 +191,7 @@ class Middleware
         if (empty($middleware)) {
             return [];
         }
-        
+
         if (is_array($middleware)) {
             [$middleware, $params] = $middleware;
         }
@@ -207,6 +209,7 @@ class Middleware
 
         if (is_array($middleware)) {
             $this->import($middleware, $type);
+
             return [];
         }
 
@@ -224,6 +227,7 @@ class Middleware
         uasort($middlewares, function ($a, $b) use ($priority) {
             $aPriority = $this->getMiddlewarePriority($priority, $a);
             $bPriority = $this->getMiddlewarePriority($priority, $b);
+
             return $bPriority - $aPriority;
         });
 
@@ -241,8 +245,10 @@ class Middleware
         [$call] = $middleware;
         if (is_array($call) && is_string($call[0])) {
             $index = array_search($call[0], array_reverse($priority));
+
             return false === $index ? -1 : $index;
         }
+
         return -1;
     }
 }

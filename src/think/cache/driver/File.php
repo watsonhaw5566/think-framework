@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\cache\driver;
 
@@ -17,6 +18,8 @@ use FilesystemIterator;
 use think\App;
 use think\cache\Driver;
 use think\exception\InvalidCacheException;
+use DateInterval;
+use Exception;
 
 /**
  * 文件缓存类
@@ -101,6 +104,7 @@ class File extends Driver
             if (0 != $expire && time() - $expire > filemtime($filename)) {
                 //缓存过期删除缓存文件
                 $this->unlink($filename);
+
                 return;
             }
 
@@ -149,7 +153,7 @@ class File extends Driver
      * @access public
      * @param string                                   $name   缓存变量名
      * @param mixed                                    $value  存储数据
-     * @param int|\DateInterval|DateTimeInterface|null $expire 有效时间 0为永久
+     * @param int|DateInterval|DateTimeInterface|null $expire 有效时间 0为永久
      * @return bool
      */
     public function set($name, $value, $expire = null): bool
@@ -166,7 +170,7 @@ class File extends Driver
         if (!is_dir($dir)) {
             try {
                 mkdir($dir, 0755, true);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // 创建失败
             }
         }
@@ -189,6 +193,7 @@ class File extends Driver
 
         if ($result) {
             clearstatcache();
+
             return true;
         }
 
@@ -275,7 +280,7 @@ class File extends Driver
     {
         try {
             return is_file($path) && unlink($path);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

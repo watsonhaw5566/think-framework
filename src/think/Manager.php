@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -108,6 +109,7 @@ abstract class Manager
     protected function resolveParams($name): array
     {
         $config = $this->resolveConfig($name);
+
         return [$config];
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\middleware;
 
@@ -29,7 +30,7 @@ class LoadLangPack
 
     public function __construct(protected App $app, protected Lang $lang, Config $config)
     {
-        $this->config = $lang->getConfig();
+        $this->config = $config->get('lang', $lang->getConfig());
     }
 
     /**

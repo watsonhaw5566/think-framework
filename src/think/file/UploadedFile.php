@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -17,7 +18,6 @@ use think\File;
 
 class UploadedFile extends File
 {
-
     private $test = false;
     private $originalName;
     private $mimeType;

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | TopThink [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -6,7 +7,7 @@
 // +----------------------------------------------------------------------
 // | Author: zhangyajun <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think;
 
@@ -42,6 +43,8 @@ use think\console\input\Definition as InputDefinition;
 use think\console\input\Option as InputOption;
 use think\console\Output;
 use think\console\output\driver\Buffer;
+use Exception;
+use Traversable;
 
 /**
  * 控制台应用管理类
@@ -56,7 +59,7 @@ class Console
     protected $catchExceptions = true;
     protected $autoExit        = true;
     protected $definition;
-    protected $defaultCommand  = 'list';
+    protected $defaultCommand = 'list';
 
     protected $defaultCommands = [
         'help'             => Help::class,
@@ -109,7 +112,7 @@ class Console
     /**
      * 初始化
      */
-    protected function initialize():void
+    protected function initialize(): void
     {
         if (!$this->app->initialized()) {
             $this->app->initialize();
@@ -120,7 +123,7 @@ class Console
     /**
      * 构造request
      */
-    protected function makeRequest():void
+    protected function makeRequest(): void
     {
         $url = $this->app->config->get('app.url', 'http://localhost');
 
@@ -241,7 +244,7 @@ class Console
      * 执行当前的指令
      * @access public
      * @return int
-     * @throws \Exception
+     * @throws Exception
      * @api
      */
     public function run()
@@ -253,7 +256,7 @@ class Console
 
         try {
             $exitCode = $this->doRun($input, $output);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if (!$this->catchExceptions) {
                 throw $e;
             }
@@ -410,6 +413,7 @@ class Console
     {
         if ($name) {
             $this->commands[$name] = $command;
+
             return;
         }
 
@@ -421,6 +425,7 @@ class Console
 
         if (!$command->isEnabled()) {
             $command->setConsole(null);
+
             return;
         }
 
@@ -521,7 +526,7 @@ class Console
         $expr          = preg_replace_callback('{([^:]+|)}', function ($matches) {
             return preg_quote($matches[1]) . '[^:]*';
         }, $namespace);
-        $namespaces    = preg_grep('{^' . $expr . '}', $allNamespaces);
+        $namespaces = preg_grep('{^' . $expr . '}', $allNamespaces);
 
         if (empty($namespaces)) {
             $message = sprintf('There are no commands defined in the "%s" namespace.', $namespace);
@@ -652,7 +657,7 @@ class Console
      * @param Input $input 输入实例
      * @param Output $output 输出实例
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     protected function doRunCommand(Command $command, Input $input, Output $output)
     {
@@ -719,10 +724,10 @@ class Console
      * 查找可替代的建议
      * @access private
      * @param string $name
-     * @param array|\Traversable $collection
+     * @param array|Traversable $collection
      * @return array
      */
-    private function findAlternatives(string $name, array|\Traversable $collection): array
+    private function findAlternatives(string $name, array|Traversable $collection): array
     {
         $threshold    = 1e3;
         $alternatives = [];

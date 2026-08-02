@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: 麦当苗儿 <zuojiazi@vip.qq.com> <http://zjzit.cn>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\initializer;
 
@@ -45,7 +46,7 @@ class Error
     /**
      * Exception Handler
      * @access public
-     * @param \Throwable $e
+     * @param Throwable $e
      */
     public function appException(Throwable $e): void
     {
@@ -54,7 +55,7 @@ class Error
         $handler->report($e);
 
         if ($this->app->runningInConsole()) {
-            $handler->renderForConsole(new ConsoleOutput, $e);
+            $handler->renderForConsole(new ConsoleOutput(), $e);
         } else {
             $response = $handler->render($this->app->request, $e);
             $response->send();

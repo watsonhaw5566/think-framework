@@ -4,12 +4,7 @@ namespace think\tests;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use think\App;
-use think\Config;
-use think\Container;
-use think\Env;
 use think\Request;
-use think\Session;
 
 class RequestTest extends TestCase
 {
@@ -127,7 +122,7 @@ class RequestTest extends TestCase
         $request->withGet(['get_param' => 'get_value'])
                ->withPost(['post_param' => 'post_value'])
                ->withServer(['REQUEST_METHOD' => 'POST']);
-        
+
         $this->assertEquals('get_value', $request->param('get_param'));
         $this->assertEquals('post_value', $request->param('post_param'));
         $this->assertEquals('default', $request->param('missing', 'default'));
@@ -139,7 +134,7 @@ class RequestTest extends TestCase
         $request->withGet(['test' => 'value'])
                ->withPost(['post_test' => 'post_value'])
                ->withServer(['REQUEST_METHOD' => 'POST']);
-        
+
         $this->assertTrue($request->has('test'));
         $this->assertTrue($request->has('post_test'));
         $this->assertFalse($request->has('missing'));
@@ -149,7 +144,7 @@ class RequestTest extends TestCase
     {
         $request = new Request();
         $request->withGet(['param1' => 'value1', 'param2' => 'value2', 'param3' => 'value3']);
-        
+
         $result = $request->only(['param1', 'param3']);
         $this->assertEquals(['param1' => 'value1', 'param3' => 'value3'], $result);
     }
@@ -158,7 +153,7 @@ class RequestTest extends TestCase
     {
         $request = new Request();
         $request->withGet(['param1' => 'value1', 'param2' => 'value2', 'param3' => 'value3']);
-        
+
         $result = $request->except(['param2']);
         $this->assertEquals(['param1' => 'value1', 'param3' => 'value3'], $result);
     }
@@ -167,7 +162,7 @@ class RequestTest extends TestCase
     {
         $request = new Request();
         $request->withHeader(['content-type' => 'application/json', 'authorization' => 'Bearer token123']);
-        
+
         $this->assertEquals('application/json', $request->header('content-type'));
         $this->assertEquals('Bearer token123', $request->header('authorization'));
         $this->assertEquals('default', $request->header('missing', 'default'));
@@ -177,7 +172,7 @@ class RequestTest extends TestCase
     {
         $request = new Request();
         $request->withServer(['HTTP_HOST' => 'example.com', 'REQUEST_URI' => '/test']);
-        
+
         $this->assertEquals('example.com', $request->server('HTTP_HOST'));
         $this->assertEquals('/test', $request->server('REQUEST_URI'));
         $this->assertEquals('default', $request->server('missing', 'default'));
@@ -187,7 +182,7 @@ class RequestTest extends TestCase
     {
         $request = new Request();
         $request->withCookie(['test_cookie' => 'cookie_value']);
-        
+
         $this->assertEquals('cookie_value', $request->cookie('test_cookie'));
         $this->assertEquals('default', $request->cookie('missing', 'default'));
     }
@@ -323,7 +318,7 @@ class RequestTest extends TestCase
     {
         $request = new Request();
         $request->withServer(['HTTP_HOST' => 'example.com', 'REQUEST_URI' => '/path/to/resource?param=value']);
-        
+
         $result = $request->url();
         $this->assertStringContainsString('/path/to/resource', $result);
     }
@@ -407,14 +402,14 @@ class RequestTest extends TestCase
     {
         $request = new Request();
         $request->withGet(['test' => 'value']);
-        
+
         $this->assertTrue(isset($request['test']));
         $this->assertEquals('value', $request['test']);
-        
+
         // offsetSet is empty in Request class, so setting values has no effect
         $request['new'] = 'new_value';
         $this->assertNull($request['new']);
-        
+
         // offsetUnset is also empty, so unset has no effect
         unset($request['test']);
         $this->assertTrue(isset($request['test']));
@@ -423,19 +418,19 @@ class RequestTest extends TestCase
     public function testWithMethods()
     {
         $request = new Request();
-        
+
         $newRequest = $request->withGet(['key' => 'value']);
         $this->assertEquals('value', $newRequest->get('key'));
-        
+
         $newRequest = $request->withPost(['post_key' => 'post_value']);
         $this->assertEquals('post_value', $newRequest->post('post_key'));
-        
+
         $newRequest = $request->withHeader(['Content-Type' => 'application/json']);
         $this->assertEquals('application/json', $newRequest->header('content-type'));
-        
+
         $newRequest = $request->withServer(['HTTP_HOST' => 'test.com']);
         $this->assertEquals('test.com', $newRequest->server('HTTP_HOST'));
-        
+
         $newRequest = $request->withCookie(['session' => 'abc123']);
         $this->assertEquals('abc123', $newRequest->cookie('session'));
     }
@@ -444,7 +439,7 @@ class RequestTest extends TestCase
     {
         $request = new Request();
         $request->withGet(['email' => '  test@example.com  ', 'number' => '123.45']);
-        
+
         $this->assertEquals('test@example.com', $request->get('email', '', 'trim'));
         $this->assertEquals(123, $request->get('number', 0, 'intval'));
         $this->assertEquals(123.45, $request->get('number', 0, 'floatval'));
@@ -455,7 +450,7 @@ class RequestTest extends TestCase
         $request = new Request();
         $request->withGet(['test' => 'get_value'])
                ->withPost(['test' => 'post_value']);
-        
+
         // Test basic param access
         $this->assertEquals('get_value', $request->param('test'));
     }
@@ -464,7 +459,7 @@ class RequestTest extends TestCase
     {
         $request = new Request();
         $request->setRoute(['controller' => 'User', 'action' => 'profile']);
-        
+
         $this->assertEquals('User', $request->route('controller'));
         $this->assertEquals('profile', $request->route('action'));
         $this->assertEquals(['controller' => 'User', 'action' => 'profile'], $request->route());
@@ -475,7 +470,7 @@ class RequestTest extends TestCase
         $request = new Request();
         $request->setController('User');
         $request->setAction('profile');
-        
+
         $this->assertEquals('User', $request->controller());
         $this->assertEquals('profile', $request->action());
     }
@@ -484,7 +479,7 @@ class RequestTest extends TestCase
     {
         $request = new Request();
         $request->withMiddleware(['auth', 'throttle']);
-        
+
         $this->assertEquals(['auth', 'throttle'], $request->middleware());
     }
 
@@ -515,7 +510,7 @@ class RequestTest extends TestCase
         // In CLI test environment, this will return false
         $request = new Request();
         $this->assertFalse($request->isCgi());
-        
+
         // Test the method returns boolean
         $this->assertIsBool($request->isCgi());
     }
@@ -525,7 +520,7 @@ class RequestTest extends TestCase
         $request = new Request();
         $request->withServer(['SERVER_PROTOCOL' => 'HTTP/1.1']);
         $this->assertEquals('HTTP/1.1', $request->protocol());
-        
+
         $request2 = new Request();
         $request2->withServer(['SERVER_PROTOCOL' => 'HTTP/2.0']);
         $this->assertEquals('HTTP/2.0', $request2->protocol());
@@ -544,7 +539,7 @@ class RequestTest extends TestCase
         $request->withGet(['get_param' => 'get_value'])
                ->withPost(['post_param' => 'post_value'])
                ->withServer(['REQUEST_METHOD' => 'POST']);
-        
+
         $all = $request->all();
         $this->assertIsArray($all);
         $this->assertArrayHasKey('get_param', $all);

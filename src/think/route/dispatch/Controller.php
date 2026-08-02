@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\route\dispatch;
 
@@ -16,7 +17,6 @@ use Closure;
 use think\App;
 use think\exception\ClassNotFoundException;
 use think\exception\HttpException;
-use think\helper\Str;
 use think\route\Dispatch;
 
 /**
@@ -92,6 +92,7 @@ class Controller extends Dispatch
                 $route = $this->miss->getRoute();
                 if ($route instanceof Closure) {
                     $vars = $this->getActionBindVars();
+
                     return $this->app->invoke($route, $vars);
                 }
                 // 检查分组绑定

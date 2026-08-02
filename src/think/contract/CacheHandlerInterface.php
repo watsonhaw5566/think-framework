@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace think\contract;
 
@@ -22,7 +23,6 @@ use think\cache\TagSet;
  */
 interface CacheHandlerInterface extends CacheInterface
 {
-
     /**
      * 自增缓存（针对数值缓存）
      * @param string $name 缓存变量名

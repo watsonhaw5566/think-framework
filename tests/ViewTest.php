@@ -67,7 +67,6 @@ class ViewTest extends TestCase
 
 class TestTemplate implements TemplateHandlerInterface
 {
-
     /**
      * 检测是否存在模板文件
      * @param string $template 模板文件或者模板规则

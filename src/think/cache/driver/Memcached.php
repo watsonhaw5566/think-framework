@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\cache\driver;
 
@@ -16,6 +17,7 @@ use DateInterval;
 use DateTimeInterface;
 use think\cache\Driver;
 use think\exception\InvalidCacheException;
+use BadFunctionCallException;
 
 /**
  * Memcached缓存类
@@ -48,14 +50,14 @@ class Memcached extends Driver
     public function __construct(array $options = [])
     {
         if (!extension_loaded('memcached')) {
-            throw new \BadFunctionCallException('not support: memcached');
+            throw new BadFunctionCallException('not support: memcached');
         }
 
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
         }
 
-        $this->handler = new \Memcached;
+        $this->handler = new \Memcached();
 
         if (!empty($this->options['option'])) {
             $this->handler->setOptions($this->options['option']);
@@ -110,6 +112,7 @@ class Memcached extends Driver
     public function get($name, $default = null): mixed
     {
         $result = $this->handler->get($this->getCacheKey($name));
+
         try {
             return false !== $result ? $this->unserialize($result) : $this->getDefaultValue($name, $default);
         } catch (InvalidCacheException $e) {

@@ -18,6 +18,7 @@ use DateTimeInterface;
 /**
  * Cookie管理类
  * @package think
+ * @phpstan-consistent-constructor
  */
 class Cookie
 {

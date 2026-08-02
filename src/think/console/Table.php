@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,15 +9,15 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\console;
 
 class Table
 {
-    const ALIGN_LEFT   = 1;
-    const ALIGN_RIGHT  = 0;
-    const ALIGN_CENTER = 2;
+    public const ALIGN_LEFT   = 1;
+    public const ALIGN_RIGHT  = 0;
+    public const ALIGN_CENTER = 2;
 
     /**
      * 头信息数据
@@ -142,6 +143,7 @@ class Table
     public function setCellAlign(int $align = 1)
     {
         $this->cellAlign = $align;
+
         return $this;
     }
 

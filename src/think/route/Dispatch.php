@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\route;
 
@@ -22,6 +23,7 @@ use think\exception\HttpException;
 use think\Request;
 use think\Response;
 use think\Validate;
+use Closure;
 
 /**
  * 路由调度基础类
@@ -58,6 +60,7 @@ abstract class Dispatch
     public function run(): Response
     {
         $data = $this->exec();
+
         return $this->autoResponse($data);
     }
 
@@ -79,7 +82,7 @@ abstract class Dispatch
             $data = ob_get_clean();
 
             $content  = false === $data ? '' : $data;
-            $status   = '' === $content && $this->request->isJson() ? 204 : 200;
+            $status   = ''    === $content && $this->request->isJson() ? 204 : 200;
             $response = Response::create($content, 'html', $status);
         }
 
@@ -141,6 +144,7 @@ abstract class Dispatch
     protected function getActionBindVars(): array
     {
         $bind = $this->rule->config('action_bind_param');
+
         return match ($bind) {
             'route' => $this->param,
             'param' => $this->request->param(),
@@ -153,12 +157,13 @@ abstract class Dispatch
      * @access public
      * @param object $instance 控制器实例
      * @param string $action
-     * @return void
+     * @return mixed
      */
     protected function responseWithMiddlewarePipeline($instance, $action)
     {
         // 注册控制器中间件
         $this->registerControllerMiddleware($instance);
+
         return $this->app->middleware->pipeline('controller')
             ->send($this->request)
             ->then(function () use ($instance, $action) {
@@ -168,6 +173,7 @@ abstract class Dispatch
 
                 if (is_callable([$instance, $action])) {
                     $vars = $this->getActionBindVars();
+
                     try {
                         $reflect = new ReflectionMethod($instance, $action);
                         // 严格获取当前操作方法名
@@ -260,7 +266,7 @@ abstract class Dispatch
     protected function createBindModel(array $bindModel, array $matches): void
     {
         foreach ($bindModel as $key => $val) {
-            if ($val instanceof \Closure) {
+            if ($val instanceof Closure) {
                 $result = $this->app->invokeFunction($val, $matches);
             } else {
                 $fields = explode('&', $key);
@@ -359,7 +365,7 @@ abstract class Dispatch
         $this->param      = $data['param'];
         $this->controller = $data['controller'];
         $this->actionName = $data['actionName'];
-        
+
         $this->app     = Container::pull('app');
         $this->request = $this->app->request;
     }

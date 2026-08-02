@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think;
 
@@ -40,9 +41,9 @@ use think\initializer\RegisterService;
 class App extends Container
 {
     /**
-     * 核心框架版本 
+     * 核心框架版本
      * @deprecated 已经废弃 请改用version()方法
-     */    
+     */
     public const VERSION = '8.0.0';
 
     /**
@@ -243,6 +244,7 @@ class App extends Container
     public function getService(Service | string $service): ?Service
     {
         $name = is_string($service) ? $service : $service::class;
+
         return array_values(array_filter($this->services, function ($value) use ($name) {
             return $value instanceof $name;
         }, ARRAY_FILTER_USE_BOTH))[0] ?? null;
@@ -257,6 +259,7 @@ class App extends Container
     public function debug(bool $debug = true)
     {
         $this->appDebug = $debug;
+
         return $this;
     }
 
@@ -279,6 +282,7 @@ class App extends Container
     public function setNamespace(string $namespace)
     {
         $this->namespace = $namespace;
+
         return $this;
     }
 
@@ -301,6 +305,7 @@ class App extends Container
     public function setBaseEnvName(string $name)
     {
         $this->baseEnvName = $name;
+
         return $this;
     }
 
@@ -313,6 +318,7 @@ class App extends Container
     public function setEnvName(string $name)
     {
         $this->envName = $name;
+
         return $this;
     }
 
@@ -323,7 +329,11 @@ class App extends Container
      */
     public function version(): string
     {
-        return ltrim(InstalledVersions::getPrettyVersion('topthink/framework'), 'v');
+        $version = InstalledVersions::getPrettyVersion('topthink/framework')
+            ?? InstalledVersions::getPrettyVersion('watsonhaw/think-framework')
+            ?? '';
+
+        return ltrim($version, 'v');
     }
 
     /**
@@ -621,7 +631,7 @@ class App extends Container
 
         if (isset($event['subscribe'])) {
             $this->event->subscribe($event['subscribe']);
-        }      
+        }
     }
 
     /**
@@ -639,7 +649,7 @@ class App extends Container
             // 多模块模式
             $layer = $module . $layer;
         } else {
-            $name  = $module . $name;
+            $name = $module . $name;
         }
         $name  = str_replace(['/', '.'], '\\', $name);
         $array = explode('\\', $name);

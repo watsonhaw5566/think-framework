@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -51,6 +52,7 @@ class Session extends Manager
     {
         $config = $this->app->config->get('session', []);
         Arr::forget($config, 'type');
+
         return $config;
     }
 

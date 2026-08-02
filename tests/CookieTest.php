@@ -24,13 +24,13 @@ class CookieTest extends TestCase
     protected function setUp(): void
     {
         $this->request = m::mock(Request::class);
-        $this->config = m::mock(Config::class);
-        
+        $this->config  = m::mock(Config::class);
+
         $this->cookie = new Cookie($this->request, [
-            'expire' => 3600,
-            'path' => '/',
-            'domain' => 'test.com',
-            'secure' => false,
+            'expire'   => 3600,
+            'path'     => '/',
+            'domain'   => 'test.com',
+            'secure'   => false,
             'httponly' => true,
             'samesite' => 'lax'
         ]);
@@ -48,7 +48,7 @@ class CookieTest extends TestCase
             ->andReturn(['expire' => 7200]);
 
         $cookie = Cookie::__make($this->request, $this->config);
-        
+
         $this->assertInstanceOf(Cookie::class, $cookie);
     }
 
@@ -59,7 +59,7 @@ class CookieTest extends TestCase
             ->andReturn('cookie_value');
 
         $result = $this->cookie->get('test_cookie', 'default');
-        
+
         $this->assertEquals('cookie_value', $result);
     }
 
@@ -70,7 +70,7 @@ class CookieTest extends TestCase
             ->andReturn(['cookie1' => 'value1', 'cookie2' => 'value2']);
 
         $result = $this->cookie->get();
-        
+
         $this->assertEquals(['cookie1' => 'value1', 'cookie2' => 'value2'], $result);
     }
 
@@ -81,7 +81,7 @@ class CookieTest extends TestCase
             ->andReturn(true);
 
         $result = $this->cookie->has('test_cookie');
-        
+
         $this->assertTrue($result);
     }
 
@@ -92,7 +92,7 @@ class CookieTest extends TestCase
             ->andReturn(false);
 
         $result = $this->cookie->has('nonexistent_cookie');
-        
+
         $this->assertFalse($result);
     }
 
@@ -102,7 +102,7 @@ class CookieTest extends TestCase
             ->with('test_cookie', 'test_value');
 
         $this->cookie->set('test_cookie', 'test_value');
-        
+
         $cookies = $this->cookie->getCookie();
         $this->assertArrayHasKey('test_cookie', $cookies);
         $this->assertEquals('test_value', $cookies['test_cookie'][0]);
@@ -114,7 +114,7 @@ class CookieTest extends TestCase
             ->with('test_cookie', 'test_value');
 
         $this->cookie->set('test_cookie', 'test_value', 7200);
-        
+
         $cookies = $this->cookie->getCookie();
         $this->assertArrayHasKey('test_cookie', $cookies);
         $this->assertGreaterThan(time(), $cookies['test_cookie'][1]);
@@ -123,12 +123,12 @@ class CookieTest extends TestCase
     public function testSetWithDateTimeExpire()
     {
         $expire = new DateTime('+1 hour');
-        
+
         $this->request->shouldReceive('setCookie')
             ->with('test_cookie', 'test_value');
 
         $this->cookie->set('test_cookie', 'test_value', $expire);
-        
+
         $cookies = $this->cookie->getCookie();
         $this->assertEquals($expire->getTimestamp(), $cookies['test_cookie'][1]);
     }
@@ -136,10 +136,10 @@ class CookieTest extends TestCase
     public function testSetWithArrayOptions()
     {
         $options = [
-            'expire' => 1800,
-            'path' => '/test',
-            'domain' => 'example.com',
-            'secure' => true,
+            'expire'   => 1800,
+            'path'     => '/test',
+            'domain'   => 'example.com',
+            'secure'   => true,
             'httponly' => false,
             'samesite' => 'strict'
         ];
@@ -148,10 +148,10 @@ class CookieTest extends TestCase
             ->with('test_cookie', 'test_value');
 
         $this->cookie->set('test_cookie', 'test_value', $options);
-        
-        $cookies = $this->cookie->getCookie();
+
+        $cookies    = $this->cookie->getCookie();
         $cookieData = $cookies['test_cookie'];
-        
+
         $this->assertEquals('test_value', $cookieData[0]);
         $this->assertGreaterThan(time(), $cookieData[1]);
         $this->assertEquals('/test', $cookieData[2]['path']);
@@ -163,14 +163,14 @@ class CookieTest extends TestCase
 
     public function testSetWithDateTimeInOptions()
     {
-        $expire = new DateTime('+2 hours');
+        $expire  = new DateTime('+2 hours');
         $options = ['expire' => $expire];
 
         $this->request->shouldReceive('setCookie')
             ->with('test_cookie', 'test_value');
 
         $this->cookie->set('test_cookie', 'test_value', $options);
-        
+
         $cookies = $this->cookie->getCookie();
         $this->assertEquals($expire->getTimestamp(), $cookies['test_cookie'][1]);
     }
@@ -181,7 +181,7 @@ class CookieTest extends TestCase
             ->with('forever_cookie', 'forever_value');
 
         $this->cookie->forever('forever_cookie', 'forever_value');
-        
+
         $cookies = $this->cookie->getCookie();
         $this->assertArrayHasKey('forever_cookie', $cookies);
         $this->assertEquals('forever_value', $cookies['forever_cookie'][0]);
@@ -196,10 +196,10 @@ class CookieTest extends TestCase
             ->with('forever_cookie', 'forever_value');
 
         $this->cookie->forever('forever_cookie', 'forever_value', $options);
-        
-        $cookies = $this->cookie->getCookie();
+
+        $cookies    = $this->cookie->getCookie();
         $cookieData = $cookies['forever_cookie'];
-        
+
         $this->assertEquals('/forever', $cookieData[2]['path']);
         $this->assertTrue($cookieData[2]['secure']);
         $this->assertGreaterThan(time() + 315360000 - 10, $cookieData[1]);
@@ -211,7 +211,7 @@ class CookieTest extends TestCase
             ->with('forever_cookie', 'forever_value');
 
         $this->cookie->forever('forever_cookie', 'forever_value', null);
-        
+
         $cookies = $this->cookie->getCookie();
         $this->assertArrayHasKey('forever_cookie', $cookies);
     }
@@ -222,7 +222,7 @@ class CookieTest extends TestCase
             ->with('forever_cookie', 'forever_value');
 
         $this->cookie->forever('forever_cookie', 'forever_value', 123);
-        
+
         $cookies = $this->cookie->getCookie();
         $this->assertArrayHasKey('forever_cookie', $cookies);
     }
@@ -233,7 +233,7 @@ class CookieTest extends TestCase
             ->with('test_cookie', null);
 
         $this->cookie->delete('test_cookie');
-        
+
         $cookies = $this->cookie->getCookie();
         $this->assertArrayHasKey('test_cookie', $cookies);
         $this->assertEquals('', $cookies['test_cookie'][0]);
@@ -248,10 +248,10 @@ class CookieTest extends TestCase
             ->with('test_cookie', null);
 
         $this->cookie->delete('test_cookie', $options);
-        
-        $cookies = $this->cookie->getCookie();
+
+        $cookies    = $this->cookie->getCookie();
         $cookieData = $cookies['test_cookie'];
-        
+
         $this->assertEquals('', $cookieData[0]);
         $this->assertEquals('/test', $cookieData[2]['path']);
         $this->assertEquals('example.com', $cookieData[2]['domain']);
@@ -266,9 +266,9 @@ class CookieTest extends TestCase
 
         $this->cookie->set('cookie1', 'value1');
         $this->cookie->set('cookie2', 'value2');
-        
+
         $cookies = $this->cookie->getCookie();
-        
+
         $this->assertArrayHasKey('cookie1', $cookies);
         $this->assertArrayHasKey('cookie2', $cookies);
         $this->assertEquals('value1', $cookies['cookie1'][0]);
@@ -278,18 +278,18 @@ class CookieTest extends TestCase
     public function testSave()
     {
         // Mock the protected saveCookie method by extending the class
-        $cookie = new class($this->request) extends Cookie {
+        $cookie = new class ($this->request) extends Cookie {
             public $savedCookies = [];
-            
+
             protected function saveCookie(string $name, string $value, int $expire, string $path, string $domain, bool $secure, bool $httponly, string $samesite): void
             {
                 $this->savedCookies[] = [
-                    'name' => $name,
-                    'value' => $value,
-                    'expire' => $expire,
-                    'path' => $path,
-                    'domain' => $domain,
-                    'secure' => $secure,
+                    'name'     => $name,
+                    'value'    => $value,
+                    'expire'   => $expire,
+                    'path'     => $path,
+                    'domain'   => $domain,
+                    'secure'   => $secure,
                     'httponly' => $httponly,
                     'samesite' => $samesite,
                 ];
@@ -301,7 +301,7 @@ class CookieTest extends TestCase
 
         $cookie->set('test_cookie', 'test_value');
         $cookie->save();
-        
+
         $this->assertCount(1, $cookie->savedCookies);
         $this->assertEquals('test_cookie', $cookie->savedCookies[0]['name']);
         $this->assertEquals('test_value', $cookie->savedCookies[0]['value']);
@@ -311,7 +311,7 @@ class CookieTest extends TestCase
     {
         $cookie = new Cookie($this->request, [
             'EXPIRE' => 1800,
-            'PATH' => '/test',
+            'PATH'   => '/test',
             'DOMAIN' => 'TEST.COM'
         ]);
 
@@ -319,10 +319,10 @@ class CookieTest extends TestCase
             ->with('test_cookie', 'test_value');
 
         $cookie->set('test_cookie', 'test_value');
-        
-        $cookies = $cookie->getCookie();
+
+        $cookies    = $cookie->getCookie();
         $cookieData = $cookies['test_cookie'];
-        
+
         $this->assertEquals('/test', $cookieData[2]['path']);
         $this->assertEquals('TEST.COM', $cookieData[2]['domain']);
     }
@@ -335,10 +335,10 @@ class CookieTest extends TestCase
             ->with('test_cookie', 'test_value');
 
         $cookie->set('test_cookie', 'test_value');
-        
-        $cookies = $cookie->getCookie();
+
+        $cookies    = $cookie->getCookie();
         $cookieData = $cookies['test_cookie'];
-        
+
         $this->assertEquals('/', $cookieData[2]['path']);
         $this->assertEquals('', $cookieData[2]['domain']);
         $this->assertFalse($cookieData[2]['secure']);

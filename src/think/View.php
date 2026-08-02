@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -14,6 +15,7 @@ namespace think;
 
 use think\contract\TemplateHandlerInterface;
 use think\helper\Arr;
+use Exception;
 
 /**
  * 视图类
@@ -21,7 +23,6 @@ use think\helper\Arr;
  */
 class View extends Manager
 {
-
     protected $namespace = '\\think\\view\\driver\\';
 
     /**
@@ -74,6 +75,7 @@ class View extends Manager
     public function filter(?callable $filter = null)
     {
         $this->filter = $filter;
+
         return $this;
     }
 
@@ -83,7 +85,7 @@ class View extends Manager
      * @param string $template 模板文件名或者内容
      * @param array  $vars     模板变量
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function fetch(string $template = '', array $vars = []): string
     {
@@ -110,7 +112,7 @@ class View extends Manager
      * 获取模板引擎渲染内容
      * @param $callback
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getContent($callback): string
     {
@@ -121,8 +123,9 @@ class View extends Manager
         // 渲染输出
         try {
             $callback();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ob_end_clean();
+
             throw $e;
         }
 
@@ -173,6 +176,7 @@ class View extends Manager
     {
         $config = $this->app->config->get('view', []);
         Arr::forget($config, 'type');
+
         return $config;
     }
 

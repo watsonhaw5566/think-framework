@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -8,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace think\route;
 
@@ -375,6 +376,7 @@ abstract class Rule
     public function domain(string $domain)
     {
         $this->domain = $domain;
+
         return $this->setOption('domain', $domain);
     }
 
@@ -403,7 +405,7 @@ abstract class Rule
     /**
      * 检查Header信息
      * @access public
-     * @param  array $header 
+     * @param  array $header
      * @return $this
      */
     public function header(array $header = [])
@@ -414,12 +416,13 @@ abstract class Rule
     /**
      * 检查版本控制
      * @access public
-     * @param  string $version 
+     * @param  string $version
      * @return $this
      */
     public function version(string $version)
     {
         $key = $this->config('api_version');
+
         return $this->header([$key => $version]);
     }
 
@@ -437,7 +440,7 @@ abstract class Rule
     /**
      * 设置路由自动注册中间件
      * @access public
-     * @param  bool $auto 
+     * @param  bool $auto
      * @return $this
      */
     public function autoMiddleware(bool $auto = true)
@@ -579,6 +582,7 @@ abstract class Rule
     public function mergeOptions(array $option = [])
     {
         $this->mergeOptions = array_merge($this->mergeOptions, $option);
+
         return $this;
     }
 
@@ -678,6 +682,7 @@ abstract class Rule
     public function crossDomainRule()
     {
         $this->router->setCrossDomainRule($this);
+
         return $this;
     }
 
@@ -701,7 +706,7 @@ abstract class Rule
 
         // 替换路由地址中的变量
         $extraParams = true;
-        $search      = $replace      = [];
+        $search      = $replace = [];
         $depr        = $this->config('pathinfo_depr');
 
         foreach ($matches as $key => $value) {
@@ -881,6 +886,7 @@ abstract class Rule
                 }
             }
         }
+
         return true;
     }
 
@@ -935,6 +941,8 @@ abstract class Rule
      */
     protected function buildRuleRegex(string $rule, array $match, array $pattern = [], array $option = [], bool $completeMatch = false, string $suffix = ''): string
     {
+        $origin  = [];
+        $replace = [];
         foreach ($match as $name) {
             $value = $this->buildNameRegex($name, $pattern, $suffix);
             if ($value) {
@@ -953,7 +961,7 @@ abstract class Rule
             }
         }
 
-        $regex = isset($replace) ? str_replace($origin, $replace, $rule) : $rule;
+        $regex = !empty($replace) ? str_replace($origin, $replace, $rule) : $rule;
         $regex = str_replace([')?/', ')?-'], [')/', ')-'], $regex);
 
         if (isset($hasSlash)) {
@@ -1050,7 +1058,7 @@ abstract class Rule
         $this->vars    = $data['vars'];
         $this->option  = $data['option'];
         $this->pattern = $data['pattern'];
-        
+
         $this->router = Container::pull('route');
     }
 

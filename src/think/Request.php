@@ -17,10 +17,12 @@ use ArrayAccess;
 use think\facade\Lang;
 use think\file\UploadedFile;
 use think\route\Rule;
+use InvalidArgumentException;
 
 /**
  * 请求管理类
  * @package think
+ * @phpstan-consistent-constructor
  */
 class Request implements ArrayAccess
 {
@@ -223,6 +225,18 @@ class Request implements ArrayAccess
     protected $put;
 
     /**
+     * 当前PATCH参数
+     * @var array
+     */
+    protected $patch;
+
+    /**
+     * 当前DELETE参数
+     * @var array
+     */
+    protected $delete;
+
+    /**
      * SESSION对象
      * @var Session
      */
@@ -352,7 +366,7 @@ class Request implements ArrayAccess
         $request->put     = $inputData;
         $request->request = $_REQUEST;
         $request->cookie  = $_COOKIE;
-        $request->file    = $_FILES ?? [];
+        $request->file    = $_FILES;
 
         return $request;
     }
@@ -366,6 +380,7 @@ class Request implements ArrayAccess
     public function setDomain(string $domain)
     {
         $this->domain = $domain;
+
         return $this;
     }
 
@@ -388,6 +403,7 @@ class Request implements ArrayAccess
     public function setRootDomain(string $domain)
     {
         $this->rootDomain = $domain;
+
         return $this;
     }
 
@@ -425,6 +441,7 @@ class Request implements ArrayAccess
     public function setSubDomain(string $domain)
     {
         $this->subDomain = $domain;
+
         return $this;
     }
 
@@ -459,6 +476,7 @@ class Request implements ArrayAccess
     public function setPanDomain(string $domain)
     {
         $this->panDomain = $domain;
+
         return $this;
     }
 
@@ -481,6 +499,7 @@ class Request implements ArrayAccess
     public function setUrl(string $url)
     {
         $this->url = $url;
+
         return $this;
     }
 
@@ -518,6 +537,7 @@ class Request implements ArrayAccess
     public function setBaseUrl(string $url)
     {
         $this->baseUrl = $url;
+
         return $this;
     }
 
@@ -576,6 +596,7 @@ class Request implements ArrayAccess
     public function setRoot(string $url)
     {
         $this->root = $url;
+
         return $this;
     }
 
@@ -624,6 +645,7 @@ class Request implements ArrayAccess
     public function setPathinfo(string $pathinfo)
     {
         $this->pathinfo = $pathinfo;
+
         return $this;
     }
 
@@ -738,6 +760,7 @@ class Request implements ArrayAccess
     public function setMethod(string $method)
     {
         $this->method = strtoupper($method);
+
         return $this;
     }
 
@@ -879,9 +902,9 @@ class Request implements ArrayAccess
 
             // 自动获取请求变量
             $vars = match ($method) {
-                'POST' => $this->post(false),
+                'POST'                   => $this->post(false),
                 'PUT', 'DELETE', 'PATCH' => $this->put(false),
-                default => [],
+                default                  => [],
             };
 
             // 当前请求参数和URL地址中的参数合并
@@ -926,6 +949,7 @@ class Request implements ArrayAccess
     public function setRule(Rule $rule)
     {
         $this->rule = $rule;
+
         return $this;
     }
 
@@ -949,6 +973,7 @@ class Request implements ArrayAccess
     {
         $this->route      = array_merge($this->route, $route);
         $this->mergeParam = false;
+
         return $this;
     }
 
@@ -998,6 +1023,7 @@ class Request implements ArrayAccess
         if (is_null($name)) {
             return $this->middleware;
         }
+
         return $this->middleware[$name] ?? $default;
     }
 
@@ -1040,6 +1066,7 @@ class Request implements ArrayAccess
         $contentType = $this->contentType();
         if ('application/x-www-form-urlencoded' == $contentType) {
             parse_str($content, $data);
+
             return $data;
         }
 
@@ -1105,6 +1132,7 @@ class Request implements ArrayAccess
         if (empty($name)) {
             return $this->env->get();
         }
+
         return $this->env->get(strtoupper($name), $default);
     }
 
@@ -1120,6 +1148,7 @@ class Request implements ArrayAccess
         if ('' === $name) {
             return $this->session->all();
         }
+
         return $this->session->get($name, $default);
     }
 
@@ -1163,6 +1192,7 @@ class Request implements ArrayAccess
         if (empty($name)) {
             return $this->server;
         }
+
         return $this->server[strtoupper($name)] ?? $default;
     }
 
@@ -1254,6 +1284,7 @@ class Request implements ArrayAccess
         ];
 
         $msg = Lang::get($fileUploadErrors[$error]);
+
         throw new Exception($msg, $error);
     }
 
@@ -1271,6 +1302,7 @@ class Request implements ArrayAccess
         }
 
         $name = str_replace('_', '-', strtolower($name));
+
         return $this->header[$name] ?? $default;
     }
 
@@ -1344,7 +1376,7 @@ class Request implements ArrayAccess
             'b'     => (bool) $data,
             'd'     => (int) $data,
             'f'     => (float) $data,
-            's'     => is_scalar($data) ? (string) $data : throw new \InvalidArgumentException('variable type error：' . gettype($data)),
+            's'     => is_scalar($data) ? (string) $data : throw new InvalidArgumentException('variable type error：' . gettype($data)),
             default => $data,
         };
     }
@@ -1836,6 +1868,7 @@ class Request implements ArrayAccess
             } else {
                 $type = $contentType;
             }
+
             return trim($type);
         }
 
@@ -1865,6 +1898,7 @@ class Request implements ArrayAccess
     public function setLayer(string $layer)
     {
         $this->layer = $layer;
+
         return $this;
     }
 
@@ -1877,6 +1911,7 @@ class Request implements ArrayAccess
     public function setController(string $controller)
     {
         $this->controller = $controller;
+
         return $this;
     }
 
@@ -1889,6 +1924,7 @@ class Request implements ArrayAccess
     public function setAction(string $action)
     {
         $this->action = $action;
+
         return $this;
     }
 
@@ -1901,6 +1937,7 @@ class Request implements ArrayAccess
     public function layer(bool $convert = false): string
     {
         $name = $this->layer ?: '';
+
         return $convert ? strtolower($name) : $name;
     }
 
@@ -1917,6 +1954,7 @@ class Request implements ArrayAccess
         if ($base) {
             $name = basename(str_replace('.', '/', $name));
         }
+
         return $convert ? strtolower($name) : $name;
     }
 
@@ -1929,6 +1967,7 @@ class Request implements ArrayAccess
     public function action(bool $convert = false): string
     {
         $name = $this->action ?: '';
+
         return $convert ? strtolower($name) : $name;
     }
 
@@ -1995,6 +2034,7 @@ class Request implements ArrayAccess
         if ($this->header('X-CSRF-TOKEN') && $this->session->get($token) === $this->header('X-CSRF-TOKEN')) {
             // 防止重复提交
             $this->session->delete($token); // 验证完成销毁session
+
             return true;
         }
 
@@ -2006,11 +2046,13 @@ class Request implements ArrayAccess
         if (isset($data[$token]) && $this->session->get($token) === $data[$token]) {
             // 防止重复提交
             $this->session->delete($token); // 验证完成销毁session
+
             return true;
         }
 
         // 开启TOKEN重置
         $this->session->delete($token);
+
         return false;
     }
 
@@ -2023,6 +2065,7 @@ class Request implements ArrayAccess
     public function withMiddleware(array $middleware)
     {
         $this->middleware = array_merge($this->middleware, $middleware);
+
         return $this;
     }
 
@@ -2035,6 +2078,7 @@ class Request implements ArrayAccess
     public function withGet(array $get)
     {
         $this->get = $get;
+
         return $this;
     }
 
@@ -2047,6 +2091,7 @@ class Request implements ArrayAccess
     public function withPost(array $post)
     {
         $this->post = $post;
+
         return $this;
     }
 
@@ -2059,6 +2104,7 @@ class Request implements ArrayAccess
     public function withCookie(array $cookie)
     {
         $this->cookie = $cookie;
+
         return $this;
     }
 
@@ -2083,6 +2129,7 @@ class Request implements ArrayAccess
     public function withSession(Session $session)
     {
         $this->session = $session;
+
         return $this;
     }
 
@@ -2095,6 +2142,7 @@ class Request implements ArrayAccess
     public function withServer(array $server)
     {
         $this->server = array_change_key_case($server, CASE_UPPER);
+
         return $this;
     }
 
@@ -2107,6 +2155,7 @@ class Request implements ArrayAccess
     public function withHeader(array $header)
     {
         $this->header = array_change_key_case($header);
+
         return $this;
     }
 
@@ -2119,6 +2168,7 @@ class Request implements ArrayAccess
     public function withEnv(Env $env)
     {
         $this->env = $env;
+
         return $this;
     }
 
@@ -2138,6 +2188,7 @@ class Request implements ArrayAccess
                 $this->put  = $inputData;
             }
         }
+
         return $this;
     }
 
@@ -2150,6 +2201,7 @@ class Request implements ArrayAccess
     public function withFiles(array $files)
     {
         $this->file = $files;
+
         return $this;
     }
 
@@ -2162,6 +2214,7 @@ class Request implements ArrayAccess
     public function withRoute(array $route)
     {
         $this->route = $route;
+
         return $this;
     }
 
@@ -2209,7 +2262,11 @@ class Request implements ArrayAccess
         return $this->param($name);
     }
 
-    public function offsetSet(mixed $name, mixed $value): void {}
+    public function offsetSet(mixed $name, mixed $value): void
+    {
+    }
 
-    public function offsetUnset(mixed $name): void {}
+    public function offsetUnset(mixed $name): void
+    {
+    }
 }

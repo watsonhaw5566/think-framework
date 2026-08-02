@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -112,7 +113,7 @@ class RuleName
      * @param  string $name 路由分组标识
      * @return bool
      */
-    public function hasGroup(string $name): bool 
+    public function hasGroup(string $name): bool
     {
         return isset($this->group[strtolower($name)]);
     }
@@ -124,8 +125,8 @@ class RuleName
      */
     public function clear(): void
     {
-        $this->item = [];
-        $this->rule = [];
+        $this->item  = [];
+        $this->rule  = [];
         $this->group = [];
     }
 
