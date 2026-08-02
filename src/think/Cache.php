@@ -36,7 +36,7 @@ class Cache extends Manager implements CacheInterface
      */
     public function getDefaultDriver(): ?string
     {
-        return $this->getConfig('default');
+        return $this->getConfig('default', 'file');
     }
 
     /**
@@ -73,12 +73,20 @@ class Cache extends Manager implements CacheInterface
 
     protected function resolveType(string $name)
     {
-        return $this->getStoreConfig($name, 'type', 'file');
+        try {
+            return $this->getStoreConfig($name, 'type', 'file');
+        } catch (\InvalidArgumentException $e) {
+            return 'file';
+        }
     }
 
     protected function resolveConfig(string $name)
     {
-        return $this->getStoreConfig($name);
+        try {
+            return $this->getStoreConfig($name);
+        } catch (\InvalidArgumentException $e) {
+            return [];
+        }
     }
 
     /**
