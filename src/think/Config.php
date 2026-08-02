@@ -83,13 +83,9 @@ class Config
     {
         $type   = pathinfo($file, PATHINFO_EXTENSION);
         $config = [];
-        $config = match ($type) {
-            'php'         => include $file,
-            'yml', 'yaml' => function_exists('yaml_parse_file') ? yaml_parse_file($file) : [],
-            'ini'         => parse_ini_file($file, true, INI_SCANNER_TYPED) ?: [],
-            'json'        => json_decode(file_get_contents($file), true),
-            default       => [],
-        };
+        if ($type === 'php') {
+            $config = include $file;
+        }
 
         return is_array($config) ? $this->set($config, strtolower($name)) : [];
     }
