@@ -329,7 +329,11 @@ class App extends Container
      */
     public function version(): string
     {
-        return ltrim(InstalledVersions::getPrettyVersion('topthink/framework'), 'v');
+        $version = InstalledVersions::getPrettyVersion('topthink/framework')
+            ?? InstalledVersions::getPrettyVersion('watsonhaw/think-framework')
+            ?? '';
+
+        return ltrim($version, 'v');
     }
 
     /**
