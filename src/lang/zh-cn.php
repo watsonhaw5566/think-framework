@@ -51,7 +51,6 @@ return [
     'redisd master'                                             => 'Redisd 主服务器错误',
     'redisd slave'                                              => 'Redisd 从服务器错误',
     'must run at sae'                                           => '必须在SAE运行',
-    'memcache init error'                                       => '未开通Memcache服务，请在SAE管理平台初始化Memcache服务',
     'KVDB init error'                                           => '没有初始化KVDB，请在SAE管理平台初始化KVDB服务',
     'fields not exists'                                         => '数据表字段不存在',
     'where express error'                                       => '查询表达式错误',
@@ -152,6 +151,5 @@ return [
     'invalid Request method'                                    => '无效的请求类型',
     'invalid token'                                             => '令牌数据无效',
     'not conform to the rules'                                  => '规则错误',
-
     'record has update'                                         => '记录已经被更新了',
 ];
