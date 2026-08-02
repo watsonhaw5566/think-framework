@@ -17,6 +17,7 @@ use Closure;
 /**
  * 配置管理类
  * @package think
+ * @phpstan-consistent-constructor
  */
 class Config
 {

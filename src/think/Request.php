@@ -21,6 +21,7 @@ use think\route\Rule;
 /**
  * 请求管理类
  * @package think
+ * @phpstan-consistent-constructor
  */
 class Request implements ArrayAccess
 {
@@ -223,6 +224,18 @@ class Request implements ArrayAccess
     protected $put;
 
     /**
+     * 当前PATCH参数
+     * @var array
+     */
+    protected $patch;
+
+    /**
+     * 当前DELETE参数
+     * @var array
+     */
+    protected $delete;
+
+    /**
      * SESSION对象
      * @var Session
      */
@@ -352,7 +365,7 @@ class Request implements ArrayAccess
         $request->put     = $inputData;
         $request->request = $_REQUEST;
         $request->cookie  = $_COOKIE;
-        $request->file    = $_FILES ?? [];
+        $request->file    = $_FILES;
 
         return $request;
     }

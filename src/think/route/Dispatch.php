@@ -153,7 +153,7 @@ abstract class Dispatch
      * @access public
      * @param object $instance 控制器实例
      * @param string $action
-     * @return void
+     * @return mixed
      */
     protected function responseWithMiddlewarePipeline($instance, $action)
     {

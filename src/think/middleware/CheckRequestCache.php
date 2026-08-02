@@ -94,6 +94,8 @@ class CheckRequestCache
         $response = $next($request);
 
         if (isset($key) && 200 == $response->getCode() && $response->isAllowCache()) {
+            $expire                  = $expire ?? null;
+            $tag                     = $tag ?? '';
             $header                  = $response->getHeader();
             $header['Cache-Control'] = 'max-age=' . $expire . ',must-revalidate';
             $header['Last-Modified'] = gmdate('D, d M Y H:i:s') . ' GMT';

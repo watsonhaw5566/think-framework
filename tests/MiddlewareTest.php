@@ -94,7 +94,7 @@ class MiddlewareTest extends TestCase
 
         $this->assertInstanceOf(Pipeline::class, $pipeline = $this->middleware->pipeline());
 
-        $pipeline->send($request)->then(function ($request) use ($e, $response) {
+        $pipeline->send($request)->then(function ($request) use ($e) {
             throw $e;
         });
 

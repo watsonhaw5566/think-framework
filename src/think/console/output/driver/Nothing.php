@@ -15,10 +15,14 @@ use think\console\Output;
 
 class Nothing
 {
+    /**
+     * @var Output
+     */
+    private $output;
 
     public function __construct(Output $output)
     {
-        // do nothing
+        $this->output = $output;
     }
 
     public function write($messages, bool $newline = false, int $options = 0)

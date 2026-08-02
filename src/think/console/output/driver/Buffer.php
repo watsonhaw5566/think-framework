@@ -16,13 +16,18 @@ use think\console\Output;
 class Buffer
 {
     /**
+     * @var Output
+     */
+    private $output;
+
+    /**
      * @var string
      */
     private $buffer = '';
 
     public function __construct(Output $output)
     {
-        // do nothing
+        $this->output = $output;
     }
 
     public function fetch()

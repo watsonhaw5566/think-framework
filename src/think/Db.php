@@ -16,6 +16,7 @@ namespace think;
  * 数据库管理类
  * @package think
  * @property Config $config
+ * @phpstan-consistent-constructor
  */
 class Db extends DbManager
 {

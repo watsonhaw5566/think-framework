@@ -395,15 +395,17 @@ class RuleGroup extends Rule
                 }
             }
 
-            $rule  = $items[$pos]->getRule();
-            $array = $this->router->getRule($rule);
+            if (isset($pos)) {
+                $rule  = $items[$pos]->getRule();
+                $array = $this->router->getRule($rule);
 
-            foreach ($array as $item) {
-                if (in_array($item->getMethod(), ['*', strtolower($request->method())])) {
-                    $result = $item->checkRule($request, $url, $var);
+                foreach ($array as $item) {
+                    if (in_array($item->getMethod(), ['*', strtolower($request->method())])) {
+                        $result = $item->checkRule($request, $url, $var);
 
-                    if (false !== $result) {
-                        return $result;
+                        if (false !== $result) {
+                            return $result;
+                        }
                     }
                 }
             }
