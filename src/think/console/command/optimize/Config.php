@@ -61,7 +61,7 @@ class Config extends Command
         // 使用 clone 防止多应用配置污染
         $config = clone $this->app->config;
         if (is_dir($path)) {
-            $files = glob($path . '*' . $this->app->getConfigExt());
+            $files = glob($path . '*.php');
             foreach ($files as $file) {
                 $config->load($file, pathinfo($file, PATHINFO_FILENAME));
             }
