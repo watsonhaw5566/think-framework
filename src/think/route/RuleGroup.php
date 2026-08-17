@@ -321,49 +321,19 @@ class RuleGroup extends Rule
     {
         $depr  = $this->config('pathinfo_depr');
         $url   = $depr . str_replace('|', $depr, $url);
-        $regex = [];
-        $items = [];
+        $regex = $items = [];
 
         foreach ($rules as $key => $item) {
-            if ($item instanceof RuleItem) {
-                $rule = $depr . str_replace('/', $depr, $item->getRule());
-                if ($depr == $rule && $depr != $url) {
-                    unset($rules[$key]);
-                    continue;
-                }
+            if ($item instanceof RuleGroup) {
+                return $this->checkMergeRuleRegex($request, $item->getRules(), ltrim($url, $depr), $completeMatch);
+            }
 
-                $complete = $item->getOption('complete_match', $completeMatch);
+            if (!$item instanceof RuleItem) {
+                continue;
+            }
 
-                if (!str_contains($rule, '<')) {
-                    if (0 === strcasecmp($rule, $url) || (!$complete && 0 === strncasecmp($rule, $url, strlen($rule)))) {
-                        return $item->checkRule($request, $url, []);
-                    }
-
-                    unset($rules[$key]);
-                    continue;
-                }
-
-                $slash = preg_quote('/-' . $depr, '/');
-
-                if ($matchRule = preg_split('/[' . $slash . ']<\w+\??>/', $rule, 2)) {
-                    if ($matchRule[0] && 0 !== strncasecmp($rule, $url, strlen($matchRule[0]))) {
-                        unset($rules[$key]);
-                        continue;
-                    }
-                }
-
-                if (preg_match_all('/[' . $slash . ']?<?\w+\??>?/', $rule, $matches)) {
-                    unset($rules[$key]);
-                    $pattern = array_merge($this->getPattern(), $item->getPattern());
-                    $option  = array_merge($this->getOption(), $item->getOption());
-
-                    $regex[$key] = $this->buildRuleRegex($rule, $matches[0], $pattern, $option, $complete, '_THINK_' . $key);
-                    $items[$key] = $item;
-                }
-            } elseif ($item instanceof RuleGroup) {
-                $array = $item->getrules();
-
-                return $this->checkMergeRuleRegex($request, $array, ltrim($url, $depr), $completeMatch);
+            if ($result = $this->processRuleItem($item, $key, $rules, $regex, $items, $url, $depr, $completeMatch, $request)) {
+                return $result;
             }
         }
 
@@ -371,48 +341,113 @@ class RuleGroup extends Rule
             return false;
         }
 
+        return $this->executeMergeRegex($request, $regex, $items, $url, $depr);
+    }
+
+    /**
+     * 处理单个RuleItem，返回false表示继续，非false表示匹配成功
+     */
+    protected function processRuleItem(RuleItem $item, $key, array &$rules, array &$regex, array &$items, string $url, string $depr, bool $completeMatch, Request $request)
+    {
+        $rule = $depr . str_replace('/', $depr, $item->getRule());
+
+        if ($depr == $rule && $depr != $url) {
+            unset($rules[$key]);
+            return false;
+        }
+
+        $complete = $item->getOption('complete_match', $completeMatch);
+
+        if (!str_contains($rule, '<')) {
+            if (0 === strcasecmp($rule, $url) || (!$complete && 0 === strncasecmp($rule, $url, strlen($rule)))) {
+                return $item->checkRule($request, $url, []);
+            }
+            unset($rules[$key]);
+            return false;
+        }
+
+        $slash = preg_quote('/-' . $depr, '/');
+
+        if ($matchRule = preg_split('/[' . $slash . ']<\w+\??>/', $rule, 2)) {
+            if ($matchRule[0] && 0 !== strncasecmp($rule, $url, strlen($matchRule[0]))) {
+                unset($rules[$key]);
+                return false;
+            }
+        }
+
+        if (preg_match_all('/[' . $slash . ']?<?\w+\??>?/', $rule, $matches)) {
+            unset($rules[$key]);
+            $pattern = array_merge($this->getPattern(), $item->getPattern());
+            $option  = array_merge($this->getOption(), $item->getOption());
+            $regex[$key] = $this->buildRuleRegex($rule, $matches[0], $pattern, $option, $complete, '_THINK_' . $key);
+            $items[$key] = $item;
+        }
+
+        return false;
+    }
+
+    /**
+     * 执行合并正则匹配并解析结果
+     */
+    protected function executeMergeRegex(Request $request, array $regex, array $items, string $url, string $depr)
+    {
         try {
             $result = preg_match('~^(?:' . implode('|', $regex) . ')~u', $url, $match);
         } catch (\Exception $e) {
             throw new Exception('route pattern error');
         }
 
-        if ($result) {
-            $var = [];
-            foreach ($match as $key => $val) {
-                if (is_string($key) && '' !== $val) {
-                    [$name, $pos] = explode('_THINK_', $key);
+        if (!$result) {
+            return false;
+        }
 
-                    $var[$name] = $val;
-                }
-            }
+        [$var, $pos] = $this->parseMatchVars($match, $regex, $depr);
 
-            if (!isset($pos)) {
-                foreach ($regex as $key => $item) {
-                    if (str_starts_with(str_replace(['\/', '\-', '\\' . $depr], ['/', '-', $depr], $item), $match[0])) {
-                        $pos = $key;
-                        break;
-                    }
-                }
-            }
+        if (!isset($pos)) {
+            return false;
+        }
 
-            if (isset($pos)) {
-                $rule  = $items[$pos]->getRule();
-                $array = $this->router->getRule($rule);
+        $rule  = $items[$pos]->getRule();
+        $array = $this->router->getRule($rule);
+        $method = strtolower($request->method());
 
-                foreach ($array as $item) {
-                    if (in_array($item->getMethod(), ['*', strtolower($request->method())])) {
-                        $result = $item->checkRule($request, $url, $var);
-
-                        if (false !== $result) {
-                            return $result;
-                        }
-                    }
+        foreach ($array as $item) {
+            if (in_array($item->getMethod(), ['*', $method])) {
+                $result = $item->checkRule($request, $url, $var);
+                if (false !== $result) {
+                    return $result;
                 }
             }
         }
 
         return false;
+    }
+
+    /**
+     * 解析正则匹配的变量和位置
+     */
+    protected function parseMatchVars(array $match, array $regex, string $depr): array
+    {
+        $var = [];
+        $pos = null;
+
+        foreach ($match as $key => $val) {
+            if (is_string($key) && '' !== $val) {
+                [$name, $pos] = explode('_THINK_', $key);
+                $var[$name] = $val;
+            }
+        }
+
+        if (null === $pos) {
+            foreach ($regex as $key => $item) {
+                if (str_starts_with(str_replace(['\/', '\-', '\\' . $depr], ['/', '-', $depr], $item), $match[0])) {
+                    $pos = $key;
+                    break;
+                }
+            }
+        }
+
+        return [$var, $pos];
     }
 
     /**
