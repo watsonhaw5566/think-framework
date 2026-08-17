@@ -353,6 +353,7 @@ class RuleGroup extends Rule
 
         if ($depr == $rule && $depr != $url) {
             unset($rules[$key]);
+
             return false;
         }
 
@@ -363,6 +364,7 @@ class RuleGroup extends Rule
                 return $item->checkRule($request, $url, []);
             }
             unset($rules[$key]);
+
             return false;
         }
 
@@ -371,14 +373,15 @@ class RuleGroup extends Rule
         if ($matchRule = preg_split('/[' . $slash . ']<\w+\??>/', $rule, 2)) {
             if ($matchRule[0] && 0 !== strncasecmp($rule, $url, strlen($matchRule[0]))) {
                 unset($rules[$key]);
+
                 return false;
             }
         }
 
         if (preg_match_all('/[' . $slash . ']?<?\w+\??>?/', $rule, $matches)) {
             unset($rules[$key]);
-            $pattern = array_merge($this->getPattern(), $item->getPattern());
-            $option  = array_merge($this->getOption(), $item->getOption());
+            $pattern     = array_merge($this->getPattern(), $item->getPattern());
+            $option      = array_merge($this->getOption(), $item->getOption());
             $regex[$key] = $this->buildRuleRegex($rule, $matches[0], $pattern, $option, $complete, '_THINK_' . $key);
             $items[$key] = $item;
         }
@@ -407,8 +410,8 @@ class RuleGroup extends Rule
             return false;
         }
 
-        $rule  = $items[$pos]->getRule();
-        $array = $this->router->getRule($rule);
+        $rule   = $items[$pos]->getRule();
+        $array  = $this->router->getRule($rule);
         $method = strtolower($request->method());
 
         foreach ($array as $item) {
@@ -434,7 +437,7 @@ class RuleGroup extends Rule
         foreach ($match as $key => $val) {
             if (is_string($key) && '' !== $val) {
                 [$name, $pos] = explode('_THINK_', $key);
-                $var[$name] = $val;
+                $var[$name]   = $val;
             }
         }
 
