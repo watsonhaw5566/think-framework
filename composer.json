@@ -39,8 +39,12 @@
     "guzzlehttp/psr7": "^2.1.0",
     "mikey179/vfsstream": "^1.6",
     "mockery/mockery": "^1.2",
+    "phpstan/phpstan": "^2.2",
     "phpunit/phpunit": "^12",
-    "phpstan/phpstan": "^2.2"
+    "symfony/yaml": "^5.4|^6.0|^7.0"
+  },
+  "suggest": {
+    "symfony/yaml": "支持 .yml/.yaml 格式的环境变量文件 (^5.4|^6.0|^7.0)"
   },
   "autoload": {
     "files": [],
