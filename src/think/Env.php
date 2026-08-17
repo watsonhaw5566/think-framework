@@ -51,8 +51,53 @@ class Env implements ArrayAccess
      */
     public function load(string $file): void
     {
-        $env = parse_ini_file($file, true, INI_SCANNER_RAW) ?: [];
+        $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION)) ?: 'env';
+        $env       = $this->parseFile($file, $extension);
         $this->set($env);
+    }
+
+    /**
+     * 根据扩展名解析环境变量文件
+     * @access protected
+     * @param string $file      文件路径
+     * @param string $extension 扩展名
+     * @return array
+     */
+    protected function parseFile(string $file, string $extension): array
+    {
+        return match ($extension) {
+            'env', 'ini'  => $this->parseIni($file),
+            'yml', 'yaml' => $this->parseYaml($file),
+            default       => throw new Exception("不支持的环境变量文件格式: {$extension}"),
+        };
+    }
+
+    /**
+     * 解析 INI 格式文件
+     * @access protected
+     * @param string $file 文件路径
+     * @return array
+     */
+    protected function parseIni(string $file): array
+    {
+        return parse_ini_file($file, true, INI_SCANNER_RAW) ?: [];
+    }
+
+    /**
+     * 解析 YAML 格式文件
+     * @access protected
+     * @param string $file 文件路径
+     * @return array
+     */
+    protected function parseYaml(string $file): array
+    {
+        if (!class_exists(\Symfony\Component\Yaml\Yaml::class)) {
+            throw new Exception('使用 YAML 格式环境变量文件需先安装 symfony/yaml: composer require symfony/yaml');
+        }
+
+        $env = \Symfony\Component\Yaml\Yaml::parseFile($file);
+
+        return is_array($env) ? $env : [];
     }
 
     /**
@@ -113,24 +158,54 @@ class Env implements ArrayAccess
         if (is_array($env)) {
             $env = array_change_key_case($env, CASE_UPPER);
 
-            foreach ($env as $key => $val) {
-                if (is_array($val)) {
-                    foreach ($val as $k => $v) {
-                        if (is_string($k)) {
-                            $this->data[$key . '_' . strtoupper($k)] = $v;
-                        } else {
-                            $this->data[$key][$k] = $v;
-                        }
-                    }
-                } else {
-                    $this->data[$key] = $val;
-                }
+            foreach ($this->flattenArray($env) as $key => $val) {
+                $this->data[$key] = $val;
             }
         } else {
             $name = strtoupper(str_replace('.', '_', $env));
 
             $this->data[$name] = $value;
         }
+    }
+
+    /**
+     * 递归将多维关联数组扁平化为一维（使用 _ 拼接键名）
+     * 索引数组（数字键）保持原样，不参与扁平化
+     * @access protected
+     * @param array  $array 待处理数组
+     * @param string $prefix 键名前缀
+     * @return array
+     */
+    protected function flattenArray(array $array, string $prefix = ''): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            $newKey = $prefix === '' ? strtoupper((string) $key) : $prefix . '_' . strtoupper((string) $key);
+
+            if (is_array($value) && $this->isAssocArray($value)) {
+                $result = array_merge($result, $this->flattenArray($value, $newKey));
+            } else {
+                $result[$newKey] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * 判断数组是否为关联数组（非纯数字连续索引）
+     * @access protected
+     * @param array $array
+     * @return bool
+     */
+    protected function isAssocArray(array $array): bool
+    {
+        if ($array === []) {
+            return false;
+        }
+
+        return array_keys($array) !== range(0, count($array) - 1);
     }
 
     /**
