@@ -7,9 +7,6 @@ namespace think\tests;
 use Mockery as m;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
-use think\App;
-use think\Config;
-use think\Container;
 use think\Request;
 use think\Route;
 use think\route\AttributeRoute;
@@ -26,8 +23,8 @@ class AttributeRouteTest extends TestCase
         $this->prepareApp();
 
         $this->config->shouldReceive('get')->with('route')->andReturn([
-            'url_route_must'   => true,
-            'url_html_suffix'  => false,
+            'url_route_must'  => true,
+            'url_html_suffix' => false,
         ]);
 
         $this->route = new Route($this->app);
@@ -141,13 +138,13 @@ class AttributeRouteTest extends TestCase
      */
     protected function getRuleMiddlewares(string $rule, string $method = 'GET'): array
     {
-        $rules = $this->route->getRule($rule);
+        $rules  = $this->route->getRule($rule);
         $method = strtolower($method);
 
         foreach ($rules as $item) {
             if (in_array($item->getMethod(), ['*', $method])) {
                 $middlewares = $item->getOption('middleware', []);
-                $names = [];
+                $names       = [];
                 foreach ($middlewares as $mw) {
                     if (is_array($mw)) {
                         $names[] = is_array($mw[0]) ? $mw[0][0] : $mw[0];
@@ -155,6 +152,7 @@ class AttributeRouteTest extends TestCase
                         $names[] = $mw;
                     }
                 }
+
                 return $names;
             }
         }
