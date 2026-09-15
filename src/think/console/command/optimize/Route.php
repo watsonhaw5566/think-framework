@@ -19,6 +19,7 @@ use think\console\Input;
 use think\console\input\Argument;
 use think\console\Output;
 use think\event\RouteLoaded;
+use think\route\AttributeRoute;
 use Throwable;
 
 class Route extends Command
@@ -89,6 +90,16 @@ class Route extends Command
         }
 
         $this->scanRoute($path, $path, $autoGroup);
+
+        // 扫描控制器注解路由
+        $attributeScan = $this->app->config->get('route.attribute_scan', false);
+        if ($attributeScan !== false) {
+            $paths = $attributeScan === true
+                ? [$this->app->getBasePath() . 'controller']
+                : (array) $attributeScan;
+
+            $this->app->make(AttributeRoute::class)->scan($paths);
+        }
 
         //触发路由载入完成事件
         $this->app->event->trigger(RouteLoaded::class);

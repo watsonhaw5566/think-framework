@@ -17,6 +17,7 @@ use think\event\HttpEnd;
 use think\event\HttpRun;
 use think\event\RouteLoaded;
 use think\exception\Handle;
+use think\route\AttributeRoute;
 use Throwable;
 
 /**
@@ -239,7 +240,42 @@ class Http
             }
         }
 
+        // 扫描控制器注解路由
+        $this->loadAttributeRoutes();
+
         $this->app->event->trigger(RouteLoaded::class);
+    }
+
+    /**
+     * 扫描控制器注解路由
+     *
+     * 配置项 route.attribute_scan 支持：
+     *   - false：关闭（默认）
+     *   - true：扫描默认控制器目录 app/controller
+     *   - array：扫描指定的目录列表
+     */
+    protected function loadAttributeRoutes(): void
+    {
+        $config = $this->app->config->get('route.attribute_scan', false);
+
+        if ($config === false) {
+            return;
+        }
+
+        $paths = [];
+        if ($config === true) {
+            $paths[] = $this->app->getBasePath() . 'controller';
+        } elseif (is_array($config)) {
+            $paths = $config;
+        }
+
+        if (empty($paths)) {
+            return;
+        }
+
+        /** @var AttributeRoute $scanner */
+        $scanner = $this->app->make(AttributeRoute::class);
+        $scanner->scan($paths);
     }
 
     /**
