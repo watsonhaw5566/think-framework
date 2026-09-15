@@ -78,66 +78,6 @@ class EnvTest extends TestCase
         $this->assertTrue($env->offsetExists('foo'));
     }
 
-    public function testYamlFile()
-    {
-        $root        = vfsStream::setup();
-        $yamlContent = <<<YAML
-key1: value1
-key2: value2
-YAML;
-        $envFile = vfsStream::newFile('.env.yml')->setContent($yamlContent);
-        $root->addChild($envFile);
-
-        $env = new Env();
-        $env->load($envFile->url());
-
-        $this->assertEquals('value1', $env->get('key1'));
-        $this->assertEquals('value2', $env->get('key2'));
-    }
-
-    public function testYamlNestedStructure()
-    {
-        $root        = vfsStream::setup();
-        $yamlContent = <<<YAML
-database:
-  host: localhost
-  port: 3306
-  user: root
-YAML;
-        $envFile = vfsStream::newFile('.env.yaml')->setContent($yamlContent);
-        $root->addChild($envFile);
-
-        $env = new Env();
-        $env->load($envFile->url());
-
-        $this->assertEquals('localhost', $env->get('database.host'));
-        $this->assertEquals(3306, $env->get('database.port'));
-        $this->assertEquals('root', $env->get('database.user'));
-    }
-
-    public function testYamlNativeTypes()
-    {
-        $root        = vfsStream::setup();
-        $yamlContent = <<<YAML
-debug: true
-cache: false
-port: 6379
-rate: 3.14
-status: "true"
-YAML;
-        $envFile = vfsStream::newFile('.env.yml')->setContent($yamlContent);
-        $root->addChild($envFile);
-
-        $env = new Env();
-        $env->load($envFile->url());
-
-        $this->assertTrue($env->get('debug'));
-        $this->assertFalse($env->get('cache'));
-        $this->assertSame(6379, $env->get('port'));
-        $this->assertSame(3.14, $env->get('rate'));
-        $this->assertTrue($env->get('status'));
-    }
-
     public function testUnsupportedFormat()
     {
         $root    = vfsStream::setup();
@@ -167,40 +107,6 @@ YAML;
 
         $this->assertEquals('deep-value', $env->get('level1.level2.level3.level4'));
         $this->assertEquals('value3', $env->get('level1.level2.another3'));
-    }
-
-    public function testYamlDeepNestedStructure()
-    {
-        $root        = vfsStream::setup();
-        $yamlContent = <<<YAML
-database:
-  connections:
-    mysql:
-      host: localhost
-      port: 3306
-      charset: utf8mb4
-    redis:
-      host: 127.0.0.1
-      port: 6379
-cache:
-  stores:
-    redis:
-      driver: redis
-      prefix: think_
-YAML;
-        $envFile = vfsStream::newFile('.env.yml')->setContent($yamlContent);
-        $root->addChild($envFile);
-
-        $env = new Env();
-        $env->load($envFile->url());
-
-        $this->assertEquals('localhost', $env->get('database.connections.mysql.host'));
-        $this->assertEquals(3306, $env->get('database.connections.mysql.port'));
-        $this->assertEquals('utf8mb4', $env->get('database.connections.mysql.charset'));
-        $this->assertEquals('127.0.0.1', $env->get('database.connections.redis.host'));
-        $this->assertEquals(6379, $env->get('database.connections.redis.port'));
-        $this->assertEquals('redis', $env->get('cache.stores.redis.driver'));
-        $this->assertEquals('think_', $env->get('cache.stores.redis.prefix'));
     }
 
     public function testSetEnvIndexedArrayPreserved()

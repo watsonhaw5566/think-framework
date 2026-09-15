@@ -66,9 +66,8 @@ class Env implements ArrayAccess
     protected function parseFile(string $file, string $extension): array
     {
         return match ($extension) {
-            'env', 'ini'  => $this->parseIni($file),
-            'yml', 'yaml' => $this->parseYaml($file),
-            default       => throw new Exception("不支持的环境变量文件格式: {$extension}"),
+            'env', 'ini' => $this->parseIni($file),
+            default      => throw new Exception("不支持的环境变量文件格式: {$extension}"),
         };
     }
 
@@ -81,23 +80,6 @@ class Env implements ArrayAccess
     protected function parseIni(string $file): array
     {
         return parse_ini_file($file, true, INI_SCANNER_RAW) ?: [];
-    }
-
-    /**
-     * 解析 YAML 格式文件
-     * @access protected
-     * @param string $file 文件路径
-     * @return array
-     */
-    protected function parseYaml(string $file): array
-    {
-        if (!class_exists(\Symfony\Component\Yaml\Yaml::class)) {
-            throw new Exception('使用 YAML 格式环境变量文件需先安装 symfony/yaml: composer require symfony/yaml');
-        }
-
-        $env = \Symfony\Component\Yaml\Yaml::parseFile($file);
-
-        return is_array($env) ? $env : [];
     }
 
     /**
